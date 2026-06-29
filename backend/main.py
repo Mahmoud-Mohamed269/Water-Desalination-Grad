@@ -20,6 +20,7 @@ ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
     "http://127.0.0.1",
+    "https://water-desalination-grad.vercel.app",
     # Add deployed frontend URL e.g.:
     # "https://your-project.vercel.app",
 ]
