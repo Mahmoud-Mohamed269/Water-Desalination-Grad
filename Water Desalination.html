@@ -2221,42 +2221,42 @@ Do NOT have the pump/valve connected to 12V during this test. Test relay clicks 
 <h2 class="code-line has-line-data" data-line-start="1561" data-line-end="1562"><a id="12_Validation_Checklist_1561"></a>12. Validation Checklist</h2>
 <h3 class="code-line has-line-data" data-line-start="1563" data-line-end="1564"><a id="Hardware_1563"></a>Hardware</h3>
 <ul>
-<li class="has-line-data" data-line-start="1564" data-line-end="1565"><input type="checkbox" id="checkbox0"><label for="checkbox0">ESP32S identified in Device Manager (COM port assigned)</label></li>
-<li class="has-line-data" data-line-start="1565" data-line-end="1566"><input type="checkbox" id="checkbox1"><label for="checkbox1">5V supply measures 4.95–5.05V on multimeter</label></li>
-<li class="has-line-data" data-line-start="1566" data-line-end="1567"><input type="checkbox" id="checkbox2"><label for="checkbox2">3.3V pin measures 3.28–3.32V</label></li>
-<li class="has-line-data" data-line-start="1567" data-line-end="1569"><input type="checkbox" id="checkbox3"><label for="checkbox3">All GNDs connected together (common ground)</label></li>
+<li class="has-line-data" data-line-start="1564" data-line-end="1565"><input type="checkbox" id="checkbox12"><label for="checkbox12">ESP32S identified in Device Manager (COM port assigned)</label></li>
+<li class="has-line-data" data-line-start="1565" data-line-end="1566"><input type="checkbox" id="checkbox13"><label for="checkbox13">5V supply measures 4.95–5.05V on multimeter</label></li>
+<li class="has-line-data" data-line-start="1566" data-line-end="1567"><input type="checkbox" id="checkbox14"><label for="checkbox14">3.3V pin measures 3.28–3.32V</label></li>
+<li class="has-line-data" data-line-start="1567" data-line-end="1569"><input type="checkbox" id="checkbox15"><label for="checkbox15">All GNDs connected together (common ground)</label></li>
 </ul>
 <h3 class="code-line has-line-data" data-line-start="1569" data-line-end="1570"><a id="Sensor_Connections_1569"></a>Sensor Connections</h3>
 <ul>
-<li class="has-line-data" data-line-start="1570" data-line-end="1571"><input type="checkbox" id="checkbox4"><label for="checkbox4">pH sensor outputs ~2.5V at pH 7 buffer</label></li>
-<li class="has-line-data" data-line-start="1571" data-line-end="1572"><input type="checkbox" id="checkbox5"><label for="checkbox5">TDS sensor voltage changes when probe in vs out of water</label></li>
-<li class="has-line-data" data-line-start="1572" data-line-end="1573"><input type="checkbox" id="checkbox6"><label for="checkbox6">Turbidity voltage is HIGH (~4V) in clear water, LOWER in murky water</label></li>
-<li class="has-line-data" data-line-start="1573" data-line-end="1574"><input type="checkbox" id="checkbox7"><label for="checkbox7">DS18B20 detected on bus (not returning -127°C)</label></li>
-<li class="has-line-data" data-line-start="1574" data-line-end="1575"><input type="checkbox" id="checkbox8"><label for="checkbox8">Pressure sensor at atmospheric reads ~0.33V (after divider)</label></li>
-<li class="has-line-data" data-line-start="1575" data-line-end="1576"><input type="checkbox" id="checkbox9"><label for="checkbox9">XKC-Y25 Feed Tank: output changes when water present</label></li>
-<li class="has-line-data" data-line-start="1576" data-line-end="1577"><input type="checkbox" id="checkbox10"><label for="checkbox10">XKC-Y25 Product Tank: output changes when water present</label></li>
-<li class="has-line-data" data-line-start="1577" data-line-end="1579"><input type="checkbox" id="checkbox11"><label for="checkbox11">YF-S201: Flow rate &gt; 0 when water flowing</label></li>
+<li class="has-line-data" data-line-start="1570" data-line-end="1571"><input type="checkbox" id="checkbox16"><label for="checkbox16">pH sensor outputs ~2.5V at pH 7 buffer</label></li>
+<li class="has-line-data" data-line-start="1571" data-line-end="1572"><input type="checkbox" id="checkbox17"><label for="checkbox17">TDS sensor voltage changes when probe in vs out of water</label></li>
+<li class="has-line-data" data-line-start="1572" data-line-end="1573"><input type="checkbox" id="checkbox18"><label for="checkbox18">Turbidity voltage is HIGH (~4V) in clear water, LOWER in murky water</label></li>
+<li class="has-line-data" data-line-start="1573" data-line-end="1574"><input type="checkbox" id="checkbox19"><label for="checkbox19">DS18B20 detected on bus (not returning -127°C)</label></li>
+<li class="has-line-data" data-line-start="1574" data-line-end="1575"><input type="checkbox" id="checkbox20"><label for="checkbox20">Pressure sensor at atmospheric reads ~0.33V (after divider)</label></li>
+<li class="has-line-data" data-line-start="1575" data-line-end="1576"><input type="checkbox" id="checkbox21"><label for="checkbox21">XKC-Y25 Feed Tank: output changes when water present</label></li>
+<li class="has-line-data" data-line-start="1576" data-line-end="1577"><input type="checkbox" id="checkbox22"><label for="checkbox22">XKC-Y25 Product Tank: output changes when water present</label></li>
+<li class="has-line-data" data-line-start="1577" data-line-end="1579"><input type="checkbox" id="checkbox23"><label for="checkbox23">YF-S201: Flow rate &gt; 0 when water flowing</label></li>
 </ul>
 <h3 class="code-line has-line-data" data-line-start="1579" data-line-end="1580"><a id="Voltage_Safety_1579"></a>Voltage Safety</h3>
 <ul>
-<li class="has-line-data" data-line-start="1580" data-line-end="1581"><input type="checkbox" id="checkbox12"><label for="checkbox12">Turbidity AOUT measured at GPIO32: &lt; 3.3V ✅</label></li>
-<li class="has-line-data" data-line-start="1581" data-line-end="1582"><input type="checkbox" id="checkbox13"><label for="checkbox13">Pressure AOUT measured at GPIO33: &lt; 3.3V ✅</label></li>
-<li class="has-line-data" data-line-start="1582" data-line-end="1583"><input type="checkbox" id="checkbox14"><label for="checkbox14">pH AOUT at GPIO34: &lt; 3.3V ✅</label></li>
-<li class="has-line-data" data-line-start="1583" data-line-end="1585"><input type="checkbox" id="checkbox15"><label for="checkbox15">TDS AOUT at GPIO35: &lt; 2.3V ✅</label></li>
+<li class="has-line-data" data-line-start="1580" data-line-end="1581"><input type="checkbox" id="checkbox24"><label for="checkbox24">Turbidity AOUT measured at GPIO32: &lt; 3.3V ✅</label></li>
+<li class="has-line-data" data-line-start="1581" data-line-end="1582"><input type="checkbox" id="checkbox25"><label for="checkbox25">Pressure AOUT measured at GPIO33: &lt; 3.3V ✅</label></li>
+<li class="has-line-data" data-line-start="1582" data-line-end="1583"><input type="checkbox" id="checkbox26"><label for="checkbox26">pH AOUT at GPIO34: &lt; 3.3V ✅</label></li>
+<li class="has-line-data" data-line-start="1583" data-line-end="1585"><input type="checkbox" id="checkbox27"><label for="checkbox27">TDS AOUT at GPIO35: &lt; 2.3V ✅</label></li>
 </ul>
 <h3 class="code-line has-line-data" data-line-start="1585" data-line-end="1586"><a id="Actuators_1585"></a>Actuators</h3>
 <ul>
-<li class="has-line-data" data-line-start="1586" data-line-end="1587"><input type="checkbox" id="checkbox16"><label for="checkbox16">Relay module relay clicks when GPIO26 driven LOW</label></li>
-<li class="has-line-data" data-line-start="1587" data-line-end="1588"><input type="checkbox" id="checkbox17"><label for="checkbox17">Relay module relay clicks when GPIO25 driven LOW</label></li>
-<li class="has-line-data" data-line-start="1588" data-line-end="1589"><input type="checkbox" id="checkbox18"><label for="checkbox18">Relay NC contact verified with multimeter (continuity when relay OFF)</label></li>
-<li class="has-line-data" data-line-start="1589" data-line-end="1591"><input type="checkbox" id="checkbox19"><label for="checkbox19">Relay NO contact verified (continuity when relay ON)</label></li>
+<li class="has-line-data" data-line-start="1586" data-line-end="1587"><input type="checkbox" id="checkbox28"><label for="checkbox28">Relay module relay clicks when GPIO26 driven LOW</label></li>
+<li class="has-line-data" data-line-start="1587" data-line-end="1588"><input type="checkbox" id="checkbox29"><label for="checkbox29">Relay module relay clicks when GPIO25 driven LOW</label></li>
+<li class="has-line-data" data-line-start="1588" data-line-end="1589"><input type="checkbox" id="checkbox30"><label for="checkbox30">Relay NC contact verified with multimeter (continuity when relay OFF)</label></li>
+<li class="has-line-data" data-line-start="1589" data-line-end="1591"><input type="checkbox" id="checkbox31"><label for="checkbox31">Relay NO contact verified (continuity when relay ON)</label></li>
 </ul>
 <h3 class="code-line has-line-data" data-line-start="1591" data-line-end="1592"><a id="Serial_Monitor_Output_1591"></a>Serial Monitor Output</h3>
 <ul>
-<li class="has-line-data" data-line-start="1592" data-line-end="1593"><input type="checkbox" id="checkbox20"><label for="checkbox20">Welcome banner prints correctly</label></li>
-<li class="has-line-data" data-line-start="1593" data-line-end="1594"><input type="checkbox" id="checkbox21"><label for="checkbox21">All sensor rows print every 5 seconds</label></li>
-<li class="has-line-data" data-line-start="1594" data-line-end="1595"><input type="checkbox" id="checkbox22"><label for="checkbox22">No crash/reset observed</label></li>
-<li class="has-line-data" data-line-start="1595" data-line-end="1597"><input type="checkbox" id="checkbox23"><label for="checkbox23">DS18B20 address printed (8 bytes, not all zeros)</label></li>
+<li class="has-line-data" data-line-start="1592" data-line-end="1593"><input type="checkbox" id="checkbox32"><label for="checkbox32">Welcome banner prints correctly</label></li>
+<li class="has-line-data" data-line-start="1593" data-line-end="1594"><input type="checkbox" id="checkbox33"><label for="checkbox33">All sensor rows print every 5 seconds</label></li>
+<li class="has-line-data" data-line-start="1594" data-line-end="1595"><input type="checkbox" id="checkbox34"><label for="checkbox34">No crash/reset observed</label></li>
+<li class="has-line-data" data-line-start="1595" data-line-end="1597"><input type="checkbox" id="checkbox35"><label for="checkbox35">DS18B20 address printed (8 bytes, not all zeros)</label></li>
 </ul>
 <hr>
 <h2 class="code-line has-line-data" data-line-start="1599" data-line-end="1600"><a id="13_Common_Errors_Troubleshooting_1599"></a>13. Common Errors &amp; Troubleshooting</h2>
@@ -2577,13 +2577,13 @@ Do NOT have the pump/valve connected to 12V during this test. Test relay clicks 
 <hr>
 <h2 class="code-line has-line-data" data-line-start="1802" data-line-end="1803"><a id="9_Validation_Checklist_1802"></a>9. Validation Checklist</h2>
 <ul>
-<li class="has-line-data" data-line-start="1804" data-line-end="1805"><input type="checkbox" id="checkbox24"><label for="checkbox24">Node 1 successfully compiles and sends data via ESP-NOW (including all 7 sensor types)</label></li>
-<li class="has-line-data" data-line-start="1805" data-line-end="1806"><input type="checkbox" id="checkbox25"><label for="checkbox25">Pressure sensor reads expected 0 bar at atmospheric pressure</label></li>
-<li class="has-line-data" data-line-start="1806" data-line-end="1807"><input type="checkbox" id="checkbox26"><label for="checkbox26">Node 2 successfully compiles and sends data via ESP-NOW</label></li>
-<li class="has-line-data" data-line-start="1807" data-line-end="1808"><input type="checkbox" id="checkbox27"><label for="checkbox27">Main Hub successfully receives data from both nodes asynchronously</label></li>
-<li class="has-line-data" data-line-start="1808" data-line-end="1809"><input type="checkbox" id="checkbox28"><label for="checkbox28">TFT Display renders UI and updates in real-time without blocking</label></li>
-<li class="has-line-data" data-line-start="1809" data-line-end="1810"><input type="checkbox" id="checkbox29"><label for="checkbox29">BLE Server starts and broadcasts correctly</label></li>
-<li class="has-line-data" data-line-start="1810" data-line-end="1812"><input type="checkbox" id="checkbox30"><label for="checkbox30">Flet Mobile App successfully pairs and receives BLE data</label></li>
+<li class="has-line-data" data-line-start="1804" data-line-end="1805"><input type="checkbox" id="checkbox36"><label for="checkbox36">Node 1 successfully compiles and sends data via ESP-NOW (including all 7 sensor types)</label></li>
+<li class="has-line-data" data-line-start="1805" data-line-end="1806"><input type="checkbox" id="checkbox37"><label for="checkbox37">Pressure sensor reads expected 0 bar at atmospheric pressure</label></li>
+<li class="has-line-data" data-line-start="1806" data-line-end="1807"><input type="checkbox" id="checkbox38"><label for="checkbox38">Node 2 successfully compiles and sends data via ESP-NOW</label></li>
+<li class="has-line-data" data-line-start="1807" data-line-end="1808"><input type="checkbox" id="checkbox39"><label for="checkbox39">Main Hub successfully receives data from both nodes asynchronously</label></li>
+<li class="has-line-data" data-line-start="1808" data-line-end="1809"><input type="checkbox" id="checkbox40"><label for="checkbox40">TFT Display renders UI and updates in real-time without blocking</label></li>
+<li class="has-line-data" data-line-start="1809" data-line-end="1810"><input type="checkbox" id="checkbox41"><label for="checkbox41">BLE Server starts and broadcasts correctly</label></li>
+<li class="has-line-data" data-line-start="1810" data-line-end="1812"><input type="checkbox" id="checkbox42"><label for="checkbox42">Flet Mobile App successfully pairs and receives BLE data</label></li>
 </ul>
 <hr>
 <blockquote>
@@ -3011,14 +3011,14 @@ uvicorn main:app --reload --port 8000
 <hr>
 <h2 class="code-line has-line-data" data-line-start="2128" data-line-end="2129"><a id="10_Validation_Checklist_2128"></a>10. Validation Checklist</h2>
 <ul>
-<li class="has-line-data" data-line-start="2130" data-line-end="2131"><input type="checkbox" id="checkbox31"><label for="checkbox31"></label><code>uvicorn main:app --reload</code> starts without import errors</li>
-<li class="has-line-data" data-line-start="2131" data-line-end="2132"><input type="checkbox" id="checkbox32"><label for="checkbox32"></label><code>/docs</code> Swagger UI loads all 5 endpoint groups</li>
-<li class="has-line-data" data-line-start="2132" data-line-end="2133"><input type="checkbox" id="checkbox33"><label for="checkbox33"></label><code>/api/v1/status/health</code> returns <code>{ &quot;status&quot;: &quot;healthy&quot; }</code></li>
-<li class="has-line-data" data-line-start="2133" data-line-end="2134"><input type="checkbox" id="checkbox34"><label for="checkbox34"></label><code>/api/v1/predict</code> returns correct labels and confidence scores</li>
-<li class="has-line-data" data-line-start="2134" data-line-end="2135"><input type="checkbox" id="checkbox35"><label for="checkbox35"></label><code>/api/v1/sensors/ingest</code> writes to Firebase <code>live_data</code> and <code>historical_logs</code></li>
-<li class="has-line-data" data-line-start="2135" data-line-end="2136"><input type="checkbox" id="checkbox36"><label for="checkbox36"></label><code>/api/v1/alerts/evaluate</code> correctly flags out-of-range readings</li>
-<li class="has-line-data" data-line-start="2136" data-line-end="2137"><input type="checkbox" id="checkbox37"><label for="checkbox37"></label><code>/api/v1/chat</code> returns Gemini response (requires valid <code>GEMINI_API_KEY</code>)</li>
-<li class="has-line-data" data-line-start="2137" data-line-end="2139"><input type="checkbox" id="checkbox38"><label for="checkbox38"></label><code>vercel deploy</code> completes without errors</li>
+<li class="has-line-data" data-line-start="2130" data-line-end="2131"><input type="checkbox" id="checkbox43"><label for="checkbox43"></label><code>uvicorn main:app --reload</code> starts without import errors</li>
+<li class="has-line-data" data-line-start="2131" data-line-end="2132"><input type="checkbox" id="checkbox44"><label for="checkbox44"></label><code>/docs</code> Swagger UI loads all 5 endpoint groups</li>
+<li class="has-line-data" data-line-start="2132" data-line-end="2133"><input type="checkbox" id="checkbox45"><label for="checkbox45"></label><code>/api/v1/status/health</code> returns <code>{ &quot;status&quot;: &quot;healthy&quot; }</code></li>
+<li class="has-line-data" data-line-start="2133" data-line-end="2134"><input type="checkbox" id="checkbox46"><label for="checkbox46"></label><code>/api/v1/predict</code> returns correct labels and confidence scores</li>
+<li class="has-line-data" data-line-start="2134" data-line-end="2135"><input type="checkbox" id="checkbox47"><label for="checkbox47"></label><code>/api/v1/sensors/ingest</code> writes to Firebase <code>live_data</code> and <code>historical_logs</code></li>
+<li class="has-line-data" data-line-start="2135" data-line-end="2136"><input type="checkbox" id="checkbox48"><label for="checkbox48"></label><code>/api/v1/alerts/evaluate</code> correctly flags out-of-range readings</li>
+<li class="has-line-data" data-line-start="2136" data-line-end="2137"><input type="checkbox" id="checkbox49"><label for="checkbox49"></label><code>/api/v1/chat</code> returns Gemini response (requires valid <code>GEMINI_API_KEY</code>)</li>
+<li class="has-line-data" data-line-start="2137" data-line-end="2139"><input type="checkbox" id="checkbox50"><label for="checkbox50"></label><code>vercel deploy</code> completes without errors</li>
 </ul>
 <hr>
 <blockquote>
@@ -3182,6 +3182,1539 @@ Phase 4 represents the complete Cloud/Backend Layer. The FastAPI service is now 
 </li>
 </ol>
 <p class="has-line-data" data-line-start="2283" data-line-end="2284"><strong>🎉 System Validation Complete!</strong></p>
+<h1 class="code-line has-line-data" data-line-start="2284" data-line-end="2285"><a id="Phase_8_Mobile_App_Polish_New_Features_2284"></a>📱 Phase 8 — Mobile App Polish &amp; New Features</h1>
+<p class="has-line-data" data-line-start="2286" data-line-end="2287">This phase covers all improvements made to the Flet mobile app after initial hardware validation in Phase 6. The app gains an Alerts page, in-dashboard ML predictions, and a fix for Flet API deprecations.</p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2290" data-line-end="2291"><a id="Table_of_Contents_2290"></a>📋 Table of Contents</h2>
+<ol>
+<li class="has-line-data" data-line-start="2291" data-line-end="2292"><a href="#1-objectives">Objectives</a></li>
+<li class="has-line-data" data-line-start="2292" data-line-end="2293"><a href="#2-what-was-fixed">What Was Fixed</a></li>
+<li class="has-line-data" data-line-start="2293" data-line-end="2294"><a href="#3-new-alerts-page">New: Alerts Page</a></li>
+<li class="has-line-data" data-line-start="2294" data-line-end="2295"><a href="#4-new-ml-predictions-on-dashboard">New: ML Predictions on Dashboard</a></li>
+<li class="has-line-data" data-line-start="2295" data-line-end="2296"><a href="#5-navigation-bar-restructure">Navigation Bar Restructure</a></li>
+<li class="has-line-data" data-line-start="2296" data-line-end="2297"><a href="#6-file-reference">File Reference</a></li>
+<li class="has-line-data" data-line-start="2297" data-line-end="2298"><a href="#7-testing-checklist">Testing Checklist</a></li>
+<li class="has-line-data" data-line-start="2298" data-line-end="2300"><a href="#8-common-errors">Common Errors</a></li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2302" data-line-end="2303"><a id="1_Objectives_2302"></a>1. Objectives</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>#</th>
+<th>Objective</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Fix deprecated Flet <code>NavigationDestination</code> API</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Add Alerts page pulling from FastAPI backend</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Add ML Analysis section to Dashboard</td>
+<td>🟠 High</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Auto-refresh Alerts on tab switch</td>
+<td>🟡 Medium</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Improve BLE error handling</td>
+<td>🟡 Medium</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2314" data-line-end="2315"><a id="2_What_Was_Fixed_2314"></a>2. What Was Fixed</h2>
+<h3 class="code-line has-line-data" data-line-start="2316" data-line-end="2317"><a id="21_Deprecated_NavigationDestination_2316"></a>2.1 Deprecated NavigationDestination</h3>
+<p class="has-line-data" data-line-start="2318" data-line-end="2319"><strong>Flet ≥ 0.23.0</strong> deprecated <code>ft.NavigationDestination</code> in favour of <code>ft.NavigationBarDestination</code>. The old code produced this warning on every launch:</p>
+<pre><code class="has-line-data" data-line-start="2321" data-line-end="2324">DeprecationWarning: NavigationDestination() is deprecated in version 0.23.0
+and will be removed in version 0.26.0. Use NavigationBarDestination class instead.
+</code></pre>
+<p class="has-line-data" data-line-start="2325" data-line-end="2326"><strong>Fix in <code>mobile/src/main.py</code>:</strong></p>
+<pre><code class="has-line-data language-python" data-line-start="2328" data-line-end="2336"><span class="hljs-comment"># ❌ Old (deprecated)</span>
+ft.NavigationDestination(icon=ft.icons.DASHBOARD_OUTLINED, label=<span class="hljs-string">&quot;Live&quot;</span>)
+
+<span class="hljs-comment"># ✅ New</span>
+ft.NavigationBarDestination(icon=ft.icons.DASHBOARD_OUTLINED,
+                             selected_icon=ft.icons.DASHBOARD,
+                             label=<span class="hljs-string">&quot;Live&quot;</span>)
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="2337" data-line-end="2338"><a id="22_BLE_Error_Handling_2337"></a>2.2 BLE Error Handling</h3>
+<p class="has-line-data" data-line-start="2339" data-line-end="2340">The <code>RealBLEClient</code> threw <code>CancelledError</code> when Bluetooth was off or no device found. The existing <code>try/except</code> inside <code>connect()</code> already catches this via a broad <code>except Exception</code>, but the error still propagated because <code>page.run_task()</code> does not suppress exceptions from coroutines. This is an async cancellation from the OS Bluetooth stack — it is expected when no hardware is nearby and does <strong>not</strong> crash the app.</p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2343" data-line-end="2344"><a id="3_New_Alerts_Page_2343"></a>3. New: Alerts Page</h2>
+<p class="has-line-data" data-line-start="2345" data-line-end="2346"><strong>File:</strong> <code>mobile/src/pages/alerts.py</code></p>
+<h3 class="code-line has-line-data" data-line-start="2347" data-line-end="2348"><a id="31_What_It_Shows_2347"></a>3.1 What It Shows</h3>
+<p class="has-line-data" data-line-start="2349" data-line-end="2350">The Alerts page calls <code>GET /api/v1/alerts/history</code> on the FastAPI backend and displays the returned alert list sorted newest-first.</p>
+<p class="has-line-data" data-line-start="2351" data-line-end="2352">Each alert card shows:</p>
+<ul>
+<li class="has-line-data" data-line-start="2352" data-line-end="2353"><strong>Severity badge</strong> — colour-coded pill (CRITICAL = red, WARNING = orange, INFO = blue)</li>
+<li class="has-line-data" data-line-start="2353" data-line-end="2354"><strong>Sensor name</strong> — e.g. “TDS”, “pH”, “Pressure”</li>
+<li class="has-line-data" data-line-start="2354" data-line-end="2355"><strong>Message</strong> — e.g. “TDS too high: 650 ppm”</li>
+<li class="has-line-data" data-line-start="2355" data-line-end="2357"><strong>Timestamp</strong> — formatted as <code>YYYY-MM-DD  HH:MM:SS</code></li>
+</ul>
+<p class="has-line-data" data-line-start="2357" data-line-end="2358">When the system is healthy and no alerts exist, a green ✓ icon with “No alerts — system is healthy!” is shown.</p>
+<h3 class="code-line has-line-data" data-line-start="2359" data-line-end="2360"><a id="32_Severity_Colour_Reference_2359"></a>3.2 Severity Colour Reference</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Severity</th>
+<th>Colour</th>
+<th>Background</th>
+<th>Icon</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>critical</code></td>
+<td><code>#ef4444</code> (red)</td>
+<td><code>#2d0a0a</code></td>
+<td><code>ERROR</code></td>
+</tr>
+<tr>
+<td><code>warning</code></td>
+<td><code>#f97316</code> (orange)</td>
+<td><code>#2d1500</code></td>
+<td><code>WARNING_AMBER</code></td>
+</tr>
+<tr>
+<td><code>info</code></td>
+<td><code>#3b82f6</code> (blue)</td>
+<td><code>#0a1a2d</code></td>
+<td><code>INFO</code></td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="2367" data-line-end="2368"><a id="33_How_Refresh_Works_2367"></a>3.3 How Refresh Works</h3>
+<p class="has-line-data" data-line-start="2369" data-line-end="2370"><code>update_data()</code> is called automatically by <code>main.py</code> every time the user taps the <strong>Alerts</strong> tab (<code>index == 2</code> in <code>on_nav_change</code>). The user can also manually tap the ↻ refresh button.</p>
+<p class="has-line-data" data-line-start="2371" data-line-end="2372">The HTTP call is synchronous (<code>requests.get</code>) — this is acceptable because Flet runs UI updates on the main thread and HTTP calls on worker threads. For future improvement, consider wrapping in <code>page.run_thread()</code>.</p>
+<h3 class="code-line has-line-data" data-line-start="2373" data-line-end="2374"><a id="34_Offline_Behaviour_2373"></a>3.4 Offline Behaviour</h3>
+<p class="has-line-data" data-line-start="2375" data-line-end="2376">When the backend is unreachable, the status label turns red with the error message. Previously fetched alerts remain displayed from the <code>self._alerts</code> cache (in-memory for the session). Full offline persistence of alerts to SQLite is a future enhancement.</p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2379" data-line-end="2380"><a id="4_New_ML_Predictions_on_Dashboard_2379"></a>4. New: ML Predictions on Dashboard</h2>
+<p class="has-line-data" data-line-start="2381" data-line-end="2382"><strong>File:</strong> <code>mobile/src/pages/dashboard.py</code></p>
+<h3 class="code-line has-line-data" data-line-start="2383" data-line-end="2384"><a id="41_ML_Analysis_Section_2383"></a>4.1 ML Analysis Section</h3>
+<p class="has-line-data" data-line-start="2385" data-line-end="2386">Added at the bottom of the scrollable dashboard column:</p>
+<pre><code class="has-line-data" data-line-start="2388" data-line-end="2398">─────────────────────────────────
+ML Analysis                    [↻]
+┌─────────────────┐ ┌──────────────────┐
+│ Water Quality   │ │ Membrane         │
+│ Good            │ │ Warning          │
+│ 94.2% confidence│ │ 68.1% confidence │
+└─────────────────┘ └──────────────────┘
+✓ Prediction complete
+─────────────────────────────────
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="2399" data-line-end="2400"><a id="42_Endpoint_Called_2399"></a>4.2 Endpoint Called</h3>
+<p class="has-line-data" data-line-start="2401" data-line-end="2402"><code>GET /api/v1/predict/run</code> — this endpoint was added in Phase 10. It automatically:</p>
+<ol>
+<li class="has-line-data" data-line-start="2402" data-line-end="2403">Fetches the latest <code>live_data</code> snapshot from Firebase</li>
+<li class="has-line-data" data-line-start="2403" data-line-end="2404">Derives all 13 ML feature values (TDS Reduction, pH Change, etc.)</li>
+<li class="has-line-data" data-line-start="2404" data-line-end="2405">Runs both Random Forest models</li>
+<li class="has-line-data" data-line-start="2405" data-line-end="2407">Returns labels + confidence percentages</li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="2407" data-line-end="2408"><a id="43_Label_Colour_Mapping_2407"></a>4.3 Label Colour Mapping</h3>
+<p class="has-line-data" data-line-start="2409" data-line-end="2410"><strong>Water Quality:</strong></p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Label</th>
+<th>Colour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>good</td>
+<td><code>#22c55e</code> (green)</td>
+</tr>
+<tr>
+<td>acceptable</td>
+<td><code>#84cc16</code> (lime)</td>
+</tr>
+<tr>
+<td>poor</td>
+<td><code>#f97316</code> (orange)</td>
+</tr>
+<tr>
+<td>bad</td>
+<td><code>#ef4444</code> (red)</td>
+</tr>
+</tbody>
+</table>
+<p class="has-line-data" data-line-start="2417" data-line-end="2418"><strong>Membrane Status:</strong></p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Label</th>
+<th>Colour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>good</td>
+<td><code>#22c55e</code> (green)</td>
+</tr>
+<tr>
+<td>warning</td>
+<td><code>#f97316</code> (orange)</td>
+</tr>
+<tr>
+<td>critical / fouled</td>
+<td><code>#ef4444</code> (red)</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="2424" data-line-end="2425"><a id="44_When_to_Run_2424"></a>4.4 When to Run</h3>
+<p class="has-line-data" data-line-start="2426" data-line-end="2427">The prediction is <strong>not</strong> run automatically on a timer (ML inference adds load to the backend). The user taps ↻ on demand. Typical use: tap once when you sit down to review the system status.</p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2430" data-line-end="2431"><a id="5_Navigation_Bar_Restructure_2430"></a>5. Navigation Bar Restructure</h2>
+<p class="has-line-data" data-line-start="2432" data-line-end="2433">The nav bar was restructured from 4 to 5 destinations:</p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Index</th>
+<th>Old</th>
+<th>New</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>Live</td>
+<td>Live (unchanged)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>History</td>
+<td>History (unchanged)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>WiFi</td>
+<td><strong>Alerts</strong> (new)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Settings</td>
+<td>WiFi (shifted)</td>
+</tr>
+<tr>
+<td>4</td>
+<td>—</td>
+<td>Settings (shifted)</td>
+</tr>
+</tbody>
+</table>
+<p class="has-line-data" data-line-start="2442" data-line-end="2443"><code>on_nav_change</code> in <code>main.py</code> was updated to call <code>page_alerts.update_data()</code> when index 2 is selected.</p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2446" data-line-end="2447"><a id="6_File_Reference_2446"></a>6. File Reference</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>File</th>
+<th>Change Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mobile/src/main.py</code></td>
+<td>Modified</td>
+<td>Fixed deprecation, added Alerts tab, updated nav change handler</td>
+</tr>
+<tr>
+<td><code>mobile/src/pages/alerts.py</code></td>
+<td><strong>New</strong></td>
+<td>Full alerts page with severity-coded cards</td>
+</tr>
+<tr>
+<td><code>mobile/src/pages/dashboard.py</code></td>
+<td>Modified</td>
+<td>Added ML Analysis section with Water Quality + Membrane cards</td>
+</tr>
+<tr>
+<td><code>mobile/src/pages/history.py</code></td>
+<td>Modified (Phase earlier)</td>
+<td>Fixed <code>update()</code> timing, added metric dropdown</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2457" data-line-end="2458"><a id="7_Testing_Checklist_2457"></a>7. Testing Checklist</h2>
+<h3 class="code-line has-line-data" data-line-start="2459" data-line-end="2460"><a id="Virtual_BLE_Mode_no_hardware_2459"></a>Virtual BLE Mode (no hardware)</h3>
+<ul>
+<li class="has-line-data" data-line-start="2460" data-line-end="2461"><input type="checkbox" id="checkbox51"><label for="checkbox51">Launch app → no deprecation warnings in terminal</label></li>
+<li class="has-line-data" data-line-start="2461" data-line-end="2462"><input type="checkbox" id="checkbox52"><label for="checkbox52">Live tab shows sensor data updating every second</label></li>
+<li class="has-line-data" data-line-start="2462" data-line-end="2463"><input type="checkbox" id="checkbox53"><label for="checkbox53">History tab shows pH chart and scrollable readings table</label></li>
+<li class="has-line-data" data-line-start="2463" data-line-end="2464"><input type="checkbox" id="checkbox54"><label for="checkbox54">Alerts tab loads, shows “No alerts” or pulls real alerts from backend</label></li>
+<li class="has-line-data" data-line-start="2464" data-line-end="2465"><input type="checkbox" id="checkbox55"><label for="checkbox55">Tapping ↻ on Alerts refreshes the list</label></li>
+<li class="has-line-data" data-line-start="2465" data-line-end="2466"><input type="checkbox" id="checkbox56"><label for="checkbox56">Dashboard ML section: tap ↻ → shows water quality + membrane status</label></li>
+<li class="has-line-data" data-line-start="2466" data-line-end="2468"><input type="checkbox" id="checkbox57"><label for="checkbox57">Settings save → status message appears green</label></li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="2468" data-line-end="2469"><a id="Real_BLE_Mode_2468"></a>Real BLE Mode</h3>
+<ul>
+<li class="has-line-data" data-line-start="2469" data-line-end="2470"><input type="checkbox" id="checkbox58"><label for="checkbox58">App connects to AquaMonitor ESP32 within 10 seconds</label></li>
+<li class="has-line-data" data-line-start="2470" data-line-end="2471"><input type="checkbox" id="checkbox59"><label for="checkbox59">Live data reflects actual sensor readings from Node 1</label></li>
+<li class="has-line-data" data-line-start="2471" data-line-end="2472"><input type="checkbox" id="checkbox60"><label for="checkbox60">History shows real readings accumulating in SQLite</label></li>
+<li class="has-line-data" data-line-start="2472" data-line-end="2474"><input type="checkbox" id="checkbox61"><label for="checkbox61">Alerts populate when TDS &gt; 500 ppm or pH out of range</label></li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2476" data-line-end="2477"><a id="8_Common_Errors_2476"></a>8. Common Errors</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DeprecationWarning: NavigationDestination</code></td>
+<td>Old Flet version</td>
+<td>Upgrade: <code>pip install --upgrade flet</code></td>
+</tr>
+<tr>
+<td><code>CancelledError</code> in terminal</td>
+<td>Bluetooth off / no BLE device</td>
+<td>Expected — enable virtual BLE in Settings</td>
+</tr>
+<tr>
+<td>ML card shows “Offline”</td>
+<td>Backend not running</td>
+<td>Start backend: <code>uvicorn main:app --reload</code> in <code>backend/</code></td>
+</tr>
+<tr>
+<td>Alerts show “Server error 500”</td>
+<td>Firebase not initialized</td>
+<td>Check <code>serviceAccountKey.json</code> exists and <code>.env</code> is set</td>
+</tr>
+</tbody>
+</table>
+<h1 class="code-line has-line-data" data-line-start="2484" data-line-end="2485"><a id="Phase_9_Security_API_Key_Protection_2484"></a>🔐 Phase 9 — Security &amp; API Key Protection</h1>
+<p class="has-line-data" data-line-start="2486" data-line-end="2487">This phase adds an API key authentication layer to the FastAPI backend, tightens CORS policy, and moves all secrets to environment variables — making the system safe to deploy publicly.</p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2490" data-line-end="2491"><a id="Table_of_Contents_2490"></a>📋 Table of Contents</h2>
+<ol>
+<li class="has-line-data" data-line-start="2491" data-line-end="2492"><a href="#1-objectives">Objectives</a></li>
+<li class="has-line-data" data-line-start="2492" data-line-end="2493"><a href="#2-threat-model">Threat Model</a></li>
+<li class="has-line-data" data-line-start="2493" data-line-end="2494"><a href="#3-api-key-implementation">API Key Implementation</a></li>
+<li class="has-line-data" data-line-start="2494" data-line-end="2495"><a href="#4-cors-hardening">CORS Hardening</a></li>
+<li class="has-line-data" data-line-start="2495" data-line-end="2496"><a href="#5-secret-management">Secret Management</a></li>
+<li class="has-line-data" data-line-start="2496" data-line-end="2497"><a href="#6-which-endpoints-are-protected">Which Endpoints Are Protected</a></li>
+<li class="has-line-data" data-line-start="2497" data-line-end="2498"><a href="#7-testing-security">Testing Security</a></li>
+<li class="has-line-data" data-line-start="2498" data-line-end="2500"><a href="#8-future-improvements">Future Improvements</a></li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2502" data-line-end="2503"><a id="1_Objectives_2502"></a>1. Objectives</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>#</th>
+<th>Objective</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Prevent unauthorized writes to Firebase via <code>/ingest</code></td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Protect ML predictions from abuse</td>
+<td>🟠 High</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Tighten CORS to known origins</td>
+<td>🟠 High</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Remove hardcoded secrets from code</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Keep public read endpoints open (dashboard, mobile)</td>
+<td>🟠 High</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2514" data-line-end="2515"><a id="2_Threat_Model_2514"></a>2. Threat Model</h2>
+<p class="has-line-data" data-line-start="2516" data-line-end="2517">Without security, anyone who discovers your backend URL can:</p>
+<ul>
+<li class="has-line-data" data-line-start="2517" data-line-end="2518"><strong>Flood <code>/ingest</code></strong> with fake sensor data, corrupting your Firebase RTDB</li>
+<li class="has-line-data" data-line-start="2518" data-line-end="2519"><strong>Spam <code>/api/v1/chat</code></strong> consuming your Gemini API quota</li>
+<li class="has-line-data" data-line-start="2519" data-line-end="2521"><strong>Read live data</strong> (acceptable — no PII, public monitoring data)</li>
+</ul>
+<p class="has-line-data" data-line-start="2521" data-line-end="2522">We do <strong>not</strong> need full user authentication (Firebase Auth) for this personal/lab project. An API key on write/mutating endpoints is sufficient.</p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2525" data-line-end="2526"><a id="3_API_Key_Implementation_2525"></a>3. API Key Implementation</h2>
+<h3 class="code-line has-line-data" data-line-start="2527" data-line-end="2528"><a id="31_How_It_Works_2527"></a>3.1 How It Works</h3>
+<p class="has-line-data" data-line-start="2529" data-line-end="2530">A new FastAPI dependency in <code>backend/app/core/security.py</code> checks the <code>X-API-Key</code> HTTP header on every protected request:</p>
+<pre><code class="has-line-data language-python" data-line-start="2532" data-line-end="2542"><span class="hljs-keyword">async</span> <span class="hljs-keyword">def</span> <span class="hljs-title function_">verify_api_key</span>(<span class="hljs-params">api_key: <span class="hljs-built_in">str</span> = Security(<span class="hljs-params">API_KEY_HEADER</span>)</span>):
+    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> settings.API_KEY:
+        <span class="hljs-keyword">return</span>  <span class="hljs-comment"># Dev mode — no key configured, allow all</span>
+
+    <span class="hljs-keyword">if</span> api_key != settings.API_KEY:
+        <span class="hljs-keyword">raise</span> HTTPException(
+            status_code=<span class="hljs-number">403</span>,
+            detail=<span class="hljs-string">&quot;Invalid or missing API key.&quot;</span>
+        )
+</code></pre>
+<p class="has-line-data" data-line-start="2543" data-line-end="2544"><strong>Dev mode safety:</strong> If <code>API_KEY</code> is empty in <code>.env</code> (local development), the check is bypassed entirely. This prevents you from locking yourself out during development.</p>
+<h3 class="code-line has-line-data" data-line-start="2545" data-line-end="2546"><a id="32_Applying_the_Dependency_2545"></a>3.2 Applying the Dependency</h3>
+<p class="has-line-data" data-line-start="2547" data-line-end="2548">The dependency is added to a specific endpoint using FastAPI’s <code>dependencies</code> parameter:</p>
+<pre><code class="has-line-data language-python" data-line-start="2550" data-line-end="2554"><span class="hljs-meta">@router.post(<span class="hljs-params"><span class="hljs-string">&quot;/ingest&quot;</span>, dependencies=[Depends(<span class="hljs-params">verify_api_key</span>)]</span>)</span>
+<span class="hljs-keyword">def</span> <span class="hljs-title function_">ingest_sensor_data</span>(<span class="hljs-params">payload: SensorPayload</span>):
+    ...
+</code></pre>
+<p class="has-line-data" data-line-start="2555" data-line-end="2556">This is cleaner than adding the dependency to the router level (which would block public read endpoints).</p>
+<h3 class="code-line has-line-data" data-line-start="2557" data-line-end="2558"><a id="33_Setting_the_API_Key_2557"></a>3.3 Setting the API Key</h3>
+<p class="has-line-data" data-line-start="2559" data-line-end="2560"><strong>Local <code>.env</code> (never commit this file):</strong></p>
+<pre><code class="has-line-data" data-line-start="2561" data-line-end="2563">API_KEY=aquamonitor-secret-key-2024
+</code></pre>
+<blockquote>
+<p class="has-line-data" data-line-start="2564" data-line-end="2566">[!WARNING]<br>
+Change this value before deploying publicly. Use a random string of at least 32 characters. You can generate one with:</p>
+<pre><code class="has-line-data language-python" data-line-start="2567" data-line-end="2569"><span class="hljs-keyword">import</span> secrets; <span class="hljs-built_in">print</span>(secrets.token_urlsafe(<span class="hljs-number">32</span>))
+</code></pre>
+</blockquote>
+<p class="has-line-data" data-line-start="2570" data-line-end="2572"><strong>Vercel Environment Variables (see Phase 10):</strong><br>
+Set <code>API_KEY</code> in your Vercel project → Settings → Environment Variables.</p>
+<h3 class="code-line has-line-data" data-line-start="2573" data-line-end="2574"><a id="34_Sending_the_Key_from_Clients_2573"></a>3.4 Sending the Key from Clients</h3>
+<p class="has-line-data" data-line-start="2575" data-line-end="2576">Any client that calls a protected endpoint must include the header:</p>
+<p class="has-line-data" data-line-start="2577" data-line-end="2578"><strong>From the Mobile App’s sync worker (<code>db/sync.py</code>):</strong></p>
+<pre><code class="has-line-data language-python" data-line-start="2579" data-line-end="2582">headers = {<span class="hljs-string">&quot;X-API-Key&quot;</span>: <span class="hljs-string">&quot;aquamonitor-secret-key-2024&quot;</span>}
+requests.post(<span class="hljs-string">f&quot;<span class="hljs-subst">{api_url}</span>/api/v1/sensors/ingest&quot;</span>, json=payload, headers=headers)
+</code></pre>
+<p class="has-line-data" data-line-start="2583" data-line-end="2584"><strong>From the ESP32 Main Hub (if posting directly):</strong></p>
+<pre><code class="has-line-data language-cpp" data-line-start="2585" data-line-end="2587">http.<span class="hljs-built_in">addHeader</span>(<span class="hljs-string">&quot;X-API-Key&quot;</span>, <span class="hljs-string">&quot;aquamonitor-secret-key-2024&quot;</span>);
+</code></pre>
+<p class="has-line-data" data-line-start="2588" data-line-end="2589"><strong>From curl (testing):</strong></p>
+<pre><code class="has-line-data language-bash" data-line-start="2590" data-line-end="2595">curl -X POST https://your-api.vercel.app/api/v1/sensors/ingest \
+  -H <span class="hljs-string">&quot;X-API-Key: aquamonitor-secret-key-2024&quot;</span> \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -d <span class="hljs-string">&#x27;{&quot;ph_feed&quot;: 7.2, &quot;tds_feed&quot;: 300}&#x27;</span>
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2598" data-line-end="2599"><a id="4_CORS_Hardening_2598"></a>4. CORS Hardening</h2>
+<h3 class="code-line has-line-data" data-line-start="2600" data-line-end="2601"><a id="41_What_CORS_Is_2600"></a>4.1 What CORS Is</h3>
+<p class="has-line-data" data-line-start="2602" data-line-end="2603">Cross-Origin Resource Sharing (CORS) controls which websites can call your API from a browser. Without CORS restrictions, any webpage in the world could silently call your backend from a visitor’s browser.</p>
+<h3 class="code-line has-line-data" data-line-start="2604" data-line-end="2605"><a id="42_Old_Configuration_insecure_2604"></a>4.2 Old Configuration (insecure)</h3>
+<pre><code class="has-line-data language-python" data-line-start="2607" data-line-end="2609">allow_origins=[<span class="hljs-string">&quot;*&quot;</span>]  <span class="hljs-comment"># Any website can call your API</span>
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="2610" data-line-end="2611"><a id="43_New_Configuration_2610"></a>4.3 New Configuration</h3>
+<pre><code class="has-line-data language-python" data-line-start="2613" data-line-end="2621">ALLOWED_ORIGINS = [
+    <span class="hljs-string">&quot;http://localhost&quot;</span>,
+    <span class="hljs-string">&quot;http://localhost:8000&quot;</span>,
+    <span class="hljs-string">&quot;http://127.0.0.1:8000&quot;</span>,
+    <span class="hljs-string">&quot;http://127.0.0.1&quot;</span>,
+    <span class="hljs-comment"># &quot;https://your-project.vercel.app&quot;,  ← add after deploy</span>
+]
+</code></pre>
+<blockquote>
+<p class="has-line-data" data-line-start="2622" data-line-end="2624">[!IMPORTANT]<br>
+After you deploy to Vercel, add your Vercel URL and your web dashboard’s URL to <code>ALLOWED_ORIGINS</code> in <code>backend/main.py</code>. Then redeploy.</p>
+</blockquote>
+<h3 class="code-line has-line-data" data-line-start="2625" data-line-end="2626"><a id="44_Note_on_CORS_vs_API_Keys_2625"></a>4.4 Note on CORS vs API Keys</h3>
+<p class="has-line-data" data-line-start="2627" data-line-end="2628">CORS protections only apply to browser-based requests. Tools like <code>curl</code>, Postman, and the mobile app (Python <code>requests</code>) <strong>ignore CORS</strong> and send requests regardless. CORS protects against malicious web pages, not against scripts or servers. The API key protects against both.</p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2631" data-line-end="2632"><a id="5_Secret_Management_2631"></a>5. Secret Management</h2>
+<h3 class="code-line has-line-data" data-line-start="2633" data-line-end="2634"><a id="51_What_Must_Never_Be_Committed_to_Git_2633"></a>5.1 What Must Never Be Committed to Git</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>File</th>
+<th>Contains</th>
+<th>Gitignore Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>backend/.env</code></td>
+<td>API key, Gemini key</td>
+<td><code>backend/.env</code></td>
+</tr>
+<tr>
+<td><code>backend/serviceAccountKey.json</code></td>
+<td>Firebase admin credentials</td>
+<td><code>backend/serviceAccountKey.json</code></td>
+</tr>
+<tr>
+<td><code>serviceAccountKey.json</code></td>
+<td>(root copy)</td>
+<td><code>serviceAccountKey.json</code></td>
+</tr>
+<tr>
+<td><code>mobile/src/sensor_data.sqlite</code></td>
+<td>User reading history</td>
+<td><code>*.sqlite</code></td>
+</tr>
+</tbody>
+</table>
+<p class="has-line-data" data-line-start="2642" data-line-end="2643">All of these are covered by <code>.gitignore</code> as of Phase 9.</p>
+<h3 class="code-line has-line-data" data-line-start="2644" data-line-end="2645"><a id="52_Environment_Variable_Priority_2644"></a>5.2 Environment Variable Priority</h3>
+<pre><code class="has-line-data" data-line-start="2647" data-line-end="2653">Vercel Dashboard env vars
+    ↓ (override)
+backend/.env file
+    ↓ (override)
+Default values in config.py
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="2654" data-line-end="2655"><a id="53_The_Gemini_API_Key_2654"></a>5.3 The Gemini API Key</h3>
+<p class="has-line-data" data-line-start="2656" data-line-end="2657">The Gemini API key was previously hardcoded in <code>config.py</code>:</p>
+<pre><code class="has-line-data language-python" data-line-start="2659" data-line-end="2662"><span class="hljs-comment"># ❌ Old — hardcoded in source code</span>
+GEMINI_API_KEY: <span class="hljs-built_in">str</span> = <span class="hljs-string">&quot;AQ.Ab8RN6LxZkUT-...&quot;</span>
+</code></pre>
+<p class="has-line-data" data-line-start="2663" data-line-end="2664">It is now loaded exclusively from <code>.env</code>:</p>
+<pre><code class="has-line-data language-python" data-line-start="2666" data-line-end="2669"><span class="hljs-comment"># ✅ New — loaded from environment</span>
+GEMINI_API_KEY: <span class="hljs-built_in">str</span> = <span class="hljs-string">&quot;&quot;</span>  <span class="hljs-comment"># Must be set in .env or Vercel env vars</span>
+</code></pre>
+<p class="has-line-data" data-line-start="2670" data-line-end="2671">Set it in <code>backend/.env</code>:</p>
+<pre><code class="has-line-data" data-line-start="2672" data-line-end="2674">GEMINI_API_KEY=your-actual-key-here
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2677" data-line-end="2678"><a id="6_Which_Endpoints_Are_Protected_2677"></a>6. Which Endpoints Are Protected</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Endpoint</th>
+<th>Method</th>
+<th>Protected</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/v1/sensors/live</code></td>
+<td>GET</td>
+<td>❌ Open</td>
+<td>Read-only, public dashboard needs it</td>
+</tr>
+<tr>
+<td><code>/api/v1/sensors/history</code></td>
+<td>GET</td>
+<td>❌ Open</td>
+<td>Read-only, charts need it</td>
+</tr>
+<tr>
+<td><code>/api/v1/sensors/ingest</code></td>
+<td>POST</td>
+<td>✅ <strong>API Key</strong></td>
+<td>Writes to Firebase</td>
+</tr>
+<tr>
+<td><code>/api/v1/predict/run</code></td>
+<td>GET</td>
+<td>❌ Open</td>
+<td>Read-only, mobile dashboard</td>
+</tr>
+<tr>
+<td><code>/api/v1/predict/</code></td>
+<td>POST</td>
+<td>❌ Open</td>
+<td>No state mutation</td>
+</tr>
+<tr>
+<td><code>/api/v1/alerts/history</code></td>
+<td>GET</td>
+<td>❌ Open</td>
+<td>Read-only</td>
+</tr>
+<tr>
+<td><code>/api/v1/alerts/evaluate</code></td>
+<td>POST</td>
+<td>❌ Open</td>
+<td>Writes to Firebase but ephemeral</td>
+</tr>
+<tr>
+<td><code>/api/v1/chat/</code></td>
+<td>POST</td>
+<td>❌ Open</td>
+<td>Quota-limited by Gemini already</td>
+</tr>
+<tr>
+<td><code>/api/v1/status/</code></td>
+<td>GET</td>
+<td>❌ Open</td>
+<td>Health check</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p class="has-line-data" data-line-start="2691" data-line-end="2693">[!TIP]<br>
+If you want to protect the chat endpoint from quota abuse, add <code>dependencies=[Depends(verify_api_key)]</code> to the chat router as well.</p>
+</blockquote>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2696" data-line-end="2697"><a id="7_Testing_Security_2696"></a>7. Testing Security</h2>
+<h3 class="code-line has-line-data" data-line-start="2698" data-line-end="2699"><a id="71_Test_that_protected_endpoint_rejects_unauthenticated_requests_2698"></a>7.1 Test that protected endpoint rejects unauthenticated requests</h3>
+<pre><code class="has-line-data language-bash" data-line-start="2701" data-line-end="2709"><span class="hljs-comment"># Should return 403 Forbidden</span>
+curl -X POST http://127.0.0.1:8000/api/v1/sensors/ingest \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -d <span class="hljs-string">&#x27;{&quot;ph_feed&quot;: 7.2}&#x27;</span>
+
+<span class="hljs-comment"># Expected response:</span>
+<span class="hljs-comment"># {&quot;detail&quot;:&quot;Invalid or missing API key. Set X-API-Key header.&quot;}</span>
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="2710" data-line-end="2711"><a id="72_Test_that_the_correct_key_is_accepted_2710"></a>7.2 Test that the correct key is accepted</h3>
+<pre><code class="has-line-data language-bash" data-line-start="2713" data-line-end="2722"><span class="hljs-comment"># Should return 200 OK</span>
+curl -X POST http://127.0.0.1:8000/api/v1/sensors/ingest \
+  -H <span class="hljs-string">&quot;Content-Type: application/json&quot;</span> \
+  -H <span class="hljs-string">&quot;X-API-Key: aquamonitor-secret-key-2024&quot;</span> \
+  -d <span class="hljs-string">&#x27;{&quot;ph_feed&quot;: 7.2, &quot;tds_feed&quot;: 300, &quot;pressure_feed&quot;: 4.0}&#x27;</span>
+
+<span class="hljs-comment"># Expected response:</span>
+<span class="hljs-comment"># {&quot;status&quot;:&quot;ok&quot;,&quot;timestamp&quot;:&quot;...&quot;}</span>
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="2723" data-line-end="2724"><a id="73_Test_that_public_endpoints_remain_open_2723"></a>7.3 Test that public endpoints remain open</h3>
+<pre><code class="has-line-data language-bash" data-line-start="2726" data-line-end="2729"><span class="hljs-comment"># Should return 200 OK (no API key needed)</span>
+curl http://127.0.0.1:8000/api/v1/sensors/live
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2732" data-line-end="2733"><a id="8_Future_Improvements_2732"></a>8. Future Improvements</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Feature</th>
+<th>Effort</th>
+<th>Benefit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Firebase Authentication (JWT tokens per user)</td>
+<td>High</td>
+<td>Multi-user support, role-based access</td>
+</tr>
+<tr>
+<td>API key rotation (multiple valid keys)</td>
+<td>Medium</td>
+<td>Zero-downtime key changes</td>
+</tr>
+<tr>
+<td>Rate limiting (slowapi)</td>
+<td>Low</td>
+<td>Prevent DoS</td>
+</tr>
+<tr>
+<td>HTTPS enforcement (redirect HTTP → HTTPS)</td>
+<td>Low</td>
+<td>Encrypted traffic</td>
+</tr>
+<tr>
+<td>Audit log (log each /ingest call)</td>
+<td>Medium</td>
+<td>Traceability</td>
+</tr>
+</tbody>
+</table>
+<p class="has-line-data" data-line-start="2742" data-line-end="2743">For a single-operator lab deployment, the current API key approach is sufficient and production-ready.</p>
+<h1 class="code-line has-line-data" data-line-start="2743" data-line-end="2744"><a id="Vercel_Deployment_Detailed_Walkthrough_2743"></a>🚀 Vercel Deployment — Detailed Walkthrough</h1>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2747" data-line-end="2748"><a id="What_You_Need_Before_Starting_2747"></a>🧰 What You Need Before Starting</h2>
+<ul>
+<li class="has-line-data" data-line-start="2749" data-line-end="2750"><input type="checkbox" id="checkbox62"><label for="checkbox62">Your project folder: </label><code>d:\Projects\Arduino Projects\Water Desalination</code></li>
+<li class="has-line-data" data-line-start="2750" data-line-end="2751"><input type="checkbox" id="checkbox63"><label for="checkbox63">The file </label><code>backend\serviceAccountKey.json</code> exists (downloaded from Firebase Console)</li>
+<li class="has-line-data" data-line-start="2751" data-line-end="2752"><input type="checkbox" id="checkbox64"><label for="checkbox64">A </label><a href="https://github.com">GitHub</a> account (free)</li>
+<li class="has-line-data" data-line-start="2752" data-line-end="2754"><input type="checkbox" id="checkbox65"><label for="checkbox65">A </label><a href="https://vercel.com">Vercel</a> account (free — sign in with GitHub)</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2756" data-line-end="2757"><a id="Step_1_Encode_the_Firebase_Service_Account_2756"></a>Step 1 — Encode the Firebase Service Account</h2>
+<p class="has-line-data" data-line-start="2758" data-line-end="2759">Vercel cannot read files on your hard drive. Instead, you convert <code>serviceAccountKey.json</code> into a single long text string (base64) and paste it as an environment variable.</p>
+<h3 class="code-line has-line-data" data-line-start="2760" data-line-end="2761"><a id="Open_PowerShell_in_the_project_folder_2760"></a>Open PowerShell in the project folder</h3>
+<p class="has-line-data" data-line-start="2762" data-line-end="2763">Right-click the folder <code>d:\Projects\Arduino Projects\Water Desalination</code> in File Explorer → <strong>“Open in Terminal”</strong></p>
+<h3 class="code-line has-line-data" data-line-start="2764" data-line-end="2765"><a id="Run_this_exact_command_2764"></a>Run this exact command:</h3>
+<pre><code class="has-line-data language-powershell" data-line-start="2767" data-line-end="2771">[<span class="hljs-type">Convert</span>]::ToBase64String(
+    [<span class="hljs-type">IO.File</span>]::ReadAllBytes(<span class="hljs-string">&quot;backend\serviceAccountKey.json&quot;</span>)
+) | <span class="hljs-built_in">Set-Clipboard</span>
+</code></pre>
+<blockquote>
+<p class="has-line-data" data-line-start="2772" data-line-end="2773"><strong>What happens:</strong> The entire contents of <code>serviceAccountKey.json</code> get encoded and silently copied to your clipboard. Nothing will print — that’s correct. The encoded string will be several hundred characters long.</p>
+</blockquote>
+<h3 class="code-line has-line-data" data-line-start="2774" data-line-end="2775"><a id="Verify_it_worked_2774"></a>Verify it worked</h3>
+<pre><code class="has-line-data language-powershell" data-line-start="2777" data-line-end="2782"><span class="hljs-comment"># Paste and check the first 50 characters</span>
+[<span class="hljs-type">Convert</span>]::ToBase64String(
+    [<span class="hljs-type">IO.File</span>]::ReadAllBytes(<span class="hljs-string">&quot;backend\serviceAccountKey.json&quot;</span>)
+) | <span class="hljs-built_in">ForEach-Object</span> { <span class="hljs-variable">$_</span>.Substring(<span class="hljs-number">0</span>, <span class="hljs-number">50</span>) }
+</code></pre>
+<p class="has-line-data" data-line-start="2783" data-line-end="2784">You should see something like: <code>ewogICJ0eXBlIjogInNlcnZpY2VfYWNjb3VudCIsC...</code></p>
+<blockquote>
+<p class="has-line-data" data-line-start="2785" data-line-end="2787">[!IMPORTANT]<br>
+<strong>Save this string somewhere safe</strong> (e.g., a temporary Notepad file) before proceeding. You’ll paste it into Vercel in Step 5. If you close the terminal, run the command again to re-copy it.</p>
+</blockquote>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2790" data-line-end="2791"><a id="Step_2_Push_the_Project_to_GitHub_2790"></a>Step 2 — Push the Project to GitHub</h2>
+<h3 class="code-line has-line-data" data-line-start="2792" data-line-end="2793"><a id="21_Initialize_Git_if_not_already_done_2792"></a>2.1 Initialize Git (if not already done)</h3>
+<pre><code class="has-line-data language-powershell" data-line-start="2795" data-line-end="2798"><span class="hljs-built_in">cd</span> <span class="hljs-string">&quot;d:\Projects\Arduino Projects\Water Desalination&quot;</span>
+git init
+</code></pre>
+<p class="has-line-data" data-line-start="2799" data-line-end="2800">If git is already initialized, skip to 2.2.</p>
+<h3 class="code-line has-line-data" data-line-start="2801" data-line-end="2802"><a id="22_Safety_check_make_sure_secrets_are_excluded_2801"></a>2.2 Safety check — make sure secrets are excluded</h3>
+<pre><code class="has-line-data language-powershell" data-line-start="2804" data-line-end="2806">git status
+</code></pre>
+<p class="has-line-data" data-line-start="2807" data-line-end="2808"><strong>Look at the output carefully.</strong> You should NOT see any of these files listed:</p>
+<ul>
+<li class="has-line-data" data-line-start="2808" data-line-end="2809"><code>backend/serviceAccountKey.json</code></li>
+<li class="has-line-data" data-line-start="2809" data-line-end="2810"><code>backend/.env</code></li>
+<li class="has-line-data" data-line-start="2810" data-line-end="2812"><code>*.sqlite</code> or <code>*.db</code></li>
+</ul>
+<p class="has-line-data" data-line-start="2812" data-line-end="2813">If you see them, your <code>.gitignore</code> isn’t working — stop and check it before continuing.</p>
+<h3 class="code-line has-line-data" data-line-start="2814" data-line-end="2815"><a id="23_Stage_and_commit_everything_2814"></a>2.3 Stage and commit everything</h3>
+<pre><code class="has-line-data language-powershell" data-line-start="2817" data-line-end="2820">git add .
+git commit <span class="hljs-literal">-m</span> <span class="hljs-string">&quot;Phase 10: Vercel deployment ready&quot;</span>
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="2821" data-line-end="2822"><a id="24_Create_a_GitHub_repository_2821"></a>2.4 Create a GitHub repository</h3>
+<ol>
+<li class="has-line-data" data-line-start="2823" data-line-end="2824">Go to <strong><a href="https://github.com/new">github.com/new</a></strong></li>
+<li class="has-line-data" data-line-start="2824" data-line-end="2825">Repository name: <code>water-desalination</code> (or any name)</li>
+<li class="has-line-data" data-line-start="2825" data-line-end="2826">Set to <strong>Private</strong> (recommended — protects your code)</li>
+<li class="has-line-data" data-line-start="2826" data-line-end="2827">Click <strong>“Create repository”</strong></li>
+<li class="has-line-data" data-line-start="2827" data-line-end="2832">GitHub shows you a page with setup commands. Copy the remote URL — it looks like:<pre><code class="has-line-data" data-line-start="2829" data-line-end="2831">https://github.com/YOUR_USERNAME/water-desalination.git
+</code></pre>
+</li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="2832" data-line-end="2833"><a id="25_Connect_and_push_2832"></a>2.5 Connect and push</h3>
+<pre><code class="has-line-data language-powershell" data-line-start="2835" data-line-end="2839">git remote add origin https://github.com/YOUR_USERNAME/water<span class="hljs-literal">-desalination</span>.git
+git branch <span class="hljs-literal">-M</span> main
+git push <span class="hljs-literal">-u</span> origin main
+</code></pre>
+<p class="has-line-data" data-line-start="2840" data-line-end="2841">You’ll be prompted for your GitHub username and password (or a personal access token if you have 2FA enabled).</p>
+<blockquote>
+<p class="has-line-data" data-line-start="2842" data-line-end="2843">✅ <strong>Success check:</strong> Refresh your GitHub repo page — you should see all the project files listed, including <code>backend/</code>, <code>mobile/</code>, <code>README.md</code>, etc.</p>
+</blockquote>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2846" data-line-end="2847"><a id="Step_3_Create_a_Vercel_Account_2846"></a>Step 3 — Create a Vercel Account</h2>
+<ol>
+<li class="has-line-data" data-line-start="2848" data-line-end="2849">Go to <strong><a href="https://vercel.com">vercel.com</a></strong></li>
+<li class="has-line-data" data-line-start="2849" data-line-end="2850">Click <strong>“Sign Up”</strong></li>
+<li class="has-line-data" data-line-start="2850" data-line-end="2851">Choose <strong>“Continue with GitHub”</strong> — this lets Vercel access your repos directly</li>
+<li class="has-line-data" data-line-start="2851" data-line-end="2852">Authorize Vercel on GitHub when prompted</li>
+<li class="has-line-data" data-line-start="2852" data-line-end="2854">On the Vercel dashboard, you’ll see <strong>“No projects yet”</strong></li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2856" data-line-end="2857"><a id="Step_4_Import_the_Project_into_Vercel_2856"></a>Step 4 — Import the Project into Vercel</h2>
+<h3 class="code-line has-line-data" data-line-start="2858" data-line-end="2859"><a id="41_Click_Add_New_Project_2858"></a>4.1 Click “Add New… → Project”</h3>
+<p class="has-line-data" data-line-start="2860" data-line-end="2861">In the top-right of the Vercel dashboard, click the <strong>“Add New…”</strong> button → select <strong>“Project”</strong></p>
+<h3 class="code-line has-line-data" data-line-start="2862" data-line-end="2863"><a id="42_Import_from_GitHub_2862"></a>4.2 Import from GitHub</h3>
+<ul>
+<li class="has-line-data" data-line-start="2864" data-line-end="2865">Vercel shows a list of your GitHub repos</li>
+<li class="has-line-data" data-line-start="2865" data-line-end="2867">Find <strong><code>water-desalination</code></strong> and click <strong>“Import”</strong></li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="2867" data-line-end="2868"><a id="43_Configure_the_project_this_is_the_critical_step_2867"></a>4.3 Configure the project — this is the critical step</h3>
+<p class="has-line-data" data-line-start="2869" data-line-end="2870">You’ll see a <strong>“Configure Project”</strong> screen. Fill it in exactly as follows:</p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Project Name</strong></td>
+<td><code>water-desalination</code> (or any name)</td>
+</tr>
+<tr>
+<td><strong>Framework Preset</strong></td>
+<td><code>Other</code></td>
+</tr>
+<tr>
+<td><strong>Root Directory</strong></td>
+<td>Click <strong>“Edit”</strong> → type <code>backend</code> → click <strong>“Continue”</strong></td>
+</tr>
+<tr>
+<td><strong>Build Command</strong></td>
+<td>Leave blank (auto-detected)</td>
+</tr>
+<tr>
+<td><strong>Output Directory</strong></td>
+<td>Leave blank</td>
+</tr>
+<tr>
+<td><strong>Install Command</strong></td>
+<td>Leave blank (Vercel auto-runs <code>pip install -r requirements.txt</code>)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p class="has-line-data" data-line-start="2880" data-line-end="2882">[!IMPORTANT]<br>
+Setting <strong>Root Directory = <code>backend</code></strong> is crucial. It tells Vercel to deploy only the <code>backend/</code> subfolder where <code>vercel.json</code> and <code>main.py</code> are. If you skip this, Vercel will try to deploy the entire project root and fail.</p>
+</blockquote>
+<h3 class="code-line has-line-data" data-line-start="2883" data-line-end="2884"><a id="What_it_looks_like_after_setting_Root_Directory_2883"></a>What it looks like after setting Root Directory:</h3>
+<pre><code class="has-line-data" data-line-start="2886" data-line-end="2893">Root Directory: backend ✓
+  ├── main.py            ← Vercel's entry point
+  ├── vercel.json        ← Deployment config
+  ├── requirements.txt   ← Dependencies
+  ├── app/               ← FastAPI app
+  └── ml/                ← .pkl model files
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2896" data-line-end="2897"><a id="Step_5_Set_Environment_Variables_2896"></a>Step 5 — Set Environment Variables</h2>
+<p class="has-line-data" data-line-start="2898" data-line-end="2899"><strong>Do not click “Deploy” yet.</strong> Scroll down to the <strong>“Environment Variables”</strong> section on the same Configure Project screen.</p>
+<p class="has-line-data" data-line-start="2900" data-line-end="2901">Add each variable one at a time by clicking <strong>“Add”</strong>:</p>
+<hr>
+<h3 class="code-line has-line-data" data-line-start="2904" data-line-end="2905"><a id="Variable_1_FIREBASE_DATABASE_URL_2904"></a>Variable 1: <code>FIREBASE_DATABASE_URL</code></h3>
+<ul>
+<li class="has-line-data" data-line-start="2906" data-line-end="2907"><strong>Name:</strong> <code>FIREBASE_DATABASE_URL</code></li>
+<li class="has-line-data" data-line-start="2907" data-line-end="2909"><strong>Value:</strong> Your Firebase RTDB URL</li>
+</ul>
+<p class="has-line-data" data-line-start="2909" data-line-end="2910"><strong>How to find it:</strong></p>
+<ol>
+<li class="has-line-data" data-line-start="2910" data-line-end="2911">Go to <a href="https://console.firebase.google.com">console.firebase.google.com</a></li>
+<li class="has-line-data" data-line-start="2911" data-line-end="2912">Select your project</li>
+<li class="has-line-data" data-line-start="2912" data-line-end="2913">Left menu → <strong>“Realtime Database”</strong></li>
+<li class="has-line-data" data-line-start="2913" data-line-end="2918">At the top of the page, copy the URL — it looks like:<pre><code class="has-line-data" data-line-start="2915" data-line-end="2917">https://water-desalination-8638c-default-rtdb.europe-west1.firebasedatabase.app
+</code></pre>
+</li>
+</ol>
+<hr>
+<h3 class="code-line has-line-data" data-line-start="2920" data-line-end="2921"><a id="Variable_2_FIREBASE_SERVICE_ACCOUNT_BASE64_2920"></a>Variable 2: <code>FIREBASE_SERVICE_ACCOUNT_BASE64</code></h3>
+<ul>
+<li class="has-line-data" data-line-start="2922" data-line-end="2923"><strong>Name:</strong> <code>FIREBASE_SERVICE_ACCOUNT_BASE64</code></li>
+<li class="has-line-data" data-line-start="2923" data-line-end="2925"><strong>Value:</strong> Paste the base64 string you copied in Step 1</li>
+</ul>
+<blockquote>
+<p class="has-line-data" data-line-start="2925" data-line-end="2927">[!IMPORTANT]<br>
+This is a very long string. Paste the <strong>entire</strong> thing. It starts with <code>eyJ</code> and ends with a <code>=</code> or <code>==</code>. Make sure there are no spaces or line breaks.</p>
+</blockquote>
+<hr>
+<h3 class="code-line has-line-data" data-line-start="2930" data-line-end="2931"><a id="Variable_3_GEMINI_API_KEY_2930"></a>Variable 3: <code>GEMINI_API_KEY</code></h3>
+<ul>
+<li class="has-line-data" data-line-start="2932" data-line-end="2933"><strong>Name:</strong> <code>GEMINI_API_KEY</code></li>
+<li class="has-line-data" data-line-start="2933" data-line-end="2935"><strong>Value:</strong> Your Gemini API key</li>
+</ul>
+<p class="has-line-data" data-line-start="2935" data-line-end="2936"><strong>How to find it:</strong></p>
+<ol>
+<li class="has-line-data" data-line-start="2936" data-line-end="2937">Go to <a href="https://aistudio.google.com">aistudio.google.com</a></li>
+<li class="has-line-data" data-line-start="2937" data-line-end="2938">Click <strong>“Get API Key”</strong> in the top menu</li>
+<li class="has-line-data" data-line-start="2938" data-line-end="2940">Copy the key (starts with <code>AQ.</code> or <code>AI...</code>)</li>
+</ol>
+<hr>
+<h3 class="code-line has-line-data" data-line-start="2942" data-line-end="2943"><a id="Variable_4_API_KEY_2942"></a>Variable 4: <code>API_KEY</code></h3>
+<ul>
+<li class="has-line-data" data-line-start="2944" data-line-end="2945"><strong>Name:</strong> <code>API_KEY</code></li>
+<li class="has-line-data" data-line-start="2945" data-line-end="2947"><strong>Value:</strong> <code>aquamonitor-secret-key-2024</code></li>
+</ul>
+<blockquote>
+<p class="has-line-data" data-line-start="2947" data-line-end="2948">This is your custom key that protects the <code>/ingest</code> endpoint. You can use any value — just keep it secret and remember it.</p>
+</blockquote>
+<hr>
+<h3 class="code-line has-line-data" data-line-start="2951" data-line-end="2952"><a id="After_adding_all_4_variables_check_the_boxes_2951"></a>After adding all 4 variables, check the boxes:</h3>
+<p class="has-line-data" data-line-start="2953" data-line-end="2954">Make sure all 4 variables have these environments checked:</p>
+<ul>
+<li class="has-line-data" data-line-start="2954" data-line-end="2955">✅ Production</li>
+<li class="has-line-data" data-line-start="2955" data-line-end="2956">✅ Preview</li>
+<li class="has-line-data" data-line-start="2956" data-line-end="2958">✅ Development</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2960" data-line-end="2961"><a id="Step_6_Deploy_2960"></a>Step 6 — Deploy</h2>
+<p class="has-line-data" data-line-start="2962" data-line-end="2963">Click the <strong>“Deploy”</strong> button.</p>
+<h3 class="code-line has-line-data" data-line-start="2964" data-line-end="2965"><a id="What_happens_during_the_build_watch_the_logs_2964"></a>What happens during the build (watch the logs):</h3>
+<pre><code class="has-line-data" data-line-start="2967" data-line-end="2975">[10:00] Cloning github.com/YOUR_USERNAME/water-desalination...
+[10:02] Detected Python project
+[10:02] Running: pip install -r requirements.txt
+[10:15] Installing: fastapi, uvicorn, firebase-admin, scikit-learn...
+[10:45] Build completed
+[10:46] Deploying...
+[10:47] ✅ Deployment ready!
+</code></pre>
+<blockquote>
+<p class="has-line-data" data-line-start="2976" data-line-end="2977">The build takes <strong>1–3 minutes</strong> — the ML packages (<code>scikit-learn</code>, <code>firebase-admin</code>) are large.</p>
+</blockquote>
+<h3 class="code-line has-line-data" data-line-start="2978" data-line-end="2979"><a id="Success_screen_2978"></a>Success screen</h3>
+<p class="has-line-data" data-line-start="2980" data-line-end="2981">You’ll see a <strong>confetti animation</strong> and your deployment URL:</p>
+<pre><code class="has-line-data" data-line-start="2982" data-line-end="2985">🎉 Congratulations!
+https://water-desalination-abc123.vercel.app
+</code></pre>
+<p class="has-line-data" data-line-start="2986" data-line-end="2987"><strong>Copy this URL</strong> — you’ll need it in Step 8.</p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2990" data-line-end="2991"><a id="Step_7_Verify_the_Deployment_2990"></a>Step 7 — Verify the Deployment</h2>
+<p class="has-line-data" data-line-start="2992" data-line-end="2993">Open your browser and test each URL. Replace <code>your-project</code> with your actual Vercel URL.</p>
+<h3 class="code-line has-line-data" data-line-start="2994" data-line-end="2995"><a id="Test_1_Root_health_check_2994"></a>✅ Test 1 — Root health check</h3>
+<pre><code class="has-line-data" data-line-start="2996" data-line-end="2998">https://your-project.vercel.app/
+</code></pre>
+<p class="has-line-data" data-line-start="2998" data-line-end="2999"><strong>Expected:</strong></p>
+<pre><code class="has-line-data language-json" data-line-start="3000" data-line-end="3002"><span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;message&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Water Desalination API is running.&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;docs&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/docs&quot;</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="3003" data-line-end="3004"><a id="Test_2_API_documentation_3003"></a>✅ Test 2 — API documentation</h3>
+<pre><code class="has-line-data" data-line-start="3005" data-line-end="3007">https://your-project.vercel.app/docs
+</code></pre>
+<p class="has-line-data" data-line-start="3007" data-line-end="3008"><strong>Expected:</strong> A Swagger UI page showing all your endpoints. Click on any <code>GET</code> endpoint → “Try it out” → “Execute” to test live.</p>
+<h3 class="code-line has-line-data" data-line-start="3009" data-line-end="3010"><a id="Test_3_Live_sensor_data_3009"></a>✅ Test 3 — Live sensor data</h3>
+<pre><code class="has-line-data" data-line-start="3011" data-line-end="3013">https://your-project.vercel.app/api/v1/sensors/live
+</code></pre>
+<p class="has-line-data" data-line-start="3013" data-line-end="3014"><strong>Expected:</strong></p>
+<pre><code class="has-line-data language-json" data-line-start="3015" data-line-end="3017"><span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ok&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;data&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;ph_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">7.2</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;tds_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">300</span><span class="hljs-punctuation">,</span> ...<span class="hljs-punctuation">}</span><span class="hljs-punctuation">}</span>
+</code></pre>
+<p class="has-line-data" data-line-start="3017" data-line-end="3018">or <code>{&quot;status&quot;: &quot;no_data&quot;}</code> if the hardware hasn’t pushed recently.</p>
+<h3 class="code-line has-line-data" data-line-start="3019" data-line-end="3020"><a id="Test_4_ML_prediction_run_from_browser_3019"></a>✅ Test 4 — ML prediction (run from browser)</h3>
+<pre><code class="has-line-data" data-line-start="3021" data-line-end="3023">https://your-project.vercel.app/api/v1/predict/run
+</code></pre>
+<p class="has-line-data" data-line-start="3023" data-line-end="3024"><strong>Expected:</strong></p>
+<pre><code class="has-line-data language-json" data-line-start="3025" data-line-end="3033"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ok&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;predictions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;water_quality&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;good&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;confidence&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">94.2</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;membrane_status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;good&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;confidence&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">87.5</span><span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="3034" data-line-end="3035"><a id="Test_5_Security_check_use_PowerShell_3034"></a>✅ Test 5 — Security check (use PowerShell)</h3>
+<p class="has-line-data" data-line-start="3036" data-line-end="3037">Without the API key — should be rejected:</p>
+<pre><code class="has-line-data language-powershell" data-line-start="3038" data-line-end="3043"><span class="hljs-built_in">Invoke-RestMethod</span> <span class="hljs-literal">-Uri</span> <span class="hljs-string">&quot;https://your-project.vercel.app/api/v1/sensors/ingest&quot;</span> `
+  <span class="hljs-literal">-Method</span> POST `
+  <span class="hljs-literal">-ContentType</span> <span class="hljs-string">&quot;application/json&quot;</span> `
+  <span class="hljs-literal">-Body</span> <span class="hljs-string">&#x27;{&quot;ph_feed&quot;: 7.2}&#x27;</span>
+</code></pre>
+<p class="has-line-data" data-line-start="3043" data-line-end="3044"><strong>Expected:</strong> <code>403 Forbidden</code> — <code>&quot;Invalid or missing API key&quot;</code></p>
+<p class="has-line-data" data-line-start="3045" data-line-end="3046">With the correct key — should succeed:</p>
+<pre><code class="has-line-data language-powershell" data-line-start="3047" data-line-end="3054"><span class="hljs-variable">$headers</span> = <span class="hljs-selector-tag">@</span>{ <span class="hljs-string">&quot;X-API-Key&quot;</span> = <span class="hljs-string">&quot;aquamonitor-secret-key-2024&quot;</span> }
+<span class="hljs-built_in">Invoke-RestMethod</span> <span class="hljs-literal">-Uri</span> <span class="hljs-string">&quot;https://your-project.vercel.app/api/v1/sensors/ingest&quot;</span> `
+  <span class="hljs-literal">-Method</span> POST `
+  <span class="hljs-literal">-ContentType</span> <span class="hljs-string">&quot;application/json&quot;</span> `
+  <span class="hljs-literal">-Headers</span> <span class="hljs-variable">$headers</span> `
+  <span class="hljs-literal">-Body</span> <span class="hljs-string">&#x27;{&quot;ph_feed&quot;: 7.2, &quot;tds_feed&quot;: 300}&#x27;</span>
+</code></pre>
+<p class="has-line-data" data-line-start="3054" data-line-end="3055"><strong>Expected:</strong> <code>{&quot;status&quot;: &quot;ok&quot;, &quot;timestamp&quot;: &quot;2026-...&quot;}</code></p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3058" data-line-end="3059"><a id="Step_8_Update_the_Mobile_App_3058"></a>Step 8 — Update the Mobile App</h2>
+<p class="has-line-data" data-line-start="3060" data-line-end="3061">Now that the backend is live in the cloud, point the mobile app to it.</p>
+<ol>
+<li class="has-line-data" data-line-start="3062" data-line-end="3067">Run the mobile app:<pre><code class="has-line-data language-powershell" data-line-start="3064" data-line-end="3067"><span class="hljs-built_in">cd</span> <span class="hljs-string">&quot;d:\Projects\Arduino Projects\Water Desalination\mobile\src&quot;</span>
+python main.py
+</code></pre>
+</li>
+<li class="has-line-data" data-line-start="3067" data-line-end="3068">Click the <strong>Settings</strong> tab (gear icon, bottom right)</li>
+<li class="has-line-data" data-line-start="3068" data-line-end="3072">In <strong>“FastAPI Backend URL”</strong>, clear the current value and type:<pre><code class="has-line-data" data-line-start="3070" data-line-end="3072">https://your-project.vercel.app
+</code></pre>
+</li>
+<li class="has-line-data" data-line-start="3072" data-line-end="3073">Click <strong>“Save Settings”</strong></li>
+<li class="has-line-data" data-line-start="3073" data-line-end="3075">The app will now sync data to the cloud backend — even when you’re not on your home WiFi</li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3077" data-line-end="3078"><a id="Step_9_Update_CORS_Final_Step_3077"></a>Step 9 — Update CORS (Final Step)</h2>
+<p class="has-line-data" data-line-start="3079" data-line-end="3080">Now that you know your Vercel URL, add it to the CORS whitelist so the web dashboard can call the API from a browser.</p>
+<p class="has-line-data" data-line-start="3081" data-line-end="3082">Open <code>backend/main.py</code> and update:</p>
+<pre><code class="has-line-data language-python" data-line-start="3084" data-line-end="3090">ALLOWED_ORIGINS = [
+    <span class="hljs-string">&quot;http://localhost&quot;</span>,
+    <span class="hljs-string">&quot;http://127.0.0.1&quot;</span>,
+    <span class="hljs-string">&quot;https://your-project.vercel.app&quot;</span>,   <span class="hljs-comment"># ← Add YOUR actual URL here</span>
+]
+</code></pre>
+<p class="has-line-data" data-line-start="3091" data-line-end="3092">Then commit and push:</p>
+<pre><code class="has-line-data language-powershell" data-line-start="3093" data-line-end="3098"><span class="hljs-built_in">cd</span> <span class="hljs-string">&quot;d:\Projects\Arduino Projects\Water Desalination&quot;</span>
+git add backend/main.py
+git commit <span class="hljs-literal">-m</span> <span class="hljs-string">&quot;Add Vercel URL to CORS whitelist&quot;</span>
+git push
+</code></pre>
+<blockquote>
+<p class="has-line-data" data-line-start="3099" data-line-end="3100">Vercel will automatically detect the push and redeploy within ~90 seconds. No manual action needed.</p>
+</blockquote>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3103" data-line-end="3104"><a id="Youre_Done_3103"></a>🎉 You’re Done!</h2>
+<p class="has-line-data" data-line-start="3105" data-line-end="3106">Your backend is now:</p>
+<ul>
+<li class="has-line-data" data-line-start="3106" data-line-end="3107">✅ Running 24/7 on Vercel (free tier)</li>
+<li class="has-line-data" data-line-start="3107" data-line-end="3108">✅ Accessible from anywhere in the world</li>
+<li class="has-line-data" data-line-start="3108" data-line-end="3109">✅ Protected with an API key on write endpoints</li>
+<li class="has-line-data" data-line-start="3109" data-line-end="3111">✅ Automatically redeploying on every <code>git push</code></li>
+</ul>
+<p class="has-line-data" data-line-start="3111" data-line-end="3113"><strong>Your live API URL:</strong> <code>https://your-project.vercel.app</code><br>
+<strong>Interactive docs:</strong> <code>https://your-project.vercel.app/docs</code></p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3116" data-line-end="3117"><a id="If_Something_Goes_Wrong_3116"></a>🔧 If Something Goes Wrong</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Problem</th>
+<th>What to check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Build fails at <code>pip install</code></td>
+<td>Check <code>backend/requirements.txt</code> has <code>pydantic-settings&gt;=2.2.0</code></td>
+</tr>
+<tr>
+<td>“No module named X” error</td>
+<td>The module is missing from <code>requirements.txt</code> — add it and push again</td>
+</tr>
+<tr>
+<td>Firebase 403 / credential error</td>
+<td>The base64 string was truncated — re-encode and update the env var in Vercel dashboard</td>
+</tr>
+<tr>
+<td>All endpoints return 500</td>
+<td>Check <strong>Function Logs</strong> in Vercel dashboard → your project → Deployments → click latest → Logs</td>
+</tr>
+<tr>
+<td>ML model not found</td>
+<td>Verify <code>backend/ml/*.pkl</code> files are committed to Git (not in <code>.gitignore</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="3126" data-line-end="3127"><a id="How_to_view_live_error_logs_on_Vercel_3126"></a>How to view live error logs on Vercel:</h3>
+<ol>
+<li class="has-line-data" data-line-start="3127" data-line-end="3128">Go to <a href="https://vercel.com">vercel.com</a> → your project</li>
+<li class="has-line-data" data-line-start="3128" data-line-end="3129">Click <strong>“Deployments”</strong> tab</li>
+<li class="has-line-data" data-line-start="3129" data-line-end="3130">Click the latest deployment</li>
+<li class="has-line-data" data-line-start="3130" data-line-end="3131">Click <strong>“Functions”</strong> → click any function name</li>
+<li class="has-line-data" data-line-start="3131" data-line-end="3132">Click <strong>“Logs”</strong> — shows real-time errors</li>
+</ol>
+<h1 class="code-line has-line-data" data-line-start="3132" data-line-end="3133"><a id="Phase_11_Documentation_Project_Finalization_3132"></a>📄 Phase 11 — Documentation &amp; Project Finalization</h1>
+<p class="has-line-data" data-line-start="3134" data-line-end="3135">This phase covers all final documentation, the project README, and the steps needed to produce a complete, submittable deliverable for the Smart Water Desalination Monitoring System.</p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3138" data-line-end="3139"><a id="Table_of_Contents_3138"></a>📋 Table of Contents</h2>
+<ol>
+<li class="has-line-data" data-line-start="3139" data-line-end="3140"><a href="#1-objectives">Objectives</a></li>
+<li class="has-line-data" data-line-start="3140" data-line-end="3141"><a href="#2-project-documentation-map">Project Documentation Map</a></li>
+<li class="has-line-data" data-line-start="3141" data-line-end="3142"><a href="#3-readme-overview">README Overview</a></li>
+<li class="has-line-data" data-line-start="3142" data-line-end="3143"><a href="#4-phase-documents-summary">Phase Documents Summary</a></li>
+<li class="has-line-data" data-line-start="3143" data-line-end="3144"><a href="#5-api-reference-summary">API Reference Summary</a></li>
+<li class="has-line-data" data-line-start="3144" data-line-end="3145"><a href="#6-system-validation-summary">System Validation Summary</a></li>
+<li class="has-line-data" data-line-start="3145" data-line-end="3146"><a href="#7-demonstration-script">Demonstration Script</a></li>
+<li class="has-line-data" data-line-start="3146" data-line-end="3147"><a href="#8-known-limitations--future-work">Known Limitations &amp; Future Work</a></li>
+<li class="has-line-data" data-line-start="3147" data-line-end="3149"><a href="#9-submission-checklist">Submission Checklist</a></li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3151" data-line-end="3152"><a id="1_Objectives_3151"></a>1. Objectives</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>#</th>
+<th>Objective</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Write the project <a href="http://README.md">README.md</a></td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Complete all phase .md documents</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Document all API endpoints</td>
+<td>🟠 High</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Produce a live demo walkthrough</td>
+<td>🟠 High</td>
+</tr>
+<tr>
+<td>5</td>
+<td>List known limitations honestly</td>
+<td>🟡 Medium</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Create submission checklist</td>
+<td>🟡 Medium</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3164" data-line-end="3165"><a id="2_Project_Documentation_Map_3164"></a>2. Project Documentation Map</h2>
+<p class="has-line-data" data-line-start="3166" data-line-end="3167">The following documentation files exist in the project root:</p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>README.md</code></td>
+<td>Project overview, setup guide, API reference</td>
+</tr>
+<tr>
+<td><code>phase1_requirements_and_architecture.md</code></td>
+<td>System design, Firebase schema, sensor specs</td>
+</tr>
+<tr>
+<td><code>phase2_hardware_design.md</code></td>
+<td>Circuit diagrams, pin assignments, BOM, wiring</td>
+</tr>
+<tr>
+<td><code>phase3_firmware_development.md</code></td>
+<td>ESP32 firmware, ESP-NOW, BLE, sensor reading code</td>
+</tr>
+<tr>
+<td><code>phase4_backend_development.md</code></td>
+<td>FastAPI backend, ML training, Firebase integration</td>
+</tr>
+<tr>
+<td><code>phase5_deployment_and_operations.md</code></td>
+<td>Hardware flashing guide, local testing procedures</td>
+</tr>
+<tr>
+<td><code>phase8_mobile_polish.md</code></td>
+<td>Mobile app improvements, Alerts page, ML predictions</td>
+</tr>
+<tr>
+<td><code>phase9_security.md</code></td>
+<td>API key auth, CORS hardening, secret management</td>
+</tr>
+<tr>
+<td><code>phase10_cloud_deployment.md</code></td>
+<td>Vercel deployment step-by-step tutorial</td>
+</tr>
+<tr>
+<td><code>phase11_documentation.md</code></td>
+<td>This document — finalization checklist</td>
+</tr>
+<tr>
+<td><code>calibration_guide.md</code></td>
+<td>Sensor calibration procedures (pH, TDS, turbidity, pressure)</td>
+</tr>
+<tr>
+<td><code>hardware_testing_walkthrough.md</code></td>
+<td>Hardware assembly testing and validation</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3185" data-line-end="3186"><a id="3_README_Overview_3185"></a>3. README Overview</h2>
+<p class="has-line-data" data-line-start="3187" data-line-end="3188">The <code>README.md</code> at the project root is the entry point for anyone who picks up this project. It contains:</p>
+<h3 class="code-line has-line-data" data-line-start="3189" data-line-end="3190"><a id="31_Sections_3189"></a>3.1 Sections</h3>
+<ul>
+<li class="has-line-data" data-line-start="3190" data-line-end="3191"><strong>System Architecture</strong> — ASCII diagram of the full data flow</li>
+<li class="has-line-data" data-line-start="3191" data-line-end="3192"><strong>Project Structure</strong> — directory tree with descriptions</li>
+<li class="has-line-data" data-line-start="3192" data-line-end="3193"><strong>Hardware BOM</strong> — component list with quantities and node assignment</li>
+<li class="has-line-data" data-line-start="3193" data-line-end="3194"><strong>Setup Instructions</strong> — step-by-step for Firebase, hardware, backend, dashboard, mobile</li>
+<li class="has-line-data" data-line-start="3194" data-line-end="3195"><strong>Cloud Deployment</strong> — pointer to <code>phase10_cloud_deployment.md</code></li>
+<li class="has-line-data" data-line-start="3195" data-line-end="3196"><strong>Security</strong> — API key model summary</li>
+<li class="has-line-data" data-line-start="3196" data-line-end="3197"><strong>ML Models</strong> — input features, output labels, how to retrain</li>
+<li class="has-line-data" data-line-start="3197" data-line-end="3198"><strong>API Reference</strong> — all endpoints in a table</li>
+<li class="has-line-data" data-line-start="3198" data-line-end="3199"><strong>Development</strong> — how to run tests and retrain models</li>
+<li class="has-line-data" data-line-start="3199" data-line-end="3201"><strong>Phase Status</strong> — completion table</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3201" data-line-end="3202"><a id="32_Keeping_It_Updated_3201"></a>3.2 Keeping It Updated</h3>
+<p class="has-line-data" data-line-start="3203" data-line-end="3204">After any major change, update these sections:</p>
+<ul>
+<li class="has-line-data" data-line-start="3204" data-line-end="3205"><strong>Phase Status table</strong> — mark the phase complete</li>
+<li class="has-line-data" data-line-start="3205" data-line-end="3206"><strong>API Reference</strong> — add any new endpoints</li>
+<li class="has-line-data" data-line-start="3206" data-line-end="3208"><strong>Setup Instructions</strong> — update if default URLs or commands change</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3210" data-line-end="3211"><a id="4_Phase_Documents_Summary_3210"></a>4. Phase Documents Summary</h2>
+<h3 class="code-line has-line-data" data-line-start="3212" data-line-end="3213"><a id="Phase_1_Requirements_Architecture_3212"></a>Phase 1 — Requirements &amp; Architecture</h3>
+<p class="has-line-data" data-line-start="3213" data-line-end="3214">Documents the full system design decisions made before writing any code:</p>
+<ul>
+<li class="has-line-data" data-line-start="3214" data-line-end="3215">Why ESP32 over Arduino/Raspberry Pi</li>
+<li class="has-line-data" data-line-start="3215" data-line-end="3216">Why Firebase over PostgreSQL</li>
+<li class="has-line-data" data-line-start="3216" data-line-end="3217">Why FastAPI over Django/Flask</li>
+<li class="has-line-data" data-line-start="3217" data-line-end="3218">Complete Firebase RTDB schema</li>
+<li class="has-line-data" data-line-start="3218" data-line-end="3219">ESP32 pin assignment plan (ADC1 constraint documented)</li>
+<li class="has-line-data" data-line-start="3219" data-line-end="3221">Non-functional requirements (latency &lt; 3s, uptime &gt; 99.5%, etc.)</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3221" data-line-end="3222"><a id="Phase_2_Hardware_Design_3221"></a>Phase 2 — Hardware Design</h3>
+<p class="has-line-data" data-line-start="3222" data-line-end="3223">Documents the physical construction of the system:</p>
+<ul>
+<li class="has-line-data" data-line-start="3223" data-line-end="3224">Full circuit schematics for all 3 nodes</li>
+<li class="has-line-data" data-line-start="3224" data-line-end="3225">Wiring colour codes and connector types</li>
+<li class="has-line-data" data-line-start="3225" data-line-end="3226">Fritzing diagram reference (<code>System Circuit.fzz</code>)</li>
+<li class="has-line-data" data-line-start="3226" data-line-end="3227">Power supply requirements (5V 2A minimum)</li>
+<li class="has-line-data" data-line-start="3227" data-line-end="3229">Sensor datasheet references and calibration constants</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3229" data-line-end="3230"><a id="Phase_3_Firmware_Development_3229"></a>Phase 3 — Firmware Development</h3>
+<p class="has-line-data" data-line-start="3230" data-line-end="3231">Documents the Arduino/C++ code running on the ESP32s:</p>
+<ul>
+<li class="has-line-data" data-line-start="3231" data-line-end="3232">ESP-NOW unicast protocol (Node → Hub)</li>
+<li class="has-line-data" data-line-start="3232" data-line-end="3233">BLE GATT service/characteristic UUIDs</li>
+<li class="has-line-data" data-line-start="3233" data-line-end="3234">Sensor reading functions with ADC1-only constraint</li>
+<li class="has-line-data" data-line-start="3234" data-line-end="3235">Kalman filter implementation for noise reduction</li>
+<li class="has-line-data" data-line-start="3235" data-line-end="3236">Firebase HTTPS push implementation</li>
+<li class="has-line-data" data-line-start="3236" data-line-end="3238">Deep sleep + wake source configuration</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3238" data-line-end="3239"><a id="Phase_4_Backend_Development_3238"></a>Phase 4 — Backend Development</h3>
+<p class="has-line-data" data-line-start="3239" data-line-end="3240">Documents the Python FastAPI backend:</p>
+<ul>
+<li class="has-line-data" data-line-start="3240" data-line-end="3241">FastAPI application structure</li>
+<li class="has-line-data" data-line-start="3241" data-line-end="3242">Firebase Admin SDK integration</li>
+<li class="has-line-data" data-line-start="3242" data-line-end="3243">ML model training pipeline (scikit-learn Random Forest)</li>
+<li class="has-line-data" data-line-start="3243" data-line-end="3244">Gemini AI chatbot integration</li>
+<li class="has-line-data" data-line-start="3244" data-line-end="3245">Alert threshold evaluation engine</li>
+<li class="has-line-data" data-line-start="3245" data-line-end="3247">All Pydantic models and data schemas</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3247" data-line-end="3248"><a id="Phase_5_Deployment_Operations_3247"></a>Phase 5 — Deployment &amp; Operations</h3>
+<p class="has-line-data" data-line-start="3248" data-line-end="3249">Documents how to flash firmware and test the live system:</p>
+<ul>
+<li class="has-line-data" data-line-start="3249" data-line-end="3250">Arduino IDE / PlatformIO build steps</li>
+<li class="has-line-data" data-line-start="3250" data-line-end="3251">Serial monitor test outputs to verify each node</li>
+<li class="has-line-data" data-line-start="3251" data-line-end="3252">Firebase Console verification</li>
+<li class="has-line-data" data-line-start="3252" data-line-end="3253">Backend local testing with <code>/docs</code></li>
+<li class="has-line-data" data-line-start="3253" data-line-end="3255">End-to-end integration test script</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3255" data-line-end="3256"><a id="Phase_8_Mobile_Polish_3255"></a>Phase 8 — Mobile Polish</h3>
+<p class="has-line-data" data-line-start="3256" data-line-end="3257">New features added after hardware validation:</p>
+<ul>
+<li class="has-line-data" data-line-start="3257" data-line-end="3258">Flet API deprecation fixes</li>
+<li class="has-line-data" data-line-start="3258" data-line-end="3259">Alerts page with severity-coded cards</li>
+<li class="has-line-data" data-line-start="3259" data-line-end="3260">ML Analysis section on Dashboard</li>
+<li class="has-line-data" data-line-start="3260" data-line-end="3262">Navigation bar restructure (5 tabs)</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3262" data-line-end="3263"><a id="Phase_9_Security_3262"></a>Phase 9 — Security</h3>
+<p class="has-line-data" data-line-start="3263" data-line-end="3264">Security hardening for public deployment:</p>
+<ul>
+<li class="has-line-data" data-line-start="3264" data-line-end="3265">API key authentication on write endpoints</li>
+<li class="has-line-data" data-line-start="3265" data-line-end="3266">CORS restrictions</li>
+<li class="has-line-data" data-line-start="3266" data-line-end="3268">Secret management via <code>.env</code> and base64 env vars</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3268" data-line-end="3269"><a id="Phase_10_Cloud_Deployment_3268"></a>Phase 10 — Cloud Deployment</h3>
+<p class="has-line-data" data-line-start="3269" data-line-end="3270">Vercel deployment tutorial:</p>
+<ul>
+<li class="has-line-data" data-line-start="3270" data-line-end="3271">Service account base64 encoding</li>
+<li class="has-line-data" data-line-start="3271" data-line-end="3272">GitHub + Vercel setup walkthrough</li>
+<li class="has-line-data" data-line-start="3272" data-line-end="3273">Environment variable configuration</li>
+<li class="has-line-data" data-line-start="3273" data-line-end="3275">Post-deploy verification steps</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3277" data-line-end="3278"><a id="5_API_Reference_Summary_3277"></a>5. API Reference Summary</h2>
+<p class="has-line-data" data-line-start="3279" data-line-end="3280">Full interactive docs always available at: <code>https://your-project.vercel.app/docs</code></p>
+<h3 class="code-line has-line-data" data-line-start="3281" data-line-end="3282"><a id="Sensors_3281"></a>Sensors</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Auth</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/sensors/live</code></td>
+<td>Open</td>
+<td>Latest live snapshot from Firebase</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/sensors/history?limit=50</code></td>
+<td>Open</td>
+<td>Historical readings (newest last)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/sensors/ingest</code></td>
+<td>🔑 API Key</td>
+<td>Write sensor data to Firebase</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="3288" data-line-end="3289"><a id="ML_Predictions_3288"></a>ML Predictions</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Auth</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/predict/run</code></td>
+<td>Open</td>
+<td>Auto-predict from live Firebase data</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/predict/</code></td>
+<td>Open</td>
+<td>Manual prediction with explicit features</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="3294" data-line-end="3295"><a id="Alerts_3294"></a>Alerts</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Auth</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/alerts/history?limit=20</code></td>
+<td>Open</td>
+<td>Recent alerts from Firebase</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/alerts/evaluate</code></td>
+<td>Open</td>
+<td>Evaluate snapshot against thresholds</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="3300" data-line-end="3301"><a id="AI_Chat_3300"></a>AI Chat</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Auth</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/api/v1/chat/</code></td>
+<td>Open</td>
+<td>Gemini AI chatbot about water quality</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="3305" data-line-end="3306"><a id="Status_3305"></a>Status</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Auth</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/v1/status/</code></td>
+<td>Open</td>
+<td>System health check</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3312" data-line-end="3313"><a id="6_System_Validation_Summary_3312"></a>6. System Validation Summary</h2>
+<p class="has-line-data" data-line-start="3314" data-line-end="3315">The following integration tests confirm the complete system works:</p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Test</th>
+<th>How to verify</th>
+<th>Expected result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node 1 → Hub (ESP-NOW)</td>
+<td>Serial monitor on Hub</td>
+<td><code>[ESP-NOW] Node 1 data received</code> every 5s</td>
+</tr>
+<tr>
+<td>Hub → Firebase (WiFi)</td>
+<td>Firebase Console RTDB</td>
+<td><code>/devices/device_001/live_data</code> updates</td>
+</tr>
+<tr>
+<td>Hub → App (BLE)</td>
+<td>Mobile app Live tab</td>
+<td>Sensor values update in real-time</td>
+</tr>
+<tr>
+<td>App → Backend (sync)</td>
+<td>Backend logs</td>
+<td><code>POST /api/v1/sensors/ingest 200</code></td>
+</tr>
+<tr>
+<td>Backend → Firebase</td>
+<td><code>/api/v1/sensors/live</code></td>
+<td>Returns latest reading</td>
+</tr>
+<tr>
+<td>Dashboard live</td>
+<td>Web dashboard</td>
+<td>KPI cards update every 5 seconds</td>
+</tr>
+<tr>
+<td>ML prediction</td>
+<td><code>/api/v1/predict/run</code></td>
+<td>Returns water_quality + membrane_status</td>
+</tr>
+<tr>
+<td>Alert engine</td>
+<td>POST <code>/api/v1/alerts/evaluate</code></td>
+<td>Triggered when TDS &gt; 500 ppm</td>
+</tr>
+<tr>
+<td>API key protection</td>
+<td>POST <code>/ingest</code> without key</td>
+<td>403 Forbidden</td>
+</tr>
+<tr>
+<td>Cloud deploy</td>
+<td><code>https://your-project.vercel.app/</code></td>
+<td><code>{&quot;message&quot;: &quot;API is running&quot;}</code></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3331" data-line-end="3332"><a id="7_Demonstration_Script_3331"></a>7. Demonstration Script</h2>
+<p class="has-line-data" data-line-start="3333" data-line-end="3334">Use this script when demonstrating the system:</p>
+<h3 class="code-line has-line-data" data-line-start="3335" data-line-end="3336"><a id="Step_1_Show_hardware_3335"></a>Step 1 — Show hardware</h3>
+<ul>
+<li class="has-line-data" data-line-start="3336" data-line-end="3337">Point out Node 1 (pH, TDS, pressure sensors attached)</li>
+<li class="has-line-data" data-line-start="3337" data-line-end="3339">Point out Main Hub (display showing live readings)</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3339" data-line-end="3340"><a id="Step_2_Show_Web_Dashboard_3339"></a>Step 2 — Show Web Dashboard</h3>
+<ul>
+<li class="has-line-data" data-line-start="3340" data-line-end="3341">Open <code>Water Desalination.html</code> in browser</li>
+<li class="has-line-data" data-line-start="3341" data-line-end="3342">Wait 5 seconds — KPI cards update with real sensor data</li>
+<li class="has-line-data" data-line-start="3342" data-line-end="3343">Point out the live status indicator (pulsing green dot)</li>
+<li class="has-line-data" data-line-start="3343" data-line-end="3345">Navigate to the History tab — show the time-series charts</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3345" data-line-end="3346"><a id="Step_3_Show_Mobile_App_3345"></a>Step 3 — Show Mobile App</h3>
+<ul>
+<li class="has-line-data" data-line-start="3346" data-line-end="3347">Open app on desktop (or phone if APK built)</li>
+<li class="has-line-data" data-line-start="3347" data-line-end="3348">Live tab — sensor values matching the dashboard</li>
+<li class="has-line-data" data-line-start="3348" data-line-end="3349">History tab — local SQLite data with metric dropdown chart</li>
+<li class="has-line-data" data-line-start="3349" data-line-end="3351">Alerts tab — alert history from backend</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3351" data-line-end="3352"><a id="Step_4_Demonstrate_ML_Analysis_3351"></a>Step 4 — Demonstrate ML Analysis</h3>
+<ul>
+<li class="has-line-data" data-line-start="3352" data-line-end="3353">On the dashboard Live tab, scroll down to “ML Analysis”</li>
+<li class="has-line-data" data-line-start="3353" data-line-end="3354">Tap the ↻ refresh button</li>
+<li class="has-line-data" data-line-start="3354" data-line-end="3356">After 1–2 seconds, show Water Quality label (e.g., “Good 94%”) and Membrane Status</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3356" data-line-end="3357"><a id="Step_5_Demonstrate_Offline_Sync_3356"></a>Step 5 — Demonstrate Offline Sync</h3>
+<ul>
+<li class="has-line-data" data-line-start="3357" data-line-end="3358">Disconnect hub from WiFi (or simulate by stopping backend)</li>
+<li class="has-line-data" data-line-start="3358" data-line-end="3359">Mobile app continues to show BLE data and saves to SQLite</li>
+<li class="has-line-data" data-line-start="3359" data-line-end="3361">Reconnect → background worker uploads to backend</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3361" data-line-end="3362"><a id="Step_6_Show_Vercel_Deployment_3361"></a>Step 6 — Show Vercel Deployment</h3>
+<ul>
+<li class="has-line-data" data-line-start="3362" data-line-end="3363">Open <code>https://your-project.vercel.app/docs</code> in browser</li>
+<li class="has-line-data" data-line-start="3363" data-line-end="3364">Show the Swagger UI — run a live <code>/sensors/live</code> query</li>
+<li class="has-line-data" data-line-start="3364" data-line-end="3366">Show the prediction endpoint <code>/predict/run</code> result</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3368" data-line-end="3369"><a id="8_Known_Limitations_Future_Work_3368"></a>8. Known Limitations &amp; Future Work</h2>
+<h3 class="code-line has-line-data" data-line-start="3370" data-line-end="3371"><a id="Current_Limitations_3370"></a>Current Limitations</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Limitation</th>
+<th>Impact</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ML models trained on synthetic data</td>
+<td>Predictions may not perfectly reflect real membrane degradation</td>
+<td>Medium — retrain as real data accumulates</td>
+</tr>
+<tr>
+<td>No user authentication (login)</td>
+<td>Anyone with the URL can read live data</td>
+<td>Low for lab use</td>
+</tr>
+<tr>
+<td>Vercel 10s timeout</td>
+<td>Very slow Firebase regions or large ML queries could timeout</td>
+<td>Very low in practice</td>
+</tr>
+<tr>
+<td>Mobile app not packaged as APK</td>
+<td>Cannot run on Android without Python installed</td>
+<td>Medium — use <code>flet build apk</code></td>
+</tr>
+<tr>
+<td>Node 2 (environment sensors) not yet integrated in live testing</td>
+<td>Gas sensor and humidity data not yet verified</td>
+<td>Low — Node 1 is the critical path</td>
+</tr>
+<tr>
+<td>Single device hardcoded (<code>device_001</code>)</td>
+<td>Cannot support multiple RO units</td>
+<td>Medium for scale-up</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="3381" data-line-end="3382"><a id="Recommended_Future_Enhancements_3381"></a>Recommended Future Enhancements</h3>
+<ol>
+<li class="has-line-data" data-line-start="3383" data-line-end="3385">
+<p class="has-line-data" data-line-start="3383" data-line-end="3384"><strong>Retrain ML models on real data</strong> — after 2–4 weeks of real sensor readings, retrain both classifiers. Real data will significantly improve prediction accuracy.</p>
+</li>
+<li class="has-line-data" data-line-start="3385" data-line-end="3387">
+<p class="has-line-data" data-line-start="3385" data-line-end="3386"><strong>Build Android APK</strong> — run <code>flet build apk</code> in <code>mobile/</code> directory (requires Flutter SDK). This lets operators use the app on any Android phone.</p>
+</li>
+<li class="has-line-data" data-line-start="3387" data-line-end="3389">
+<p class="has-line-data" data-line-start="3387" data-line-end="3388"><strong>Add Node 2 data</strong> — integrate the environmental sensors (gas, temperature, humidity, tank levels) into the live dashboard and alert thresholds.</p>
+</li>
+<li class="has-line-data" data-line-start="3389" data-line-end="3391">
+<p class="has-line-data" data-line-start="3389" data-line-end="3390"><strong>Push notifications</strong> — use Firebase Cloud Messaging (FCM) to send push alerts to the mobile app when a critical threshold is crossed.</p>
+</li>
+<li class="has-line-data" data-line-start="3391" data-line-end="3393">
+<p class="has-line-data" data-line-start="3391" data-line-end="3392"><strong>Multi-device support</strong> — replace the hardcoded <code>device_001</code> with a dynamic device selector in the dashboard and mobile app.</p>
+</li>
+<li class="has-line-data" data-line-start="3393" data-line-end="3395">
+<p class="has-line-data" data-line-start="3393" data-line-end="3394"><strong>Membrane replacement scheduler</strong> — use the membrane status model’s confidence trends over time to predict the optimal replacement date.</p>
+</li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="3397" data-line-end="3398"><a id="9_Submission_Checklist_3397"></a>9. Submission Checklist</h2>
+<h3 class="code-line has-line-data" data-line-start="3399" data-line-end="3400"><a id="Code_Configuration_3399"></a>Code &amp; Configuration</h3>
+<ul>
+<li class="has-line-data" data-line-start="3400" data-line-end="3401"><input type="checkbox" id="checkbox66"><label for="checkbox66">All 3 ESP32 nodes flashed and tested</label></li>
+<li class="has-line-data" data-line-start="3401" data-line-end="3402"><input type="checkbox" id="checkbox67"><label for="checkbox67"></label><code>backend/</code> deployed to Vercel and verified working</li>
+<li class="has-line-data" data-line-start="3402" data-line-end="3403"><input type="checkbox" id="checkbox68"><label for="checkbox68"></label><code>Water Desalination.html</code> dashboard working with cloud backend URL</li>
+<li class="has-line-data" data-line-start="3403" data-line-end="3404"><input type="checkbox" id="checkbox69"><label for="checkbox69">Mobile app working with cloud backend URL in Settings</label></li>
+<li class="has-line-data" data-line-start="3404" data-line-end="3405"><input type="checkbox" id="checkbox70"><label for="checkbox70"></label><code>.gitignore</code> excludes all secrets and binaries</li>
+<li class="has-line-data" data-line-start="3405" data-line-end="3407"><input type="checkbox" id="checkbox71"><label for="checkbox71">No hardcoded API keys or passwords in committed code</label></li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3407" data-line-end="3408"><a id="Documentation_3407"></a>Documentation</h3>
+<ul>
+<li class="has-line-data" data-line-start="3408" data-line-end="3409"><input type="checkbox" id="checkbox72"><label for="checkbox72"></label><code>README.md</code> is complete and accurate</li>
+<li class="has-line-data" data-line-start="3409" data-line-end="3410"><input type="checkbox" id="checkbox73"><label for="checkbox73">All phase </label><code>.md</code> documents exist and are complete</li>
+<li class="has-line-data" data-line-start="3410" data-line-end="3411"><input type="checkbox" id="checkbox74"><label for="checkbox74"></label><code>calibration_guide.md</code> covers all sensors</li>
+<li class="has-line-data" data-line-start="3411" data-line-end="3413"><input type="checkbox" id="checkbox75"><label for="checkbox75">API reference table is up to date</label></li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3413" data-line-end="3414"><a id="Demonstration_3413"></a>Demonstration</h3>
+<ul>
+<li class="has-line-data" data-line-start="3414" data-line-end="3415"><input type="checkbox" id="checkbox76"><label for="checkbox76">End-to-end test flow verified (hardware → Firebase → dashboard → mobile)</label></li>
+<li class="has-line-data" data-line-start="3415" data-line-end="3416"><input type="checkbox" id="checkbox77"><label for="checkbox77">ML prediction endpoint returns valid output</label></li>
+<li class="has-line-data" data-line-start="3416" data-line-end="3417"><input type="checkbox" id="checkbox78"><label for="checkbox78">API key rejection verified (403 without key)</label></li>
+<li class="has-line-data" data-line-start="3417" data-line-end="3419"><input type="checkbox" id="checkbox79"><label for="checkbox79">Demo video recorded (optional but highly recommended)</label></li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="3419" data-line-end="3420"><a id="Repository_3419"></a>Repository</h3>
+<ul>
+<li class="has-line-data" data-line-start="3420" data-line-end="3421"><input type="checkbox" id="checkbox80"><label for="checkbox80">GitHub repository is public (or shared with evaluators)</label></li>
+<li class="has-line-data" data-line-start="3421" data-line-end="3422"><input type="checkbox" id="checkbox81"><label for="checkbox81">All code committed and pushed</label></li>
+<li class="has-line-data" data-line-start="3422" data-line-end="3424"><input type="checkbox" id="checkbox82"><label for="checkbox82"></label><code>README.md</code> is the first file seen on GitHub</li>
+</ul>
+<hr>
+<p class="has-line-data" data-line-start="3426" data-line-end="3427"><em>Phase 11 complete. The Smart Water Desalination Monitoring System is fully documented and production-ready.</em></p>
 
 </body>
 </html>
