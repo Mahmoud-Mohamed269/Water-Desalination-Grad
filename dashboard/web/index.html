@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Water Desalination Dashboard</title>
+  <meta name="description" content="AquaMonitor — Real-time monitoring dashboard for your RO water desalination system." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dark">
+
+  <!-- Alert Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="logo-area">
+      <img src="assets/TVI Logo.jpg" alt="TVI Logo" class="logo" onerror="this.style.display='none'" />
+      <img src="assets/Water Desalination.png" alt="Water Desalination" class="logo" onerror="this.style.display='none'" />
+      <h2 class="brand">AquaMonitor</h2>
+    </div>
+
+    <nav class="nav">
+      <a class="nav-item active" id="nav-overview" onclick="navigate(this, 'overview')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Overview
+      </a>
+      <a class="nav-item" id="nav-sensors" onclick="navigate(this, 'sensors')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        Sensors
+      </a>
+      <a class="nav-item" id="nav-history" onclick="navigate(this, 'history')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        History
+      </a>
+      <a class="nav-item" id="nav-predictions" onclick="navigate(this, 'predictions')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        ML Predictions
+      </a>
+      <a class="nav-item" id="nav-chatbot" onclick="navigate(this, 'chatbot')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        AI Chatbot
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="live-indicator" id="live-indicator">
+        <span class="live-dot"></span> Auto-refresh ON
+      </div>
+      <label class="theme-toggle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        <input type="checkbox" id="themeToggle" onchange="toggleTheme()" checked />
+        <span class="slider"></span>
+        Dark Mode
+      </label>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main" id="main">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <h1 id="page-title">System Overview</h1>
+        <span class="status-badge online" id="system-status">● ONLINE</span>
+      </div>
+      <div class="header-right">
+        <button class="btn-refresh" id="btn-refresh" onclick="loadCurrentPage()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+          Refresh
+        </button>
+        <span class="api-url">API: <code>localhost:8000</code></span>
+      </div>
+    </header>
+
+    <!-- Pages -->
+    <div class="pages">
+
+      <!-- ── OVERVIEW ── -->
+      <section class="page active" id="page-overview">
+        <div class="kpi-grid" id="kpi-grid">
+          <div class="kpi-card" id="kpi-status">
+            <div class="kpi-icon status-icon">💧</div>
+            <div class="kpi-body">
+              <p class="kpi-label">System Status</p>
+              <p class="kpi-value" id="ov-status">Loading…</p>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">🔬</div>
+            <div class="kpi-body">
+              <p class="kpi-label">Water Quality (ML)</p>
+              <p class="kpi-value" id="ov-wq">—</p>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">🧱</div>
+            <div class="kpi-body">
+              <p class="kpi-label">Membrane Status (ML)</p>
+              <p class="kpi-value" id="ov-ms">—</p>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">⚡</div>
+            <div class="kpi-body">
+              <p class="kpi-label">Pump</p>
+              <p class="kpi-value" id="ov-pump">—</p>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">🌊</div>
+            <div class="kpi-body">
+              <p class="kpi-label">Recovery Rate</p>
+              <p class="kpi-value" id="ov-recovery">—</p>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon">🛡️</div>
+            <div class="kpi-body">
+              <p class="kpi-label">Salt Rejection</p>
+              <p class="kpi-value" id="ov-rejection">—</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-title">Recent Sensor Readings</div>
+        <div class="sensor-mini-grid" id="mini-sensors"></div>
+
+        <!-- System Status Card -->
+        <div class="section-title" style="margin-top:2rem">System Diagnostics</div>
+        <div class="sys-status-grid" id="sys-status-grid">
+          <div class="sys-card"><span class="sys-label">CPU Temp</span><span class="sys-val" id="ss-cpu">—</span></div>
+          <div class="sys-card"><span class="sys-label">Free RAM</span><span class="sys-val" id="ss-heap">—</span></div>
+          <div class="sys-card"><span class="sys-label">WiFi Signal</span><span class="sys-val" id="ss-rssi">—</span></div>
+          <div class="sys-card"><span class="sys-label">Uptime</span><span class="sys-val" id="ss-uptime">—</span></div>
+        </div>
+
+        <!-- Sensor Health Badges -->
+        <div class="section-title" style="margin-top:1.5rem">Sensor Health</div>
+        <div class="health-grid" id="health-grid"></div>
+      </section>
+
+      <!-- ── SENSORS ── -->
+      <section class="page" id="page-sensors">
+        <div class="section-title node-title">
+          <span class="node-badge n1">Node 1</span> Water Quality Sensors
+        </div>
+        <div class="sensor-grid" id="node1-sensors"></div>
+
+        <div class="section-title node-title" style="margin-top:2rem">
+          <span class="node-badge n2">Node 2</span> Environmental Sensors
+        </div>
+        <div class="sensor-grid" id="node2-sensors"></div>
+      </section>
+
+      <!-- ── HISTORY ── -->
+      <section class="page" id="page-history">
+        <div class="chart-grid">
+          <div class="chart-card">
+            <div class="chart-title">pH (Feed & Permeate)</div>
+            <canvas id="chart-ph"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">TDS (Feed & Permeate) — ppm</div>
+            <canvas id="chart-tds"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Turbidity Feed — NTU</div>
+            <canvas id="chart-turbidity"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Pressure Feed — bar</div>
+            <canvas id="chart-pressure"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Flow Rate (Feed & Permeate) — L/min</div>
+            <canvas id="chart-flow"></canvas>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Temperature (Feed & Permeate) — °C</div>
+            <canvas id="chart-temp"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── PREDICTIONS ── -->
+      <section class="page" id="page-predictions">
+        <div class="predictions-grid">
+          <div class="pred-card glass" id="pred-wq">
+            <div class="pred-header">
+              <span class="pred-icon">🔬</span>
+              <h3>Water Quality</h3>
+            </div>
+            <div class="pred-label" id="pred-wq-label">—</div>
+            <div class="pred-conf" id="pred-wq-conf"></div>
+            <div class="pred-bar-wrap"><div class="pred-bar" id="pred-wq-bar"></div></div>
+          </div>
+          <div class="pred-card glass" id="pred-ms">
+            <div class="pred-header">
+              <span class="pred-icon">🧱</span>
+              <h3>Membrane Fouling Risk</h3>
+            </div>
+            <div class="pred-label" id="pred-ms-label">—</div>
+            <div class="pred-conf" id="pred-ms-conf"></div>
+            <div class="pred-bar-wrap"><div class="pred-bar" id="pred-ms-bar"></div></div>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="loadPredictions()">Run ML Inference</button>
+      </section>
+
+      <!-- ── CHATBOT ── -->
+      <section class="page" id="page-chatbot">
+        <div class="chat-container">
+          <div class="chat-messages" id="chat-messages">
+            <div class="chat-bubble assistant">
+              <strong>Gemini AI</strong>
+              <p>Hello! I'm your AI assistant specialized in water desalination systems. Ask me anything about your RO system, sensor readings, or water quality!</p>
+            </div>
+          </div>
+          <div class="chat-input-row">
+            <input type="text" id="chat-input" class="chat-input" placeholder="Ask about your RO system…" onkeydown="if(event.key==='Enter') sendMessage()" />
+            <button class="btn-send" onclick="sendMessage()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="app.js?v=4"></script>
+</body>
+</html>

@@ -1,0 +1,3187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Untitled Document.md</title>
+  
+</head>
+<body id="preview">
+<h1 class="code-line has-line-data" data-line-start="0" data-line-end="1"><a id="Smart_Water_Desalination_Monitoring_Analytics_System_0"></a>🌊 Smart Water Desalination Monitoring &amp; Analytics System</h1>
+<h2 class="code-line has-line-data" data-line-start="1" data-line-end="2"><a id="Phase_1_Requirements_Analysis_and_System_Architecture_1"></a>Phase 1 — Requirements Analysis and System Architecture</h2>
+<blockquote>
+<p class="has-line-data" data-line-start="3" data-line-end="5">[!NOTE]<br>
+<strong>Design Decisions Log</strong> (Updated after user review)</p>
+<ul>
+<li class="has-line-data" data-line-start="5" data-line-end="6">✅ ML Dataset: Will be synthetically generated in Phase 11 (no real dataset required to start)</li>
+<li class="has-line-data" data-line-start="6" data-line-end="7">✅ Flow Sensor (YF-S201): Included — required for Recovery Rate calculation and pump failure detection</li>
+<li class="has-line-data" data-line-start="7" data-line-end="8">✅ Solenoid Valve: Included — enables automated safety shutoff and remote control</li>
+<li class="has-line-data" data-line-start="8" data-line-end="9">✅ Power Mode: Battery/Solar — ESP32 uses Deep Sleep with dual wake sources (water level sensor + dashboard command)</li>
+</ul>
+</blockquote>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="12" data-line-end="13"><a id="Table_of_Contents_12"></a>📋 Table of Contents</h2>
+<ol>
+<li class="has-line-data" data-line-start="14" data-line-end="15"><a href="#objectives">Objectives</a></li>
+<li class="has-line-data" data-line-start="15" data-line-end="16"><a href="#theory">Theory</a></li>
+<li class="has-line-data" data-line-start="16" data-line-end="17"><a href="#detailed-system-explanation">Detailed System Explanation</a></li>
+<li class="has-line-data" data-line-start="17" data-line-end="18"><a href="#system-architecture-design">System Architecture Design</a></li>
+<li class="has-line-data" data-line-start="18" data-line-end="19"><a href="#technology-stack-justification">Technology Stack Justification</a></li>
+<li class="has-line-data" data-line-start="19" data-line-end="20"><a href="#firebase-database-schema">Firebase Database Schema</a></li>
+<li class="has-line-data" data-line-start="20" data-line-end="21"><a href="#folder-structure">Folder Structure</a></li>
+<li class="has-line-data" data-line-start="21" data-line-end="22"><a href="#data-flow-diagram">Data Flow Diagram</a></li>
+<li class="has-line-data" data-line-start="22" data-line-end="23"><a href="#sensor-specifications--requirements">Sensor Specifications &amp; Requirements</a></li>
+<li class="has-line-data" data-line-start="23" data-line-end="24"><a href="#non-functional-requirements">Non-Functional Requirements</a></li>
+<li class="has-line-data" data-line-start="24" data-line-end="25"><a href="#validation-checklist">Validation Checklist</a></li>
+<li class="has-line-data" data-line-start="25" data-line-end="26"><a href="#common-errors--troubleshooting">Common Errors &amp; Troubleshooting</a></li>
+<li class="has-line-data" data-line-start="26" data-line-end="28"><a href="#best-practices">Best Practices</a></li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="30" data-line-end="31"><a id="1_Objectives_30"></a>1. Objectives</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>#</th>
+<th>Objective</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Define all functional and non-functional system requirements</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Design the complete multi-layer system architecture</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Define sensor data models and measurement ranges</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Design the Firebase Realtime Database schema</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Define the project folder structure (monorepo)</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Define communication protocols between all layers</td>
+<td>🟠 High</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Establish data quality and filtering requirements</td>
+<td>🟠 High</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Define ML prediction targets and thresholds</td>
+<td>🟠 High</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Establish security and authentication model</td>
+<td>🟡 Medium</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Define deployment strategy per component</td>
+<td>🟡 Medium</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="47" data-line-end="48"><a id="2_Theory_47"></a>2. Theory</h2>
+<h3 class="code-line has-line-data" data-line-start="49" data-line-end="50"><a id="21_Reverse_Osmosis_RO_Desalination_Engineering_Overview_49"></a>2.1 Reverse Osmosis (RO) Desalination — Engineering Overview</h3>
+<p class="has-line-data" data-line-start="51" data-line-end="52">Reverse Osmosis is a pressure-driven membrane separation process. Feed water is pushed through a semi-permeable membrane that rejects dissolved solids, ions, and organic molecules, producing permeate (purified water) and concentrate (brine reject).</p>
+<p class="has-line-data" data-line-start="53" data-line-end="54"><strong>Key Physical Parameters:</strong></p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Symbol</th>
+<th>Unit</th>
+<th>Role in RO</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pH</td>
+<td>pH</td>
+<td>0–14</td>
+<td>Membrane longevity, scaling potential</td>
+</tr>
+<tr>
+<td>TDS</td>
+<td>TDS</td>
+<td>mg/L (ppm)</td>
+<td>Rejection efficiency measurement</td>
+</tr>
+<tr>
+<td>Turbidity</td>
+<td>NTU</td>
+<td>NTU</td>
+<td>Pre-filter fouling, feed quality</td>
+</tr>
+<tr>
+<td>Temperature</td>
+<td>T</td>
+<td>°C</td>
+<td>Membrane permeability, reaction kinetics</td>
+</tr>
+<tr>
+<td>Pressure</td>
+<td>P</td>
+<td>bar / PSI</td>
+<td>Driving force for permeation</td>
+</tr>
+<tr>
+<td>Flow Rate</td>
+<td>Q</td>
+<td>L/min</td>
+<td>Recovery rate, system throughput — <strong>Required for efficiency calculations</strong></td>
+</tr>
+<tr>
+<td>Water Level</td>
+<td>L</td>
+<td>% / cm</td>
+<td>Tank management, feed availability — <strong>Also used as wake/sleep trigger</strong></td>
+</tr>
+<tr>
+<td>EC (Optional)</td>
+<td>EC</td>
+<td>µS/cm</td>
+<td>Salinity proxy, conductivity</td>
+</tr>
+</tbody>
+</table>
+<p class="has-line-data" data-line-start="66" data-line-end="67"><strong>Critical RO Ratios:</strong></p>
+<pre><code class="has-line-data" data-line-start="69" data-line-end="73">Recovery Rate (%) = (Permeate Flow / Feed Flow) × 100       ← Requires YF-S201 Flow Sensor
+Rejection Rate (%) = (1 - Permeate TDS / Feed TDS) × 100   ← Requires TDS Sensor
+Salt Passage (%) = (Permeate TDS / Feed TDS) × 100
+</code></pre>
+<blockquote>
+<p class="has-line-data" data-line-start="74" data-line-end="75"><strong>Why the Flow Sensor is non-negotiable:</strong> Recovery Rate is the primary KPI of any RO system. Without it, you cannot determine if your system is operating efficiently or if the membrane is degrading. The YF-S201 (~$3) is the cheapest and most impactful sensor in the system.</p>
+</blockquote>
+<blockquote>
+<p class="has-line-data" data-line-start="76" data-line-end="77"><strong>Why the Solenoid Valve is essential for automation:</strong> Without the solenoid valve, your system can only <em>alert</em> you to problems. With it, the system can automatically <em>respond</em> — for example, immediately closing when TDS spikes above safe levels, protecting downstream equipment and users. This is the difference between a monitoring system and a control system.</p>
+</blockquote>
+<p class="has-line-data" data-line-start="78" data-line-end="79"><strong>Typical Target Values for Potable Water (WHO Standards):</strong></p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Acceptable Range</th>
+<th>Alert Threshold</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pH</td>
+<td>6.5 – 8.5</td>
+<td>&lt; 6.0 or &gt; 9.0</td>
+</tr>
+<tr>
+<td>TDS</td>
+<td>&lt; 500 mg/L</td>
+<td>&gt; 1000 mg/L</td>
+</tr>
+<tr>
+<td>Turbidity</td>
+<td>&lt; 1 NTU</td>
+<td>&gt; 4 NTU</td>
+</tr>
+<tr>
+<td>Temperature</td>
+<td>5 – 30°C</td>
+<td>&gt; 40°C</td>
+</tr>
+<tr>
+<td>Pressure (Feed)</td>
+<td>3 – 8 bar</td>
+<td>&gt; 10 bar</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="88" data-line-end="89"><a id="22_IoT_Architecture_Patterns_88"></a>2.2 IoT Architecture Patterns</h3>
+<p class="has-line-data" data-line-start="90" data-line-end="91">This system uses the <strong>Edge-to-Cloud</strong> IoT architecture:</p>
+<pre><code class="has-line-data" data-line-start="93" data-line-end="96">Edge Layer     →   Transport Layer   →   Cloud Layer   →   Application Layer
+(ESP32 + Sensors)  (WiFi + MQTT/HTTP)  (Firebase)      (FastAPI + Flet + ML)
+</code></pre>
+<p class="has-line-data" data-line-start="97" data-line-end="98"><strong>Why Edge-to-Cloud?</strong></p>
+<ul>
+<li class="has-line-data" data-line-start="98" data-line-end="99">ESP32 handles local data acquisition and preliminary filtering</li>
+<li class="has-line-data" data-line-start="99" data-line-end="100">Cloud handles persistence, analytics, and multi-client access</li>
+<li class="has-line-data" data-line-start="100" data-line-end="102">Application layer handles visualization, AI, and prediction</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="102" data-line-end="103"><a id="23_Machine_Learning_in_Water_Quality_102"></a>2.3 Machine Learning in Water Quality</h3>
+<p class="has-line-data" data-line-start="104" data-line-end="105">Random Forest is chosen because:</p>
+<ul>
+<li class="has-line-data" data-line-start="105" data-line-end="106">Handles non-linear relationships between sensor parameters</li>
+<li class="has-line-data" data-line-start="106" data-line-end="107">Robust to outliers (critical when sensors malfunction)</li>
+<li class="has-line-data" data-line-start="107" data-line-end="108">Provides feature importance (explains WHY a prediction was made)</li>
+<li class="has-line-data" data-line-start="108" data-line-end="109">Works well with tabular sensor data</li>
+<li class="has-line-data" data-line-start="109" data-line-end="110">Low inference latency (&lt;1ms for 100 trees on sensor data)</li>
+<li class="has-line-data" data-line-start="110" data-line-end="112">scikit-learn implementation is production-ready</li>
+</ul>
+<blockquote>
+<p class="has-line-data" data-line-start="112" data-line-end="114">[!IMPORTANT]<br>
+<strong>No real dataset available at project start.</strong> A realistic synthetic dataset will be generated in Phase 11 using:</p>
+<ul>
+<li class="has-line-data" data-line-start="114" data-line-end="115">RO membrane physics equations (rejection rate curves, fouling models)</li>
+<li class="has-line-data" data-line-start="115" data-line-end="116">WHO and EPA water quality standards as label boundaries</li>
+<li class="has-line-data" data-line-start="116" data-line-end="117">Gaussian sensor noise injection (based on datasheet accuracy specs)</li>
+<li class="has-line-data" data-line-start="117" data-line-end="118">Fault scenario injection (membrane fouling, sensor drift, pump cavitation)</li>
+<li class="has-line-data" data-line-start="118" data-line-end="119">The synthetic dataset will be used for initial training, then the model will be retrained and fine-tuned using real data collected by the system after deployment.</li>
+</ul>
+</blockquote>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="122" data-line-end="123"><a id="3_Detailed_System_Explanation_122"></a>3. Detailed System Explanation</h2>
+<h3 class="code-line has-line-data" data-line-start="124" data-line-end="125"><a id="31_System_Layers_124"></a>3.1 System Layers</h3>
+<pre><code class="has-line-data language-mermaid" data-line-start="127" data-line-end="158">graph TD
+    subgraph &quot;Layer 1: Physical / Sensing Layer (Edge Nodes)&quot;
+        S1[Node 1: Water Quality]
+        S2[Node 2: Environment]
+    end
+
+    subgraph &quot;Layer 2: Local Hub Layer (Main ESP32)&quot;
+        Hub[Main Hub: Comms &amp; Display]
+    end
+
+    subgraph &quot;Layer 3: Mobile / Offline Layer&quot;
+        App[Flet Mobile App]
+        LocalDB[(SQLite Local DB)]
+    end
+
+    subgraph &quot;Layer 4: Cloud Data Layer&quot;
+        FB[(Firebase Realtime DB)]
+    end
+
+    subgraph &quot;Layer 5: Backend / API Layer (FastAPI)&quot;
+        API[FastAPI + ML Models]
+    end
+
+    S1 -- &quot;ESP-NOW (Broadcast)&quot; --&gt; Hub
+    S2 -- &quot;ESP-NOW (Broadcast)&quot; --&gt; Hub
+    Hub -- &quot;BLE (Offline Sync)&quot; --&gt; App
+    Hub -- &quot;WiFi (Live Upload)&quot; --&gt; FB
+    App -- &quot;Local Storage&quot; --&gt; LocalDB
+    App -- &quot;WiFi (Background Sync)&quot; --&gt; API
+    API -- &quot;Ingest / Read&quot; --&gt; FB
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="159" data-line-end="160"><a id="32_ESP32_Pin_Assignment_Plan_159"></a>3.2 ESP32 Pin Assignment Plan</h3>
+<blockquote>
+<p class="has-line-data" data-line-start="161" data-line-end="163">[!NOTE]<br>
+This is the high-level plan for the 3-node architecture. Full pinouts will be finalized in Phase 2 (Hardware Design).</p>
+</blockquote>
+<p class="has-line-data" data-line-start="164" data-line-end="165"><strong>Node 1 (Water Quality - ESP32 38-pin):</strong></p>
+<ul>
+<li class="has-line-data" data-line-start="165" data-line-end="166">pH Feed &amp; Permeate (GPIO34=pH Feed, GPIO36=pH Permeate) — ADC1 only</li>
+<li class="has-line-data" data-line-start="166" data-line-end="167">TDS Feed &amp; Permeate (GPIO35=TDS Feed, GPIO39=TDS Permeate) — ADC1 only</li>
+<li class="has-line-data" data-line-start="167" data-line-end="168">Turbidity Feed (GPIO32) — ADC1 only, via 10kΩ/20kΩ voltage divider</li>
+<li class="has-line-data" data-line-start="168" data-line-end="169">Pressure Feed / G1/4 (GPIO33) — ADC1 only, via 10kΩ/20kΩ voltage divider</li>
+<li class="has-line-data" data-line-start="169" data-line-end="170">Temperature Feed &amp; Permeate (GPIO4, DS18B20 shared OneWire bus)</li>
+<li class="has-line-data" data-line-start="170" data-line-end="171">Flow Sensor Feed (GPIO18, interrupt), Flow Permeate (GPIO27, digital interrupt only — ADC2 pin but NOT used for analogRead, safe with WiFi)</li>
+<li class="has-line-data" data-line-start="171" data-line-end="172">Level Sensors: Feed (GPIO5), Product (GPIO19)</li>
+<li class="has-line-data" data-line-start="172" data-line-end="174">Relays: Pump (GPIO26), Valve (GPIO25)</li>
+</ul>
+<p class="has-line-data" data-line-start="174" data-line-end="175"><strong>Node 2 (Environment &amp; Fans - ESP32 38-pin):</strong></p>
+<ul>
+<li class="has-line-data" data-line-start="175" data-line-end="176">2x Ultrasonic (Trig/Echo digital pins)</li>
+<li class="has-line-data" data-line-start="176" data-line-end="177">1x DHT22 (Digital pin)</li>
+<li class="has-line-data" data-line-start="177" data-line-end="178">2x Gas Sensors (ADC1 pins)</li>
+<li class="has-line-data" data-line-start="178" data-line-end="179">2x Water Temp (DS18B20 on GPIO4)</li>
+<li class="has-line-data" data-line-start="179" data-line-end="181">3x Fans (Relay output pins)</li>
+</ul>
+<p class="has-line-data" data-line-start="181" data-line-end="182"><strong>Main Hub (Display &amp; Comms - ESP32 38-pin):</strong></p>
+<ul>
+<li class="has-line-data" data-line-start="182" data-line-end="183">5-inch SPI TFT Display (MOSI, SCK, CS, DC, RST)</li>
+<li class="has-line-data" data-line-start="183" data-line-end="185">No analog sensors attached (avoids WiFi/ADC2 conflicts entirely)</li>
+</ul>
+<blockquote>
+<p class="has-line-data" data-line-start="185" data-line-end="187">[!IMPORTANT]<br>
+<strong>Mobile App Offline Sync Architecture</strong></p>
+<ul>
+<li class="has-line-data" data-line-start="187" data-line-end="188">The Main ESP32 constantly streams data to the Mobile App via BLE.</li>
+<li class="has-line-data" data-line-start="188" data-line-end="189">The App stores data in a local SQLite DB.</li>
+<li class="has-line-data" data-line-start="189" data-line-end="190">When internet is available, the App syncs the local DB to Firebase, ensuring zero data loss during WiFi outages.</li>
+</ul>
+</blockquote>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="193" data-line-end="194"><a id="4_System_Architecture_Design_193"></a>4. System Architecture Design</h2>
+<h3 class="code-line has-line-data" data-line-start="195" data-line-end="196"><a id="41_Communication_Flowcharts_195"></a>4.1 Communication Flowcharts</h3>
+<p class="has-line-data" data-line-start="197" data-line-end="198"><strong>Main Hub (Display &amp; Comms) Flowchart</strong></p>
+<pre><code class="has-line-data language-mermaid" data-line-start="199" data-line-end="215">graph TD
+    Start((Start)) --&gt; Init[Init WiFi, NTP, BLE, ESP-NOW, Firebase]
+    Init --&gt; ReceiveLoop
+    
+    ReceiveLoop[Listen for ESP-NOW from Nodes 1 &amp; 2] --&gt; |Data Received| Merge[Merge into JSON Payload]
+    Merge --&gt; UpdateDisplay[Update LCD Display]
+    UpdateDisplay --&gt; CheckApp{Mobile App Connected via BLE?}
+    
+    CheckApp --&gt;|Yes| SendBLE[Stream JSON to App]
+    CheckApp --&gt;|No| CheckWiFi{WiFi Connected?}
+    
+    SendBLE --&gt; CheckWiFi
+    CheckWiFi --&gt;|Yes| Sync[Upload JSON directly to Firebase RTDB]
+    CheckWiFi --&gt;|No| ReceiveLoop
+    Sync --&gt; ReceiveLoop
+</code></pre>
+<p class="has-line-data" data-line-start="216" data-line-end="217"><strong>Mobile App (Offline Sync) Flowchart</strong></p>
+<pre><code class="has-line-data language-mermaid" data-line-start="218" data-line-end="228">graph TD
+    Start((App Open)) --&gt; ConnectBLE[Connect to Main Hub via BLE]
+    ConnectBLE --&gt; ReceiveData[Receive Merged JSON Data]
+    ReceiveData --&gt; StoreLocal[(Store in Local SQLite DB)]
+    StoreLocal --&gt; CheckNet{Phone has Internet?}
+    
+    CheckNet --&gt;|Yes| Sync[Upload Pending Data to FastAPI Backend]
+    Sync --&gt; ReceiveData
+    CheckNet --&gt;|No| ReceiveData
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="229" data-line-end="230"><a id="42_Communication_Protocols_229"></a>4.2 Communication Protocols</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Layer</th>
+<th>Protocol</th>
+<th>Format</th>
+<th>Frequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Nodes → Main Hub</td>
+<td>ESP-NOW</td>
+<td>C-Struct</td>
+<td>Every 5 sec</td>
+</tr>
+<tr>
+<td>Main Hub → App</td>
+<td>Bluetooth (BLE)</td>
+<td>JSON</td>
+<td>Every 3 sec</td>
+</tr>
+<tr>
+<td>Main Hub → Firebase</td>
+<td>HTTP / RTDB</td>
+<td>JSON</td>
+<td>Every 5 sec</td>
+</tr>
+<tr>
+<td>App → Backend</td>
+<td>HTTP POST</td>
+<td>JSON</td>
+<td>Background Sync</td>
+</tr>
+<tr>
+<td>Backend → Firebase</td>
+<td>Firebase Admin SDK</td>
+<td>JSON</td>
+<td>On-demand / ingest</td>
+</tr>
+<tr>
+<td>FastAPI → Dashboard</td>
+<td>HTTP GET/POST</td>
+<td>JSON</td>
+<td>Real-time polling</td>
+</tr>
+<tr>
+<td>Backend → Gemini</td>
+<td>HTTPS</td>
+<td>JSON</td>
+<td>On-demand chatbot</td>
+</tr>
+<tr>
+<td>FastAPI → ML Service</td>
+<td>Internal Python</td>
+<td>Array</td>
+<td>On-demand prediction</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="244" data-line-end="245"><a id="5_Technology_Stack_Justification_244"></a>5. Technology Stack Justification</h2>
+<h3 class="code-line has-line-data" data-line-start="246" data-line-end="247"><a id="51_Why_ESP32S_246"></a>5.1 Why ESP32S?</h3>
+<ul>
+<li class="has-line-data" data-line-start="247" data-line-end="248">Dual-core Xtensa LX6 @ 240 MHz — handles sensor reading + WiFi simultaneously</li>
+<li class="has-line-data" data-line-start="248" data-line-end="249">Built-in WiFi + Bluetooth</li>
+<li class="has-line-data" data-line-start="249" data-line-end="250">18 ADC channels (we use ADC1 only during WiFi)</li>
+<li class="has-line-data" data-line-start="250" data-line-end="251">4MB flash, 520KB SRAM — sufficient for firmware + buffers</li>
+<li class="has-line-data" data-line-start="251" data-line-end="253">Low cost, wide community support</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="253" data-line-end="254"><a id="52_Why_Firebase_Realtime_Database_253"></a>5.2 Why Firebase Realtime Database?</h3>
+<ul>
+<li class="has-line-data" data-line-start="254" data-line-end="255">Real-time push to all connected clients simultaneously</li>
+<li class="has-line-data" data-line-start="255" data-line-end="256">JSON tree structure maps naturally to sensor readings</li>
+<li class="has-line-data" data-line-start="256" data-line-end="257">Built-in security rules</li>
+<li class="has-line-data" data-line-start="257" data-line-end="258">Free tier: 1GB storage, 10GB/month transfer</li>
+<li class="has-line-data" data-line-start="258" data-line-end="260">Native SDK for Python, JavaScript, mobile</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="260" data-line-end="261"><a id="53_Why_FastAPI_260"></a>5.3 Why FastAPI?</h3>
+<ul>
+<li class="has-line-data" data-line-start="261" data-line-end="262">Async-first (handles concurrent sensor reads + client requests)</li>
+<li class="has-line-data" data-line-start="262" data-line-end="263">Auto-generates OpenAPI documentation</li>
+<li class="has-line-data" data-line-start="263" data-line-end="264">Native Pydantic validation (enforces data schemas)</li>
+<li class="has-line-data" data-line-start="264" data-line-end="265">Easy ML model integration (Python-native)</li>
+<li class="has-line-data" data-line-start="265" data-line-end="267">High performance (comparable to Node.js)</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="267" data-line-end="268"><a id="54_Why_Flet_267"></a>5.4 Why Flet?</h3>
+<ul>
+<li class="has-line-data" data-line-start="268" data-line-end="269">Write once, run on Web + Android + iOS + Desktop (Python)</li>
+<li class="has-line-data" data-line-start="269" data-line-end="270">Flutter rendering engine → native-quality UI</li>
+<li class="has-line-data" data-line-start="270" data-line-end="271">Firebase integration via Python SDK</li>
+<li class="has-line-data" data-line-start="271" data-line-end="273">Shared codebase for dashboard and mobile app</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="273" data-line-end="274"><a id="55_Why_Random_Forest_273"></a>5.5 Why Random Forest?</h3>
+<ul>
+<li class="has-line-data" data-line-start="274" data-line-end="275">No need for feature scaling (unlike SVM, neural nets)</li>
+<li class="has-line-data" data-line-start="275" data-line-end="276">Interpretable (feature importance)</li>
+<li class="has-line-data" data-line-start="276" data-line-end="277">Handles missing data gracefully</li>
+<li class="has-line-data" data-line-start="277" data-line-end="278">Fast inference (&lt;1ms for 100 trees on sensor data)</li>
+<li class="has-line-data" data-line-start="278" data-line-end="280">scikit-learn implementation is production-ready</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="280" data-line-end="281"><a id="56_Why_Google_Gemini_API_280"></a>5.6 Why Google Gemini API?</h3>
+<ul>
+<li class="has-line-data" data-line-start="281" data-line-end="282">Multimodal (can interpret sensor charts + text)</li>
+<li class="has-line-data" data-line-start="282" data-line-end="283">Domain knowledge of water treatment</li>
+<li class="has-line-data" data-line-start="283" data-line-end="284">Structured output support (JSON responses)</li>
+<li class="has-line-data" data-line-start="284" data-line-end="286">Function calling (can query Firebase directly)</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="288" data-line-end="289"><a id="6_Firebase_Database_Schema_288"></a>6. Firebase Database Schema</h2>
+<h3 class="code-line has-line-data" data-line-start="290" data-line-end="291"><a id="61_Complete_Schema_Design_290"></a>6.1 Complete Schema Design</h3>
+<pre><code class="has-line-data language-json" data-line-start="293" data-line-end="492"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;devices&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;device_001&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;info&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;name&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;RO Unit Alpha&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;location&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Plant A - Zone 1&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;firmware_version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;1.0.0&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;registered_at&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-01-01T00:00:00Z&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;last_seen&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-01-01T12:00:00Z&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;online&quot;</span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;config&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;sampling_interval_ms&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">5000</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;alert_thresholds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;ph_min&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">6.5</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;ph_max&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">8.5</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;tds_max&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1000</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;turbidity_max&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4.0</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;temperature_max&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">40.0</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;pressure_max&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">10.0</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;flow_rate_min&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.5</span>
+        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;filtering&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;algorithm&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;kalman&quot;</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;window_size&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">10</span>
+        <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;live_data&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;ph_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">7.2</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;ph_permeate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">6.9</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;tds_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">850</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;tds_permeate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">12</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;turbidity_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.8</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;temperature_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">24.5</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;temperature_permeate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">24.2</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;pressure_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4.2</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;flow_rate_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2.5</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;flow_rate_permeate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1.8</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;recovery_rate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">72.0</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;rejection_rate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">98.6</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;water_level_feed_tank&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">100</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;water_level_product_tank&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;pump_status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;running&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;valve_status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;open&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;tank1_level_cm&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">45.5</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;tank2_level_cm&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">20.0</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;ambient_temp&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">32.0</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;ambient_humidity&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">65.0</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;gas_1_ppm&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">400.0</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;gas_2_ppm&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">350.0</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;water_temp_1&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">25.0</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;water_temp_2&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">26.0</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;fan_1_status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;fan_2_status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;fan_3_status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;timestamp&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-01-01T12:00:00Z&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;uptime_seconds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3600</span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;calibration&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;ph&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;slope&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1.023</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;offset&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">-0.15</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;temp_coefficient&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.0198</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;calibrated_at&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-01-01T00:00:00Z&quot;</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;next_calibration_due&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-04-01T00:00:00Z&quot;</span>
+        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;tds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;temp_coefficient&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.02</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;calibration_ppm&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1413</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;calibrated_at&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-01-01T00:00:00Z&quot;</span>
+        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;turbidity&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;voltage_at_0_ntu&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4.2</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;slope&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">-1120.4</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;calibrated_at&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-01-01T00:00:00Z&quot;</span>
+        <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;pressure&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;offset_voltage&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.5</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;full_scale_voltage&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4.5</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;max_pressure_bar&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">12.0</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;calibrated_at&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-01-01T00:00:00Z&quot;</span>
+        <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+
+  <span class="hljs-attr">&quot;historical_logs&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;device_001&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;2024-01-01&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;log_001&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;ph&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">7.2</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;tds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">320</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;turbidity&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.8</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;temperature&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">24.5</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;pressure_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4.2</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;flow_rate_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2.5</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;water_level_feed_tank&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">85</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;recovery_rate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">72.0</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;rejection_rate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">98.5</span><span class="hljs-punctuation">,</span>
+          <span class="hljs-attr">&quot;timestamp&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-01-01T00:00:00Z&quot;</span>
+        <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+
+  <span class="hljs-attr">&quot;alerts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;device_001&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;alert_001&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;high_tds&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;severity&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;warning&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;parameter&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;tds&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;value&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1050</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;threshold&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1000</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;message&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;TDS exceeded maximum threshold (1050 &gt; 1000 ppm)&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;timestamp&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-01-01T12:05:00Z&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;acknowledged&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;acknowledged_by&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;acknowledged_at&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;resolved&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;resolved_at&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">null</span></span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+
+  <span class="hljs-attr">&quot;predictions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;device_001&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;latest&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;water_quality_score&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">87.5</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;water_quality_class&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;good&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;membrane_fouling_risk&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;low&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;membrane_fouling_probability&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.12</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;filter_replacement_days&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">45</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;pump_failure_probability&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.03</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;sensor_anomalies&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;confidence&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.94</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;model_version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;v1.2.0&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;predicted_at&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-01-01T12:00:00Z&quot;</span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;history&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;2024-01-01&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;pred_001&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+            <span class="hljs-attr">&quot;water_quality_score&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">87.5</span><span class="hljs-punctuation">,</span>
+            <span class="hljs-attr">&quot;water_quality_class&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;good&quot;</span><span class="hljs-punctuation">,</span>
+            <span class="hljs-attr">&quot;membrane_fouling_risk&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;low&quot;</span><span class="hljs-punctuation">,</span>
+            <span class="hljs-attr">&quot;predicted_at&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-01-01T12:00:00Z&quot;</span>
+          <span class="hljs-punctuation">}</span>
+        <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+
+  <span class="hljs-attr">&quot;system_status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;device_001&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;online&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;wifi_rssi&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">-65</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;heap_free_bytes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">245760</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;cpu_temp_celsius&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">42.5</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;loop_frequency_hz&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">10</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;sensor_health&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;ph&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ok&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;tds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ok&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;turbidity&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ok&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;temperature&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ok&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;pressure&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ok&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;flow&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ok&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;level&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ok&quot;</span>
+      <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;last_update&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-01-01T12:00:00Z&quot;</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+
+  <span class="hljs-attr">&quot;maintenance_logs&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;device_001&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;maint_001&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;type&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;membrane_replacement&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;description&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;RO membrane replaced (DOW FilmTec TW30-1812-50)&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;performed_by&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Technician A&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;performed_at&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2024-01-01T00:00:00Z&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;next_due_at&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;2025-01-01T00:00:00Z&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;cost_usd&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">45.00</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;notes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Pre-filter also cleaned&quot;</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+
+  <span class="hljs-attr">&quot;users&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;user_001&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;email&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;operator@plant.com&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;role&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;operator&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;devices&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-string">&quot;device_001&quot;</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;notification_preferences&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;email&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;push&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">true</span></span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;sms&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-literal"><span class="hljs-keyword">false</span></span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="493" data-line-end="494"><a id="62_Firebase_Security_Rules_Draft_493"></a>6.2 Firebase Security Rules (Draft)</h3>
+<pre><code class="has-line-data language-json" data-line-start="496" data-line-end="534"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;rules&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;devices&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;$device_id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;.read&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auth != null &amp;&amp; root.child(&#x27;users&#x27;).child(auth.uid).child(&#x27;devices&#x27;).hasChild($device_id)&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;.write&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auth != null &amp;&amp; root.child(&#x27;users&#x27;).child(auth.uid).child(&#x27;role&#x27;).val() === &#x27;admin&#x27;&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;live_data&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+          <span class="hljs-attr">&quot;.write&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auth != null&quot;</span>
+        <span class="hljs-punctuation">}</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;historical_logs&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;$device_id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;.read&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auth != null&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;.write&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auth != null&quot;</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;alerts&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;$device_id&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+        <span class="hljs-attr">&quot;.read&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auth != null&quot;</span><span class="hljs-punctuation">,</span>
+        <span class="hljs-attr">&quot;.write&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auth != null&quot;</span>
+      <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;predictions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;.read&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auth != null&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;.write&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auth != null&quot;</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;system_status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;.read&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auth != null&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;.write&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auth != null&quot;</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;maintenance_logs&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;.read&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auth != null&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;.write&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;auth != null &amp;&amp; root.child(&#x27;users&#x27;).child(auth.uid).child(&#x27;role&#x27;).val() !== &#x27;viewer&#x27;&quot;</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="537" data-line-end="538"><a id="7_Folder_Structure_537"></a>7. Folder Structure</h2>
+<h3 class="code-line has-line-data" data-line-start="539" data-line-end="540"><a id="71_Monorepo_Project_Structure_539"></a>7.1 Monorepo Project Structure</h3>
+<pre><code class="has-line-data" data-line-start="542" data-line-end="600">water-desalination-system/
+│
+├── 📁 Node1_WaterQuality/              # Edge Node 1 Firmware
+│   ├── Node1_WaterQuality.ino
+│   ├── config.h
+│   ├── state_machine.h / .cpp
+│   ├── sensors.h / .cpp
+│   └── espnow_broadcast.h / .cpp
+│
+├── 📁 Node2_Environment/               # Edge Node 2 Firmware
+│   ├── Node2_Environment.ino
+│   ├── config.h
+│   ├── sensors_env.h / .cpp
+│   └── espnow_env.h / .cpp
+│
+├── 📁 Main_Hub/                        # Central Hub Firmware
+│   ├── Main_Hub.ino
+│   ├── config.h
+│   ├── firebase_client.h / .cpp        # Direct RTDB uploads
+│   └── ... (BLE and Display handling)
+│
+├── 📁 backend/                         # FastAPI Backend
+│   ├── 📁 app/
+│   │   ├── main.py                     # FastAPI app factory
+│   │   ├── 📁 api/
+│   │   │   └── 📁 v1/
+│   │   │       ├── sensors.py          # Data endpoints
+│   │   │       ├── predictions.py      # ML models
+│   │   │       └── chat.py             # Gemini chatbot
+│   │   ├── 📁 core/
+│   │   │   ├── config.py               
+│   │   │   └── firebase.py             
+│   │   └── 📁 services/
+│   │       └── alert_engine.py         
+│   ├── run.py
+│   └── requirements.txt
+│
+├── 📁 dashboard/                       # Web UI
+│   └── 📁 web/
+│       ├── index.html
+│       ├── style.css
+│       └── app.js
+│
+├── 📁 mobile/                          # Flet Mobile App
+│   ├── 📁 src/
+│   │   ├── main.py                     # Entry point, bottom nav
+│   │   ├── 📁 pages/
+│   │   │   ├── dashboard.py
+│   │   │   ├── history.py
+│   │   │   ├── wifi_setup.py
+│   │   │   └── settings.py
+│   │   ├── 📁 ble/
+│   │   │   └── client.py               # Real &amp; Virtual BLE
+│   │   └── 📁 db/
+│   │       ├── local_db.py             # SQLite offline storage
+│   │       └── sync.py                 # Background upload to backend
+│   └── requirements.txt
+</code></pre>
+<p class="has-line-data" data-line-start="600" data-line-end="637">├── 📁 ml/                              # Standalone ML Development<br>
+│   ├── 📁 notebooks/<br>
+│   │   ├── 01_data_exploration.ipynb<br>
+│   │   ├── 02_feature_engineering.ipynb<br>
+│   │   ├── 03_model_training.ipynb<br>
+│   │   ├── 04_hyperparameter_tuning.ipynb<br>
+│   │   └── 05_model_evaluation.ipynb<br>
+│   ├── 📁 data/<br>
+│   │   ├── 📁 raw/                     # Raw collected sensor data<br>
+│   │   ├── 📁 processed/               # Cleaned and feature-engineered data<br>
+│   │   └── 📁 synthetic/              # Synthetic data for initial training<br>
+│   ├── 📁 models/                      # Trained model artifacts<br>
+│   ├── generate_synthetic_data.py<br>
+│   ├── train_pipeline.py<br>
+│   └── requirements.txt<br>
+│<br>
+├── 📁 docs/                            # Project Documentation<br>
+│   ├── 📁 phases/                      # Per-phase documentation<br>
+│   │   ├── phase01_requirements.md<br>
+│   │   ├── phase02_hardware.md<br>
+│   │   └── …<br>
+│   ├── 📁 api/                         # API documentation<br>
+│   ├── 📁 hardware/<br>
+│   │   ├── schematic.pdf<br>
+│   │   ├── pin_assignment.md<br>
+│   │   └── <a href="http://bom.md">bom.md</a>                      # Bill of Materials<br>
+│   └── <a href="http://architecture.md">architecture.md</a><br>
+│<br>
+├── 📁 scripts/                         # Utility Scripts<br>
+│   ├── setup_firebase.py               # Firebase initialization script<br>
+│   ├── generate_test_data.py           # Test data generator<br>
+│   ├── <a href="http://deploy.sh">deploy.sh</a>                       # Deployment automation<br>
+│   └── calibrate_sensors.py            # CLI calibration tool<br>
+│<br>
+├── .gitignore<br>
+├── <a href="http://README.md">README.md</a><br>
+└── docker-compose.yml                  # Local development stack</p>
+<pre><code class="has-line-data" data-line-start="638" data-line-end="644">
+---
+
+## 8. Data Flow Diagram
+
+</code></pre>
+<p class="has-line-data" data-line-start="644" data-line-end="671">┌──────────┐   ESP-NOW     ┌──────────────┐   RTDB Push    ┌────────────┐<br>
+│  Sensor  │ ─────────────▶│   Main Hub   │ ──────────────▶│  Firebase  │<br>
+│ Nodes 1,2│               │  (ESP32S)    │   (WiFi)       │  Realtime  │<br>
+└──────────┘               └──────┬───────┘                │  Database  │<br>
+│                        └──────┬─────┘<br>
+▼ BLE                           │<br>
+┌──────────────┐                       │ REST/SDK Pull<br>
+│  Mobile App  │                       ▼<br>
+│ (Local DB)   │                ┌─────────────┐<br>
+└──────┬───────┘                │   FastAPI   │<br>
+│ HTTP Sync              │   Backend   │<br>
+└───────────────────────▶└──────┬──────┘<br>
+│<br>
+┌───────────┴───────────┐<br>
+│                       │<br>
+▼                       ▼<br>
+┌─────────────┐        ┌─────────────┐<br>
+│  ML Service │        │ Gemini API  │<br>
+│  (sklearn)  │        │  (Google)   │<br>
+└──────┬──────┘        └──────┬──────┘<br>
+│                      │<br>
+└──────────┬───────────┘<br>
+▼<br>
+Predictions +<br>
+AI Insights<br>
+→ Displayed in<br>
+Dashboard/App</p>
+<pre><code class="has-line-data" data-line-start="672" data-line-end="695">
+---
+
+## 9. Sensor Specifications &amp; Requirements
+
+### 9.1 Complete Sensor Reference Table
+
+| Sensor | Model | Range | Output | Resolution | Accuracy | Sampling Rate |
+|--------|-------|-------|--------|------------|----------|---------------|
+| pH (Feed) | Analog pH Kit | 0–14 pH | 0–3.3V analog | 0.01 pH | ±0.1 pH | 1 Hz |
+| pH (Permeate) | Analog pH Kit | 0–14 pH | 0–3.3V analog | 0.01 pH | ±0.1 pH | 1 Hz |
+| TDS (Feed) | TDS Meter V1.0 | 0–1000 ppm | 0–2.3V analog | 1 ppm | ±10% | 1 Hz |
+| TDS (Permeate) | TDS Meter V1.0 | 0–1000 ppm | 0–2.3V analog | 1 ppm | ±10% | 1 Hz |
+| Turbidity | Analog Module | 0–3000 NTU | 0–4.5V analog | 0.1 NTU | ±5% | 1 Hz |
+| Temperature | DS18B20 ×2 | -55–125°C | 1-Wire digital | 0.0625°C | ±0.5°C | 0.1 Hz |
+| Pressure | G1/4 Analog | 0–1.2 MPa | 0.5–4.5V analog | 0.01 bar | ±2% FS | 1 Hz |
+| Water Level | XKC-Y25 ×2 | Contact-free | Digital HIGH/LOW | Binary | N/A | 10 Hz |
+| Flow Rate (Feed) | YF-S201 | 1–30 L/min | PWM pulse | 0.1 L/min | ±10% | Interrupt |
+| Flow Rate (Permeate) | YF-S201 | 1–30 L/min | PWM pulse | 0.1 L/min | ±10% | Interrupt |
+
+### 9.2 Measurement Frequency Plan
+
+</code></pre>
+<p class="has-line-data" data-line-start="695" data-line-end="697">High Priority (every 5 seconds, sent to Firebase):<br>
+• pH, TDS, Temperature, Turbidity, Pressure, Flow Rate, Water Level</p>
+<p class="has-line-data" data-line-start="698" data-line-end="700">Medium Priority (logged every 1 minute):<br>
+• Computed metrics: Recovery Rate, Rejection Rate, Running averages</p>
+<p class="has-line-data" data-line-start="701" data-line-end="703">Low Priority (logged every 10 minutes):<br>
+• System diagnostics: WiFi RSSI, Free heap, CPU temp</p>
+<p class="has-line-data" data-line-start="704" data-line-end="706">ML Prediction (every 5 minutes):<br>
+• Triggered by FastAPI service using latest live_data</p>
+<pre><code class="has-line-data" data-line-start="707" data-line-end="846">
+---
+
+## 10. Non-Functional Requirements
+
+| Category | Requirement | Target |
+|----------|-------------|--------|
+| **Latency** | Sensor-to-dashboard display | &lt; 3 seconds end-to-end |
+| **Availability** | System uptime | &gt; 99.5% |
+| **Data Retention** | Historical logs | 365 days |
+| **Scalability** | Concurrent devices | Up to 50 devices |
+| **Security** | Data transport | TLS 1.3 (HTTPS) |
+| **Security** | Auth | Firebase Authentication |
+| **Accuracy** | ML model F1-score | &gt; 90% on test set |
+| **Throughput** | FastAPI requests | &gt; 500 req/sec |
+| **Storage** | Firebase usage | &lt; 100MB/device/year |
+| **Mobile** | App response time | &lt; 500ms for UI interactions |
+
+---
+
+## 11. Validation Checklist
+
+### ✅ Phase 1 Completion Criteria
+
+#### Architecture &amp; Design
+- [ ] Complete system architecture diagram reviewed and approved
+- [ ] All system layers defined with clear interfaces
+- [ ] Communication protocols selected and documented
+- [ ] Data flow verified end-to-end on paper
+
+#### Hardware Planning
+- [ ] All sensor models identified and data sheets reviewed
+- [ ] ESP32 pin assignment table completed with no conflicts
+- [ ] ADC1-only constraint verified for all analog sensors
+- [ ] Power supply requirements calculated (3.3V vs 5V per sensor)
+
+#### Firebase
+- [ ] Firebase project created in Firebase Console
+- [ ] Realtime Database provisioned (us-central1 or nearest region)
+- [ ] Database schema designed and documented
+- [ ] Security rules drafted
+- [ ] Firebase Admin SDK service account created
+- [ ] Firebase config keys stored securely (not in code)
+
+#### Software Structure
+- [ ] Project repository initialized (Git)
+- [ ] Complete folder structure created
+- [ ] .gitignore configured (secrets.h, .env, *.pkl excluded)
+- [ ] README.md created at project root
+- [ ] All technology versions documented
+
+#### Environment Setup
+- [ ] Arduino IDE / PlatformIO installed
+- [ ] ESP32 board package installed
+- [ ] Python 3.11+ installed
+- [ ] FastAPI + dependencies listed in requirements.txt
+- [ ] Flet 0.80.5 installed
+- [ ] Firebase Admin Python SDK installed
+- [ ] Google Gemini Python SDK installed
+- [ ] scikit-learn installed
+
+---
+
+## 12. Common Errors &amp; Troubleshooting
+
+### 12.1 Firebase Setup Issues
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `PERMISSION_DENIED` | Security rules too restrictive | Set rules to allow authenticated reads temporarily |
+| `Database not found` | Wrong database URL format | Must end with `.firebaseio.com` |
+| `Service account invalid` | Wrong JSON key file | Download fresh key from Firebase Console → Project Settings → Service Accounts |
+
+### 12.2 ESP32 Planning Issues
+
+| Issue | Cause | Fix |
+|-------|-------|-----|
+| ADC reading 0 on analog sensors | Using ADC2 pin while WiFi is on | Move all analog sensors to GPIO32-39 (ADC1) |
+| Random resets during WiFi | Insufficient power | Use external 5V 2A power supply, not USB alone |
+| DS18B20 reads -127°C | Missing pull-up resistor | Add 4.7kΩ between DATA and VCC |
+
+### 12.3 Architecture Decisions
+
+| Decision | Options Considered | Chosen | Reason |
+|----------|-------------------|--------|--------|
+| Embedded protocol | MQTT vs HTTP | HTTPS POST | Simpler, Firebase-native, no broker needed |
+| Database | Firebase vs PostgreSQL | Firebase | Real-time push, mobile-friendly, free tier |
+| ML framework | TensorFlow vs sklearn | sklearn RF | Lighter, faster inference, interpretable |
+| API style | REST vs GraphQL | REST | Simpler, better ecosystem support |
+
+---
+
+## 13. Best Practices
+
+### 13.1 Security Best Practices
+1. **Never commit credentials** — use `.env` files and `secrets.h` (both gitignored)
+2. **Use Firebase Security Rules** — never use open read/write
+3. **Rotate Firebase service account keys** every 90 days
+4. **Use HTTPS only** — never plain HTTP for API endpoints
+
+### 13.2 Code Quality Best Practices
+1. **Use semantic versioning** for firmware (MAJOR.MINOR.PATCH)
+2. **Document every function** with purpose, params, return values
+3. **Use constants for all magic numbers** (pin numbers, thresholds)
+4. **Write unit tests** for backend services and ML pipeline
+
+### 13.3 Data Engineering Best Practices
+1. **Always timestamp data at the source** (ESP32 NTP-synced clock)
+2. **Design for schema evolution** — add fields, never remove
+3. **Store raw + filtered readings** for audit trail
+4. **Validate data ranges** before storing to Firebase
+
+### 13.4 Hardware Best Practices
+1. **Use bypass capacitors** (100nF) near each analog sensor
+2. **Use shielded cables** for analog signal lines &gt; 30cm
+3. **Separate analog and digital ground planes** if possible
+4. **Add TVS diodes** on sensor lines for surge protection
+
+---
+
+## 🚀 Action Items Before Phase 2
+
+&gt; [!IMPORTANT]
+&gt; Complete ALL items below before proceeding to Phase 2
+
+### Immediate Setup Tasks
+
+1. **Create Firebase Project**
+   - Go to [Firebase Console](https://console.firebase.google.com)
+   - Create project: `water-desalination-system`
+   - Enable Realtime Database (Start in test mode)
+   - Download `serviceAccountKey.json`
+
+2. **Initialize Git Repository**
+   ```bash
+   mkdir water-desalination-system
+   cd water-desalination-system
+   git init
+</code></pre>
+<ol start="3">
+<li class="has-line-data" data-line-start="847" data-line-end="858">
+<p class="has-line-data" data-line-start="847" data-line-end="848"><strong>Create the folder structure</strong></p>
+<pre><code class="has-line-data language-bash" data-line-start="849" data-line-end="857"><span class="hljs-built_in">mkdir</span> -p firmware/src/{sensors,calibration,filters,communication,control,config}
+<span class="hljs-built_in">mkdir</span> -p backend/app/{api/v1,core,models,services,ml/models}
+<span class="hljs-built_in">mkdir</span> -p dashboard/src/{pages,components,services,models,utils,assets}
+<span class="hljs-built_in">mkdir</span> -p mobile/src/{screens,components}
+<span class="hljs-built_in">mkdir</span> -p ml/{notebooks,data/{raw,processed,synthetic},models}
+<span class="hljs-built_in">mkdir</span> -p docs/{phases,api,hardware}
+<span class="hljs-built_in">mkdir</span> scripts
+</code></pre>
+</li>
+<li class="has-line-data" data-line-start="858" data-line-end="865">
+<p class="has-line-data" data-line-start="858" data-line-end="859"><strong>Install Python Environment</strong></p>
+<pre><code class="has-line-data language-bash" data-line-start="860" data-line-end="864">python -m venv venv
+venv\Scripts\activate   <span class="hljs-comment"># Windows</span>
+pip install fastapi uvicorn firebase-admin google-generativeai scikit-learn flet pandas numpy python-dotenv
+</code></pre>
+</li>
+<li class="has-line-data" data-line-start="865" data-line-end="867">
+<p class="has-line-data" data-line-start="865" data-line-end="866"><strong>Install PlatformIO</strong> (VS Code Extension) or Arduino IDE 2.x with ESP32 board package</p>
+</li>
+</ol>
+<hr>
+<blockquote>
+<p class="has-line-data" data-line-start="869" data-line-end="871">[!NOTE]<br>
+<strong>Phase 1 is complete when all validation checklist items are checked ✅</strong></p>
+</blockquote>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="874" data-line-end="875"><a id="Phase_Summary_874"></a>📊 Phase Summary</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Item</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>System Architecture</td>
+<td>✅ Designed</td>
+</tr>
+<tr>
+<td>Database Schema</td>
+<td>✅ Designed</td>
+</tr>
+<tr>
+<td>Folder Structure</td>
+<td>✅ Defined</td>
+</tr>
+<tr>
+<td>Technology Stack</td>
+<td>✅ Justified</td>
+</tr>
+<tr>
+<td>Sensor Specifications</td>
+<td>✅ Documented</td>
+</tr>
+<tr>
+<td>Non-Functional Requirements</td>
+<td>✅ Defined</td>
+</tr>
+<tr>
+<td>Security Model</td>
+<td>✅ Drafted</td>
+</tr>
+<tr>
+<td>Action Items</td>
+<td>⏳ Pending your completion</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p class="has-line-data" data-line-start="889" data-line-end="890"><strong>Have you completed this phase?</strong></p>
+<p class="has-line-data" data-line-start="891" data-line-end="892">Reply with <strong>“Phase Completed”</strong> to proceed to <strong>Phase 2: Hardware Design and Connections</strong>.</p>
+<h1 class="code-line has-line-data" data-line-start="893" data-line-end="894"><a id="Phase_2_Hardware_Design_and_Connections_893"></a>🔧 Phase 2 — Hardware Design and Connections</h1>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="897" data-line-end="898"><a id="Table_of_Contents_897"></a>📋 Table of Contents</h2>
+<ol>
+<li class="has-line-data" data-line-start="899" data-line-end="900"><a href="#1-objectives">Objectives</a></li>
+<li class="has-line-data" data-line-start="900" data-line-end="901"><a href="#2-theory">Theory</a></li>
+<li class="has-line-data" data-line-start="901" data-line-end="902"><a href="#3-bill-of-materials-bom">Bill of Materials (BOM)</a></li>
+<li class="has-line-data" data-line-start="902" data-line-end="903"><a href="#4-power-supply-design">Power Supply Design</a></li>
+<li class="has-line-data" data-line-start="903" data-line-end="904"><a href="#5-esp32s-38-pin-board-layout">ESP32S 38-Pin Board Layout</a></li>
+<li class="has-line-data" data-line-start="904" data-line-end="905"><a href="#6-complete-pin-assignment-table">Complete Pin Assignment Table</a></li>
+<li class="has-line-data" data-line-start="905" data-line-end="906"><a href="#7-voltage-divider-design">Voltage Divider Design</a></li>
+<li class="has-line-data" data-line-start="906" data-line-end="907"><a href="#8-sensor-wiring-diagrams">Sensor Wiring Diagrams</a></li>
+<li class="has-line-data" data-line-start="907" data-line-end="908"><a href="#9-complete-system-wiring-overview">Complete System Wiring Overview</a></li>
+<li class="has-line-data" data-line-start="908" data-line-end="909"><a href="#10-source-code-files">Source Code Files</a></li>
+<li class="has-line-data" data-line-start="909" data-line-end="910"><a href="#11-testing-procedures">Testing Procedures</a></li>
+<li class="has-line-data" data-line-start="910" data-line-end="911"><a href="#12-validation-checklist">Validation Checklist</a></li>
+<li class="has-line-data" data-line-start="911" data-line-end="912"><a href="#13-common-errors--troubleshooting">Common Errors &amp; Troubleshooting</a></li>
+<li class="has-line-data" data-line-start="912" data-line-end="914"><a href="#14-best-practices">Best Practices</a></li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="916" data-line-end="917"><a id="1_Objectives_916"></a>1. Objectives</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>#</th>
+<th>Objective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Connect all 7 sensors to the ESP32S safely</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Design voltage dividers for 5V sensor outputs</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Wire relay modules for pump and solenoid valve control</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Design a clean power distribution system</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Verify all connections with the hardware test sketch</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Create the <code>config.h</code> master pin definition file</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="929" data-line-end="930"><a id="2_Theory_929"></a>2. Theory</h2>
+<h3 class="code-line has-line-data" data-line-start="931" data-line-end="932"><a id="21_ESP32_ADC_Limitation_The_Most_Critical_Rule_931"></a>2.1 ESP32 ADC Limitation — The Most Critical Rule</h3>
+<p class="has-line-data" data-line-start="933" data-line-end="934">The ESP32 has <strong>two ADC units</strong>:</p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>ADC Unit</th>
+<th>Pins</th>
+<th>WiFi-Safe?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ADC1</strong></td>
+<td>GPIO32, 33, 34, 35, 36, 39</td>
+<td>✅ YES</td>
+</tr>
+<tr>
+<td><strong>ADC2</strong></td>
+<td>GPIO0, 2, 4, 12, 13, 14, 15, 25, 26, 27</td>
+<td>❌ NO</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p class="has-line-data" data-line-start="940" data-line-end="942">[!CAUTION]<br>
+<strong>ADC2 is internally used by the WiFi radio.</strong> When WiFi is active, any <code>analogRead()</code> on ADC2 pins returns garbage values or causes crashes. ALL analog sensors in this project use ADC1 pins only.</p>
+</blockquote>
+<h3 class="code-line has-line-data" data-line-start="943" data-line-end="944"><a id="22_Voltage_Divider_Principle_943"></a>2.2 Voltage Divider Principle</h3>
+<p class="has-line-data" data-line-start="945" data-line-end="946">Several sensors are powered by 5V and output up to 4.5V. The ESP32 ADC maximum input is <strong>3.3V</strong>. Exceeding this <strong>permanently damages</strong> the ESP32.</p>
+<p class="has-line-data" data-line-start="947" data-line-end="948"><strong>Solution: Resistor Voltage Divider</strong></p>
+<pre><code class="has-line-data" data-line-start="950" data-line-end="960">  Sensor Output (5V max)
+         │
+        [R1 = 10kΩ]
+         │
+         ├──────────── To ESP32 GPIO (ADC)
+         │
+        [R2 = 20kΩ]
+         │
+        GND
+</code></pre>
+<pre><code class="has-line-data" data-line-start="962" data-line-end="967">Vout = Vin × R2 / (R1 + R2)
+Vout = 5.0 × 20 / (10 + 20)
+Vout = 5.0 × 0.667
+Vout = 3.33V  ✅ (safe for ESP32)
+</code></pre>
+<p class="has-line-data" data-line-start="968" data-line-end="969"><strong>Affected sensors requiring dividers:</strong></p>
+<ul>
+<li class="has-line-data" data-line-start="969" data-line-end="970">Turbidity Sensor (outputs 0–4.5V at 5V supply)</li>
+<li class="has-line-data" data-line-start="970" data-line-end="972">Pressure Sensor G1/4 (outputs 0.5–4.5V at 5V supply)</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="972" data-line-end="973"><a id="23_OneWire_Protocol_DS18B20_972"></a>2.3 OneWire Protocol (DS18B20)</h3>
+<p class="has-line-data" data-line-start="974" data-line-end="975">The DS18B20 uses the Dallas OneWire protocol — a single-wire bidirectional communication. A <strong>4.7kΩ pull-up resistor</strong> between the DATA line and VCC is <strong>mandatory</strong>. Without it, the sensor will always return <code>-127°C</code> (error code).</p>
+<h3 class="code-line has-line-data" data-line-start="976" data-line-end="977"><a id="24_Relay_Module_Logic_976"></a>2.4 Relay Module Logic</h3>
+<p class="has-line-data" data-line-start="978" data-line-end="979">Most relay modules are <strong>Active-LOW</strong> (the relay energizes when the control pin is pulled LOW):</p>
+<ul>
+<li class="has-line-data" data-line-start="979" data-line-end="980"><code>digitalWrite(PIN_RELAY, LOW)</code> → Relay <strong>ON</strong> → Pump/Valve ON</li>
+<li class="has-line-data" data-line-start="980" data-line-end="982"><code>digitalWrite(PIN_RELAY, HIGH)</code> → Relay <strong>OFF</strong> → Pump/Valve OFF</li>
+</ul>
+<p class="has-line-data" data-line-start="982" data-line-end="983">The relay module uses an optocoupler for isolation, protecting the ESP32 from the high-current load circuit.</p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="986" data-line-end="987"><a id="3_Bill_of_Materials_BOM_986"></a>3. Bill of Materials (BOM)</h2>
+<h3 class="code-line has-line-data" data-line-start="988" data-line-end="989"><a id="31_Core_Components_988"></a>3.1 Core Components</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>#</th>
+<th>Component</th>
+<th>Quantity</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>ESP32 38-pin Development Board</td>
+<td>3</td>
+<td>Main Hub, Node 1, Node 2</td>
+</tr>
+<tr>
+<td>2</td>
+<td>5-inch SPI TFT LCD Module</td>
+<td>1</td>
+<td>ILI9488 or equivalent SPI display</td>
+</tr>
+<tr>
+<td>3</td>
+<td>pH Analog Sensor Kit</td>
+<td>1</td>
+<td>For Node 1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>TDS Meter Analog Sensor</td>
+<td>1</td>
+<td>For Node 1</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Water Turbidity Sensor</td>
+<td>1</td>
+<td>For Node 1</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Analog Water Pressure Sensor</td>
+<td>1</td>
+<td>For Node 1</td>
+</tr>
+<tr>
+<td>7</td>
+<td>XKC-Y25 Level Sensor</td>
+<td>2</td>
+<td>For Node 1</td>
+</tr>
+<tr>
+<td>8</td>
+<td>YF-S201 Water Flow Sensor</td>
+<td>1</td>
+<td>For Node 1</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Ultrasonic Distance Sensor</td>
+<td>2</td>
+<td>For Node 2 (Tank Levels)</td>
+</tr>
+<tr>
+<td>10</td>
+<td>DHT22 Temp/Humidity Sensor</td>
+<td>1</td>
+<td>For Node 2</td>
+</tr>
+<tr>
+<td>11</td>
+<td>MQ-Series Gas Sensor</td>
+<td>2</td>
+<td>For Node 2</td>
+</tr>
+<tr>
+<td>12</td>
+<td>DS18B20 Temp Sensor</td>
+<td>2</td>
+<td>For Node 2</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Relay Modules</td>
+<td>5</td>
+<td>2 for Node 1 (Pump/Valve), 3 for Node 2 (Fans)</td>
+</tr>
+<tr>
+<td>14</td>
+<td>RO Pump &amp; Solenoid Valve</td>
+<td>1 ea</td>
+<td>Controlled by Node 1</td>
+</tr>
+<tr>
+<td>15</td>
+<td>Cooling Fans (12V)</td>
+<td>3</td>
+<td>Controlled by Node 2</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="1008" data-line-end="1009"><a id="32_Passive_Components_1008"></a>3.2 Passive Components</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>#</th>
+<th>Component</th>
+<th>Quantity</th>
+<th>Value</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Resistor</td>
+<td>2</td>
+<td>10kΩ (1%)</td>
+<td>Voltage divider R1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Resistor</td>
+<td>2</td>
+<td>20kΩ (1%)</td>
+<td>Voltage divider R2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Resistor</td>
+<td>1</td>
+<td>4.7kΩ</td>
+<td>DS18B20 pull-up</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Resistor</td>
+<td>1</td>
+<td>10kΩ</td>
+<td>Flow sensor pull-up</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Capacitor</td>
+<td>4</td>
+<td>100nF ceramic</td>
+<td>ADC bypass caps</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Capacitor</td>
+<td>1</td>
+<td>10µF electrolytic</td>
+<td>3.3V power line filter</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="1019" data-line-end="1020"><a id="33_Power_Wiring_1019"></a>3.3 Power &amp; Wiring</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>#</th>
+<th>Component</th>
+<th>Quantity</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>5V 2A DC Power Supply</td>
+<td>1</td>
+<td>For ESP32 + all 5V sensors</td>
+</tr>
+<tr>
+<td>2</td>
+<td>12V or 24V 5A DC Power Supply</td>
+<td>1</td>
+<td>For pump + solenoid valve</td>
+</tr>
+<tr>
+<td>3</td>
+<td>AMS1117-3.3 Regulator or equivalent</td>
+<td>1</td>
+<td>If needed for 3.3V rail</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Terminal blocks (2-pin)</td>
+<td>10</td>
+<td>For sensor wire connections</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Breadboard or PCB</td>
+<td>1</td>
+<td>For prototyping</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Dupont jumper wires (M-M, M-F, F-F)</td>
+<td>40+</td>
+<td>Various</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Shielded wire (for analog sensors)</td>
+<td>2m</td>
+<td>Reduces noise</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="1031" data-line-end="1032"><a id="34_Arduino_Libraries_Required_1031"></a>3.4 Arduino Libraries Required</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Library</th>
+<th>Author</th>
+<th>Install via</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OneWire</code></td>
+<td>Paul Stoffregen</td>
+<td>Arduino Library Manager</td>
+</tr>
+<tr>
+<td><code>DallasTemperature</code></td>
+<td>Miles Burton</td>
+<td>Arduino Library Manager</td>
+</tr>
+<tr>
+<td><code>ArduinoJson</code></td>
+<td>Benoit Blanchon</td>
+<td>Arduino Library Manager</td>
+</tr>
+<tr>
+<td><code>Firebase ESP Client</code></td>
+<td>Mobizt</td>
+<td>Arduino Library Manager</td>
+</tr>
+<tr>
+<td><code>NTPClient</code></td>
+<td>Fabrice Weinberg</td>
+<td>Arduino Library Manager</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1043" data-line-end="1044"><a id="4_Power_Supply_Design_1043"></a>4. Power Supply Design</h2>
+<h3 class="code-line has-line-data" data-line-start="1045" data-line-end="1046"><a id="41_Power_Budget_1045"></a>4.1 Power Budget</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Component</th>
+<th>Voltage</th>
+<th>Current Draw</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ESP32S</td>
+<td>3.3V (via onboard LDO)</td>
+<td>80–250 mA</td>
+<td>5V supply via USB/VIN</td>
+</tr>
+<tr>
+<td>pH Sensor board</td>
+<td>5V</td>
+<td>~5 mA</td>
+<td>5V rail</td>
+</tr>
+<tr>
+<td>TDS Sensor board</td>
+<td>3.3–5V</td>
+<td>~3 mA</td>
+<td>3.3V or 5V rail</td>
+</tr>
+<tr>
+<td>Turbidity Sensor</td>
+<td>5V</td>
+<td>~30 mA</td>
+<td>5V rail</td>
+</tr>
+<tr>
+<td>DS18B20</td>
+<td>3.3V</td>
+<td>~1.5 mA</td>
+<td>3.3V rail</td>
+</tr>
+<tr>
+<td>Pressure Sensor</td>
+<td>5V</td>
+<td>~10 mA</td>
+<td>5V rail</td>
+</tr>
+<tr>
+<td>XKC-Y25 × 2</td>
+<td>5–12V</td>
+<td>~15 mA × 2</td>
+<td>5V rail</td>
+</tr>
+<tr>
+<td>YF-S201 Flow</td>
+<td>5–12V</td>
+<td>~15 mA</td>
+<td>5V rail</td>
+</tr>
+<tr>
+<td>Relay Module</td>
+<td>5V (coil)</td>
+<td>~50 mA × 2</td>
+<td>5V rail</td>
+</tr>
+<tr>
+<td><strong>TOTAL 5V load</strong></td>
+<td><strong>5V</strong></td>
+<td><strong>~480 mA</strong></td>
+<td><strong>5V 2A supply</strong></td>
+</tr>
+<tr>
+<td>RO Pump</td>
+<td>12V</td>
+<td>3–5 A</td>
+<td>12V supply (separate)</td>
+</tr>
+<tr>
+<td>Solenoid Valve</td>
+<td>12V</td>
+<td>0.5–1 A</td>
+<td>12V supply (separate)</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="1062" data-line-end="1063"><a id="42_Power_Distribution_Diagram_1062"></a>4.2 Power Distribution Diagram</h3>
+<pre><code class="has-line-data" data-line-start="1065" data-line-end="1095">  [5V 2A Power Supply]
+         │
+         ├─────────────────── ESP32S VIN pin
+         │                    (onboard LDO → 3.3V)
+         │
+         ├─────────────────── pH Sensor VCC (5V)
+         │
+         ├─────────────────── Turbidity Sensor VCC (5V)
+         │
+         ├─────────────────── Pressure Sensor VCC (5V)
+         │
+         ├─────────────────── XKC-Y25 #1 VCC (5V)
+         │
+         ├─────────────────── XKC-Y25 #2 VCC (5V)
+         │
+         ├─────────────────── YF-S201 VCC (5V)
+         │
+         └─────────────────── Relay Module VCC (5V)
+
+  [ESP32S 3.3V pin] ──────── TDS Sensor VCC (3.3V)
+                   └──────── DS18B20 VCC (3.3V)
+
+  [12V 5A Power Supply]
+         ├─────────────────── Relay Common (COM)
+         │                    → Relay NC → Pump
+         └─────────────────── Relay Common (COM)
+                              → Relay NC → Solenoid Valve
+
+  GND ──────────────────────── ALL GND pins connected together
+</code></pre>
+<blockquote>
+<p class="has-line-data" data-line-start="1096" data-line-end="1098">[!IMPORTANT]<br>
+The 12V pump/valve power supply <strong>shares GND</strong> with the 5V/3.3V circuit but the <strong>12V line itself is isolated</strong> — it only connects to the relay Common (COM) terminal. Never connect 12V directly to the ESP32 or sensors.</p>
+</blockquote>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1101" data-line-end="1102"><a id="5_ESP32_Board_Layouts_3_Nodes_1101"></a>5. ESP32 Board Layouts (3 Nodes)</h2>
+<p class="has-line-data" data-line-start="1103" data-line-end="1104">The system is distributed across three separate ESP32s to prevent GPIO exhaustion and ADC interference.</p>
+<h3 class="code-line has-line-data" data-line-start="1105" data-line-end="1106"><a id="51_Node_1_Water_Quality_Sensor_Node_1105"></a>5.1 Node 1: Water Quality (Sensor Node)</h3>
+<pre><code class="has-line-data" data-line-start="1107" data-line-end="1126">                    ESP32S 38-PIN BOARD (Node 1)
+                    ┌─────────────────┐
+              EN ───┤ EN          D23 ├─── (free)
+ pH(Perm) GPIO36 ─── ┤ VP(36)      D22 ├─── (free)
+ TDS(Perm)GPIO39 ──┤ VN(39)      TX0 ├─── Serial TX
+ pH(Feed) GPIO34 ───┤ D34         RX0 ├─── Serial RX
+ TDS(Feed)GPIO35 ───┤ D35         D21 ├─── (free)
+ TurbidityGPIO32 ───┤ D32         D19 ├────Level Product
+ Pressure GPIO33 ───┤ D33         D18 ├────Flow (Feed)
+ Valve    GPIO25 ───┤ D25    (TX2)D17 ├─── (free)
+ Pump     GPIO26 ──┤ D26    (RX2)D16 ├─── (free)
+ Flow(P)  GPIO27 ──┤ D27         D15 ├─── (free)
+          GPIO14 ──┤ D14          D2 ├────Status LED
+          GPIO12 ──┤ D12          D4 ├────DS18B20 Temp
+              GND─ ┤ GND         GND ├─── GND
+          GPIO13 ──┤ D13         D5  ├────Level Feed
+              5V ─ ┤ 5V          3V3 ├─── 3.3V out
+                    └─────────────────┘
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="1127" data-line-end="1128"><a id="52_Node_2_Environment_1127"></a>5.2 Node 2: Environment</h3>
+<pre><code class="has-line-data" data-line-start="1129" data-line-end="1148">                    ESP32S 38-PIN BOARD (Node 2)
+                    ┌─────────────────┐
+              EN ───┤ EN          D23 ├─── (free)
+ Gas1     GPIO36 ─── ┤ VP(36)      D22 ├─── (free)
+ Gas2     GPIO39 ──┤ VN(39)      TX0 ├─── Serial TX
+          GPIO34 ───┤ D34         RX0 ├─── Serial RX
+          GPIO35 ───┤ D35         D21 ├─── (free)
+ Fan3     GPIO32 ───┤ D32         D19 ├─── (free)
+          GPIO33 ───┤ D33         D18 ├─── (free)
+ Fan1     GPIO25 ───┤ D25    (TX2)D17 ├─── (free)
+ Fan2     GPIO26 ──┤ D26    (RX2)D16 ├─── (free)
+ US2 Echo GPIO27 ──┤ D27         D15 ├─── (free)
+ US2 Trig GPIO14 ──┤ D14          D2 ├────Status LED
+ US1 Echo GPIO12 ──┤ D12          D4 ├────DHT22
+              GND─ ┤ GND         GND ├─── GND
+ US1 Trig GPIO13 ──┤ D13         D5  ├────DS18B20 (Water Temps)
+              5V ─ ┤ 5V          3V3 ├─── 3.3V out
+                    └─────────────────┘
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="1149" data-line-end="1150"><a id="53_Main_Hub_Comms_Display_1149"></a>5.3 Main Hub (Comms &amp; Display)</h3>
+<pre><code class="has-line-data" data-line-start="1151" data-line-end="1170">                    ESP32S 38-PIN BOARD (Main Hub)
+                    ┌─────────────────┐
+              EN ───┤ EN          D23 ├────TFT MOSI
+          GPIO36 ─── ┤ VP(36)      D22 ├────TFT SCL (Touch)
+          GPIO39 ──┤ VN(39)      TX0 ├─── Serial TX
+          GPIO34 ───┤ D34         RX0 ├─── Serial RX
+          GPIO35 ───┤ D35         D21 ├────TFT SDA (Touch)
+          GPIO32 ───┤ D32         D19 ├────TFT MISO
+          GPIO33 ───┤ D33         D18 ├────TFT SCK
+          GPIO25 ───┤ D25    (TX2)D17 ├─── (free)
+          GPIO26 ──┤ D26    (RX2)D16 ├─── (free)
+          GPIO27 ──┤ D27         D15 ├─── (free)
+          GPIO14 ──┤ D14          D2 ├────TFT DC
+          GPIO12 ──┤ D12          D4 ├────TFT RST
+              GND─ ┤ GND         GND ├─── GND
+          GPIO13 ──┤ D13         D5  ├────TFT CS
+              5V ─ ┤ 5V          3V3 ├─── 3.3V out
+                    └─────────────────┘
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1173" data-line-end="1174"><a id="6_Complete_Pin_Assignment_Table_1173"></a>6. Complete Pin Assignment Table</h2>
+<h3 class="code-line has-line-data" data-line-start="1175" data-line-end="1176"><a id="61_Node_1_Water_Quality_1175"></a>6.1 Node 1: Water Quality</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Sensor / Module</th>
+<th>Pin Name</th>
+<th>ESP32 GPIO</th>
+<th>Role</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pH Feed</td>
+<td>AOUT</td>
+<td>GPIO34</td>
+<td>ADC1</td>
+<td>Use shielded cable</td>
+</tr>
+<tr>
+<td>pH Permeate</td>
+<td>AOUT</td>
+<td>GPIO36</td>
+<td>ADC1</td>
+<td>Use shielded cable</td>
+</tr>
+<tr>
+<td>TDS Feed</td>
+<td>AOUT</td>
+<td>GPIO35</td>
+<td>ADC1</td>
+<td></td>
+</tr>
+<tr>
+<td>TDS Permeate</td>
+<td>AOUT</td>
+<td>GPIO39</td>
+<td>ADC1</td>
+<td></td>
+</tr>
+<tr>
+<td>Turbidity</td>
+<td>AOUT</td>
+<td>GPIO32</td>
+<td>ADC1</td>
+<td>Voltage divider required</td>
+</tr>
+<tr>
+<td>Pressure G1/4</td>
+<td>OUT</td>
+<td>GPIO33</td>
+<td>ADC1</td>
+<td>Voltage divider required</td>
+</tr>
+<tr>
+<td>DS18B20 Temps</td>
+<td>DATA</td>
+<td>GPIO4</td>
+<td>1W</td>
+<td>4.7kΩ pull-up to 3.3V</td>
+</tr>
+<tr>
+<td>Flow Feed</td>
+<td>SIGNAL</td>
+<td>GPIO18</td>
+<td>INT</td>
+<td>10kΩ pull-up</td>
+</tr>
+<tr>
+<td>Flow Permeate</td>
+<td>SIGNAL</td>
+<td>GPIO27</td>
+<td>INT</td>
+<td>10kΩ pull-up</td>
+</tr>
+<tr>
+<td>Level Feed</td>
+<td>OUT</td>
+<td>GPIO5</td>
+<td>IN</td>
+<td>XKC-Y25, check for HIGH/LOW</td>
+</tr>
+<tr>
+<td>Level Product</td>
+<td>OUT</td>
+<td>GPIO19</td>
+<td>IN</td>
+<td>XKC-Y25, check for HIGH/LOW</td>
+</tr>
+<tr>
+<td>Relay (Pump)</td>
+<td>IN</td>
+<td>GPIO26</td>
+<td>OUT</td>
+<td>Active-LOW</td>
+</tr>
+<tr>
+<td>Relay (Valve)</td>
+<td>IN</td>
+<td>GPIO25</td>
+<td>OUT</td>
+<td>Active-LOW</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="1192" data-line-end="1193"><a id="62_Node_2_Environment_1192"></a>6.2 Node 2: Environment</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Sensor / Module</th>
+<th>Pin Name</th>
+<th>ESP32 GPIO</th>
+<th>Role</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Gas 1</td>
+<td>AOUT</td>
+<td>GPIO36</td>
+<td>ADC1</td>
+<td></td>
+</tr>
+<tr>
+<td>Gas 2</td>
+<td>AOUT</td>
+<td>GPIO39</td>
+<td>ADC1</td>
+<td></td>
+</tr>
+<tr>
+<td>Ultrasonic 1</td>
+<td>TRIG</td>
+<td>GPIO13</td>
+<td>OUT</td>
+<td>Tank 1</td>
+</tr>
+<tr>
+<td>Ultrasonic 1</td>
+<td>ECHO</td>
+<td>GPIO12</td>
+<td>IN</td>
+<td>Tank 1</td>
+</tr>
+<tr>
+<td>Ultrasonic 2</td>
+<td>TRIG</td>
+<td>GPIO14</td>
+<td>OUT</td>
+<td>Tank 2</td>
+</tr>
+<tr>
+<td>Ultrasonic 2</td>
+<td>ECHO</td>
+<td>GPIO27</td>
+<td>IN</td>
+<td>Tank 2</td>
+</tr>
+<tr>
+<td>DHT22</td>
+<td>DATA</td>
+<td>GPIO4</td>
+<td>1W</td>
+<td>Environment</td>
+</tr>
+<tr>
+<td>DS18B20 Temps</td>
+<td>DATA</td>
+<td>GPIO5</td>
+<td>1W</td>
+<td>Water Temps, shared bus</td>
+</tr>
+<tr>
+<td>Relay (Fan 1)</td>
+<td>IN</td>
+<td>GPIO25</td>
+<td>OUT</td>
+<td>Active-LOW</td>
+</tr>
+<tr>
+<td>Relay (Fan 2)</td>
+<td>IN</td>
+<td>GPIO26</td>
+<td>OUT</td>
+<td>Active-LOW</td>
+</tr>
+<tr>
+<td>Relay (Fan 3)</td>
+<td>IN</td>
+<td>GPIO32</td>
+<td>OUT</td>
+<td>Active-LOW</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="1207" data-line-end="1208"><a id="63_Main_Hub_Comms_Display_1207"></a>6.3 Main Hub (Comms &amp; Display)</h3>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Module</th>
+<th>Pin Name</th>
+<th>ESP32 GPIO</th>
+<th>Role</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TFT SPI Display</td>
+<td>CS</td>
+<td>GPIO5</td>
+<td>OUT</td>
+<td>Chip Select</td>
+</tr>
+<tr>
+<td>TFT SPI Display</td>
+<td>DC</td>
+<td>GPIO2</td>
+<td>OUT</td>
+<td>Data/Command</td>
+</tr>
+<tr>
+<td>TFT SPI Display</td>
+<td>RST</td>
+<td>GPIO4</td>
+<td>OUT</td>
+<td>Reset</td>
+</tr>
+<tr>
+<td>TFT SPI Display</td>
+<td>MOSI</td>
+<td>GPIO23</td>
+<td>OUT</td>
+<td>SPI Data Out</td>
+</tr>
+<tr>
+<td>TFT SPI Display</td>
+<td>MISO</td>
+<td>GPIO19</td>
+<td>IN</td>
+<td>SPI Data In</td>
+</tr>
+<tr>
+<td>TFT SPI Display</td>
+<td>SCK</td>
+<td>GPIO18</td>
+<td>OUT</td>
+<td>SPI Clock</td>
+</tr>
+<tr>
+<td>TFT Touch I2C</td>
+<td>SDA</td>
+<td>GPIO21</td>
+<td>I2C</td>
+<td>Optional Touch</td>
+</tr>
+<tr>
+<td>TFT Touch I2C</td>
+<td>SCL</td>
+<td>GPIO22</td>
+<td>I2C</td>
+<td>Optional Touch</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1221" data-line-end="1222"><a id="7_Voltage_Divider_Design_1221"></a>7. Voltage Divider Design</h2>
+<h3 class="code-line has-line-data" data-line-start="1223" data-line-end="1224"><a id="71_Turbidity_Sensor_Voltage_Divider_1223"></a>7.1 Turbidity Sensor Voltage Divider</h3>
+<pre><code class="has-line-data" data-line-start="1226" data-line-end="1236">  Turbidity Sensor AOUT (0–4.5V)
+          │
+         [R1 = 10kΩ]
+          │
+          ├──────── GPIO32 (ADC1_CH4)
+          │         Max: 4.5 × 20/30 = 3.0V ✅
+         [R2 = 20kΩ]
+          │
+         GND
+</code></pre>
+<p class="has-line-data" data-line-start="1237" data-line-end="1238"><strong>Inverse recovery in software:</strong></p>
+<pre><code class="has-line-data language-cpp" data-line-start="1239" data-line-end="1243"><span class="hljs-comment">// After reading ADC voltage (Vout):</span>
+<span class="hljs-type">float</span> actualVoltage = Vout * VDIV_RATIO_TURBIDITY;  <span class="hljs-comment">// × 1.5</span>
+<span class="hljs-comment">// actualVoltage now represents the true 0–4.5V sensor output</span>
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="1244" data-line-end="1245"><a id="72_Pressure_Sensor_Voltage_Divider_1244"></a>7.2 Pressure Sensor Voltage Divider</h3>
+<pre><code class="has-line-data" data-line-start="1247" data-line-end="1257">  Pressure Sensor AOUT (0.5–4.5V)
+          │
+         [R1 = 10kΩ]
+          │
+          ├──────── GPIO33 (ADC1_CH5)
+          │         Max: 4.5 × 20/30 = 3.0V ✅
+         [R2 = 20kΩ]
+          │
+         GND
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1260" data-line-end="1261"><a id="8_Sensor_Wiring_Diagrams_1260"></a>8. Sensor Wiring Diagrams</h2>
+<h3 class="code-line has-line-data" data-line-start="1262" data-line-end="1263"><a id="81_pH_Sensor_1262"></a>8.1 pH Sensor</h3>
+<pre><code class="has-line-data" data-line-start="1265" data-line-end="1276">  pH Sensor Board                    ESP32S
+  ──────────────                     ──────
+  VCC ─────────────────────────────── 5V (VIN)
+  GND ─────────────────────────────── GND
+  AOUT ──────────────[100nF]─── GND  GPIO34
+         └───────────────────────────  (ADC1)
+
+  * 100nF capacitor from AOUT to GND: noise bypass
+  * Use shielded cable for AOUT line if &gt; 20cm
+  * pH Probe connects to BNC connector on sensor board
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="1277" data-line-end="1278"><a id="82_TDS_Sensor_V10_1277"></a>8.2 TDS Sensor V1.0</h3>
+<pre><code class="has-line-data" data-line-start="1280" data-line-end="1290">  TDS Sensor Board                   ESP32S
+  ────────────────                   ──────
+  VCC ─────────────────────────────── 3.3V
+  GND ─────────────────────────────── GND
+  AOUT ──────────────[100nF]─── GND  GPIO35
+         └───────────────────────────  (ADC1)
+
+  * TDS sensor outputs max 2.3V — safe for ESP32 directly
+  * TDS probe (two stainless electrodes) connects to sensor board
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="1291" data-line-end="1292"><a id="83_Turbidity_Sensor_with_Voltage_Divider_1291"></a>8.3 Turbidity Sensor (with Voltage Divider)</h3>
+<pre><code class="has-line-data" data-line-start="1294" data-line-end="1307">  Turbidity Sensor                   Voltage Divider     ESP32S
+  ────────────────                   ───────────────     ──────
+  VCC ──────────────────────────────────────────────── 5V
+  GND ──────────────────────────────────────────────── GND
+  AOUT ─────────────────────── [10kΩ R1]
+                                        │
+                                        ├──── GPIO32 (ADC1)
+                                        │
+                               [20kΩ R2]
+                                        │
+                                       GND
+  [100nF bypass cap from GPIO32 to GND]
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="1308" data-line-end="1309"><a id="84_DS18B20_Temperature_Sensor_1308"></a>8.4 DS18B20 Temperature Sensor</h3>
+<pre><code class="has-line-data" data-line-start="1311" data-line-end="1323">  DS18B20 (3-wire)                   ESP32S
+  ────────────────                   ──────
+  VDD (Red) ───────────────────────── 3.3V
+  GND (Black) ─────────────────────── GND
+  DATA (Yellow) ──────[4.7kΩ]──────── 3.3V (pull-up)
+                  └──────────────────  GPIO4
+
+  * 4.7kΩ pull-up BETWEEN Data and VCC is MANDATORY
+  * Without pull-up: sensor always returns -127°C
+  * Multiple DS18B20 can share the same GPIO4 (daisy chain)
+  * Each sensor has unique 64-bit address for identification
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="1324" data-line-end="1325"><a id="85_Pressure_Sensor_G14_with_Voltage_Divider_1324"></a>8.5 Pressure Sensor G1/4 (with Voltage Divider)</h3>
+<pre><code class="has-line-data" data-line-start="1327" data-line-end="1342">  Pressure Sensor G1/4               Voltage Divider     ESP32S
+  ────────────────────               ───────────────     ──────
+  VCC (Red) ─────────────────────────────────────────── 5V
+  GND (Black) ───────────────────────────────────────── GND
+  AOUT (Yellow) ──────────────[10kΩ R1]
+                                          │
+                                          ├──── GPIO33 (ADC1)
+                                          │
+                                 [20kΩ R2]
+                                          │
+                                         GND
+  [100nF bypass cap from GPIO33 to GND]
+
+  Pressure Rating: Install G1/4 fitting on feed line (before membrane)
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="1343" data-line-end="1344"><a id="86_XKCY25_NonContact_Water_Level_Sensor_1343"></a>8.6 XKC-Y25 Non-Contact Water Level Sensor</h3>
+<pre><code class="has-line-data" data-line-start="1346" data-line-end="1363">  XKC-Y25 Sensor #1 (Feed Tank)      ESP32S
+  ─────────────────────────────       ──────
+  Brown  (VCC) ─────────────────────── 5V
+  Blue   (GND) ─────────────────────── GND
+  Black  (OUT) ─────────────────────── GPIO5 (INPUT_PULLUP)
+
+  XKC-Y25 Sensor #2 (Product Tank)   ESP32S
+  ─────────────────────────────────── ──────
+  Brown  (VCC) ─────────────────────── 5V
+  Blue   (GND) ─────────────────────── GND
+  Black  (OUT) ─────────────────────── GPIO19 (INPUT_PULLUP)
+
+  * Mount sensor on OUTSIDE of tank wall (non-contact)
+  * Output: LOW = water at sensor level, HIGH = no water
+  * ESP32 INPUT_PULLUP makes idle state HIGH (no water)
+  * Use waterproof housing for sensor body if near splashes
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="1364" data-line-end="1365"><a id="87_YFS201_Flow_Sensor_1364"></a>8.7 YF-S201 Flow Sensor</h3>
+<pre><code class="has-line-data" data-line-start="1367" data-line-end="1380">  YF-S201 Flow Sensor                ESP32S
+  ───────────────────                ──────
+  Red   (VCC) ──────────────────────── 5V
+  Black (GND) ──────────────────────── GND
+  Yellow (Signal) ──[10kΩ]────────── 3.3V (pull-up)
+                    └──────────────── GPIO18 (Interrupt)
+
+  * 10kΩ pull-up from Signal to 3.3V (NOT 5V!)
+  * Interrupt configured as FALLING edge
+  * Flow rate: pulses/sec ÷ 7.5 = L/min
+  * Install in-line with 1/2&quot; thread fittings (G1/2)
+  * Install on FEED water line after pre-filter
+</code></pre>
+<h3 class="code-line has-line-data" data-line-start="1381" data-line-end="1382"><a id="88_Relay_Module_Pump_Valve_1381"></a>8.8 Relay Module (Pump + Valve)</h3>
+<pre><code class="has-line-data" data-line-start="1384" data-line-end="1405">  2-Channel Relay Module              ESP32S         Load Circuit
+  ──────────────────────              ──────         ────────────
+  VCC ────────────────────────────── 5V
+  GND ────────────────────────────── GND ─────────── 12V Supply GND
+  IN1 ────────────────────────────── GPIO26 (Pump)
+  IN2 ────────────────────────────── GPIO25 (Valve)
+
+  Relay Channel 1 (Pump):
+    COM ──────── [+12V from power supply]
+    NC  ──────── (normally connected — pump OFF by default)
+    NO  ──────── [Pump positive terminal]
+
+  Relay Channel 2 (Valve):
+    COM ──────── [+12V from power supply]
+    NC  ──────── (normally connected — valve OFF by default)
+    NO  ──────── [Solenoid Valve positive terminal]
+
+  * Active-LOW: GPIO LOW = Relay ON = Load ON
+  * Use NC (Normally Closed) for fail-safe operation:
+    If ESP32 loses power, pump/valve turns OFF automatically
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1408" data-line-end="1409"><a id="9_Complete_System_Wiring_Overview_1408"></a>9. Complete System Wiring Overview</h2>
+<pre><code class="has-line-data" data-line-start="1411" data-line-end="1452">                        ┌─────────────────────────────────────────┐
+                        │           5V 2A Power Supply             │
+                        └──────┬──────────────────────────────────┘
+                               │ 5V                     GND
+    ┌──────────────────────────┼────────────────────────┼──────────┐
+    │                          │                         │          │
+    │  ┌───────────────────────▼─────────────────────────▼───────┐  │
+    │  │                    ESP32S 38-PIN                        │  │
+    │  │                                                         │  │
+    │  │  [VIN/5V]──────────────────────────────────────[GND]   │  │
+    │  │  [3.3V out]                                            │  │
+    │  │                                                         │  │
+    │  │  GPIO34 ◄── pH Sensor Feed (5V, direct)                │  │
+    │  │  GPIO35 ◄── TDS Sensor Feed (3.3V, direct)             │  │
+    │  │  GPIO32 ◄── Turbidity Feed (5V, via 10k/20k divider)   │  │
+    │  │  GPIO33 ◄── Pressure Feed (5V, via 10k/20k divider)    │  │
+    │  │  GPIO36 ◄── pH Sensor Permeate (5V, direct)            │  │
+    │  │  GPIO39 ◄── TDS Sensor Permeate (3.3V, direct)         │  │
+    │  │  GPIO4  ◄── DS18B20 x2 (3.3V, 4.7k pull-up)            │  │
+    │  │  GPIO5  ◄── XKC-Y25 Feed Tank (5V, INPUT_PULLUP)       │  │
+    │  │  GPIO19 ◄── XKC-Y25 Product Tank (5V, INPUT_PULLUP)    │  │
+    │  │  GPIO18 ◄── YF-S201 Flow Feed (5V, 10k pull-up, INT)   │  │
+    │  │  GPIO27 ◄── YF-S201 Flow Permeate (5V, 10k pull-up, INT)│  │
+    │  │  GPIO26 ──► Relay IN1 (Pump)                           │  │
+    │  │  GPIO25 ──► Relay IN2 (Valve)                          │  │
+    │  │  GPIO2  ──► Status LED (built-in)                      │  │
+    │  └─────────────────────────────────────────────────────────┘  │
+    │                                                                │
+    │  ┌──────────────┐    ┌──────────────────────────────────────┐  │
+    │  │ 2-CH Relay   │    │        12V 5A Power Supply           │  │
+    │  │              │    └──────┬─────────────────────────┬────┘  │
+    │  │ IN1 ◄─GPIO26 │           │ +12V                    │GND    │
+    │  │ IN2 ◄─GPIO25 │           │                         │       │
+    │  │              │    ┌──────┤                         │       │
+    │  │ CH1 COM◄─12V─┘    │      │                         │       │
+    │  │ CH1 NO──────────► │ RO PUMP (+) ──────────────────┘       │
+    │  │                   └──────────────────────────────────────  │
+    │  │ CH2 COM◄─12V───────────────────────────────────           │
+    │  │ CH2 NO──────────── SOLENOID VALVE (+) ─────────────────   │
+    └──┴──────────────────────────────────────────────────────────┘
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1455" data-line-end="1456"><a id="10_Source_Code_Files_1455"></a>10. Source Code Files</h2>
+<p class="has-line-data" data-line-start="1457" data-line-end="1458">Three files have been created in your project:</p>
+<h3 class="code-line has-line-data" data-line-start="1459" data-line-end="1460"><a id="101_confighfiledProjectsArduino20ProjectsWater20DesalinationNode1_WaterQualityconfigh_Master_Configuration_1459"></a>10.1 [<code>config.h</code>](file:///d:/Projects/Arduino%20Projects/Water%20Desalination/Node1_WaterQuality/config.h) — Master Configuration</h3>
+<p class="has-line-data" data-line-start="1461" data-line-end="1462">Contains ALL pin definitions, thresholds, ADC settings, calibration constants, sleep configuration, and debug macros. <strong>Every number in the firmware comes from this file — never use magic numbers.</strong></p>
+<p class="has-line-data" data-line-start="1463" data-line-end="1464">Key sections:</p>
+<ul>
+<li class="has-line-data" data-line-start="1464" data-line-end="1465"><code>PIN_*</code> — all GPIO assignments</li>
+<li class="has-line-data" data-line-start="1465" data-line-end="1466"><code>ALERT_*_MIN/MAX</code> — alert thresholds per sensor</li>
+<li class="has-line-data" data-line-start="1466" data-line-end="1467"><code>ADC_RESOLUTION</code>, <code>ADC_VREF</code>, <code>ADC_SAMPLES</code> — ADC settings</li>
+<li class="has-line-data" data-line-start="1467" data-line-end="1468"><code>VDIV_RATIO_*</code> — voltage divider compensation factors</li>
+<li class="has-line-data" data-line-start="1468" data-line-end="1469"><code>SLEEP_ENABLED</code>, <code>TIMER_WAKE_INTERVAL_SEC</code> — deep sleep config</li>
+<li class="has-line-data" data-line-start="1469" data-line-end="1471"><code>RELAY_ON / RELAY_OFF</code> — relay logic level</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="1471" data-line-end="1472"><a id="102_secretshfiledProjectsArduino20ProjectsWater20DesalinationNode1_WaterQualitysecretsh_Credentials_1471"></a>10.2 [<code>secrets.h</code>](file:///d:/Projects/Arduino%20Projects/Water%20Desalination/Node1_WaterQuality/secrets.h) — Credentials</h3>
+<blockquote>
+<p class="has-line-data" data-line-start="1473" data-line-end="1475">[!CAUTION]<br>
+This file contains WiFi password and Firebase secret. <strong>Never commit to Git.</strong> Add to <code>.gitignore</code>:</p>
+<pre><code class="has-line-data" data-line-start="1476" data-line-end="1478">Node1_WaterQuality/secrets.h
+</code></pre>
+</blockquote>
+<p class="has-line-data" data-line-start="1479" data-line-end="1480">Contains:</p>
+<ul>
+<li class="has-line-data" data-line-start="1480" data-line-end="1481"><code>WIFI_SSID</code> / <code>WIFI_PASSWORD</code></li>
+<li class="has-line-data" data-line-start="1481" data-line-end="1482"><code>FIREBASE_DATABASE_URL</code></li>
+<li class="has-line-data" data-line-start="1482" data-line-end="1483"><code>FIREBASE_AUTH_TOKEN</code></li>
+<li class="has-line-data" data-line-start="1483" data-line-end="1485">NTP server settings + timezone offset</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="1485" data-line-end="1486"><a id="103_Node1_WaterQualityinofiledProjectsArduino20ProjectsWater20DesalinationNode1_WaterQualityNode1_WaterQualityino_Hardware_Test_Sketch_1485"></a>10.3 [<code>Node1_WaterQuality.ino</code>](file:///d:/Projects/Arduino%20Projects/Water%20Desalination/Node1_WaterQuality/Node1_WaterQuality.ino) — Hardware Test Sketch</h3>
+<p class="has-line-data" data-line-start="1487" data-line-end="1488"><strong>Purpose (Phase 2 only):</strong> Reads all sensors raw and prints to Serial Monitor. Verifies every hardware connection before writing calibration or Firebase code.</p>
+<p class="has-line-data" data-line-start="1489" data-line-end="1490"><strong>What it does:</strong></p>
+<ul>
+<li class="has-line-data" data-line-start="1490" data-line-end="1491">Reads ADC voltage from pH, TDS, Turbidity, Pressure sensors</li>
+<li class="has-line-data" data-line-start="1491" data-line-end="1492">Reads DS18B20 temperature via OneWire</li>
+<li class="has-line-data" data-line-start="1492" data-line-end="1493">Counts YF-S201 flow pulses via hardware interrupt</li>
+<li class="has-line-data" data-line-start="1493" data-line-end="1494">Reads both XKC-Y25 level sensors (digital)</li>
+<li class="has-line-data" data-line-start="1494" data-line-end="1496">Prints formatted table every 5 seconds at 115200 baud</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1498" data-line-end="1499"><a id="11_Testing_Procedures_1498"></a>11. Testing Procedures</h2>
+<h3 class="code-line has-line-data" data-line-start="1500" data-line-end="1501"><a id="Test_1_PowerOn_Test_Before_connecting_sensors_1500"></a>Test 1 — Power-On Test (Before connecting sensors)</h3>
+<ol>
+<li class="has-line-data" data-line-start="1502" data-line-end="1503">Connect ESP32S to PC via USB</li>
+<li class="has-line-data" data-line-start="1503" data-line-end="1504">Open Arduino IDE → Tools → Port → select the ESP32 COM port</li>
+<li class="has-line-data" data-line-start="1504" data-line-end="1505">Open Serial Monitor (Ctrl+Shift+M) → set 115200 baud</li>
+<li class="has-line-data" data-line-start="1505" data-line-end="1506">Upload the current <code>Node1_WaterQuality.ino</code></li>
+<li class="has-line-data" data-line-start="1506" data-line-end="1508"><strong>Expected:</strong> Welcome banner prints, “No DS18B20 found” (not connected yet)</li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="1508" data-line-end="1509"><a id="Test_2_DS18B20_Temperature_Sensor_1508"></a>Test 2 — DS18B20 Temperature Sensor</h3>
+<ol>
+<li class="has-line-data" data-line-start="1510" data-line-end="1511">Connect DS18B20 with 4.7kΩ pull-up resistor to GPIO4</li>
+<li class="has-line-data" data-line-start="1511" data-line-end="1512">Upload and run sketch</li>
+<li class="has-line-data" data-line-start="1512" data-line-end="1518"><strong>Expected:</strong><pre><code class="has-line-data" data-line-start="1514" data-line-end="1518">DS18B20 Sensors found on bus: 1
+Sensor 0 Address: 28:AA:BB:CC:DD:EE:FF:01
+Temperature DS18B20   24.500 °C   [OK]
+</code></pre>
+</li>
+<li class="has-line-data" data-line-start="1518" data-line-end="1520"><strong>Fail:</strong> <code>-127.000 °C [OK]</code> → Missing pull-up resistor</li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="1520" data-line-end="1521"><a id="Test_3_Analog_Sensors_Voltage_Check_1520"></a>Test 3 — Analog Sensors (Voltage Check)</h3>
+<p class="has-line-data" data-line-start="1522" data-line-end="1523">Submerge each sensor probe in water and check expected voltage ranges:</p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Sensor</th>
+<th>Condition</th>
+<th>Expected ADC Voltage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pH</td>
+<td>In pH 7 buffer solution</td>
+<td>~2.5V</td>
+</tr>
+<tr>
+<td>TDS</td>
+<td>In 342 ppm water</td>
+<td>~0.7–1.0V</td>
+</tr>
+<tr>
+<td>Turbidity</td>
+<td>In clear water</td>
+<td>~3.8–4.2V (high V = clear)</td>
+</tr>
+<tr>
+<td>Turbidity</td>
+<td>In murky water</td>
+<td>~0.5–2.0V (lower V = murky)</td>
+</tr>
+<tr>
+<td>Pressure</td>
+<td>At atmospheric (no pressure)</td>
+<td>~0.33V (after divider)</td>
+</tr>
+<tr>
+<td>Pressure</td>
+<td>At 1 bar</td>
+<td>~0.63V (after divider)</td>
+</tr>
+</tbody>
+</table>
+<h3 class="code-line has-line-data" data-line-start="1533" data-line-end="1534"><a id="Test_4_Flow_Sensor_1533"></a>Test 4 — Flow Sensor</h3>
+<ol>
+<li class="has-line-data" data-line-start="1535" data-line-end="1536">Connect YF-S201 to GPIO18 with 10kΩ pull-up</li>
+<li class="has-line-data" data-line-start="1536" data-line-end="1537">Let water flow through the sensor</li>
+<li class="has-line-data" data-line-start="1537" data-line-end="1538"><strong>Expected:</strong> <code>Flow Rate: 2.xxx L/min [RAW]</code></li>
+<li class="has-line-data" data-line-start="1538" data-line-end="1540"><strong>Fail:</strong> Always 0.000 → Check pull-up or interrupt pin</li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="1540" data-line-end="1541"><a id="Test_5_Water_Level_Sensors_1540"></a>Test 5 — Water Level Sensors</h3>
+<ol>
+<li class="has-line-data" data-line-start="1542" data-line-end="1543">Connect XKC-Y25 to GPIO5</li>
+<li class="has-line-data" data-line-start="1543" data-line-end="1544">Place sensor on outside of container with water</li>
+<li class="has-line-data" data-line-start="1544" data-line-end="1548"><strong>Expected:</strong><pre><code class="has-line-data" data-line-start="1546" data-line-end="1548">Level Feed Tank      WATER         [OK]
+</code></pre>
+</li>
+<li class="has-line-data" data-line-start="1548" data-line-end="1550">Remove from water: <code>Level Feed Tank       EMPTY         [LOW]</code></li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="1550" data-line-end="1551"><a id="Test_6_Relay_Module_PumpValve_1550"></a>Test 6 — Relay Module (Pump/Valve)</h3>
+<blockquote>
+<p class="has-line-data" data-line-start="1552" data-line-end="1554">[!WARNING]<br>
+Do NOT have the pump/valve connected to 12V during this test. Test relay clicks only.</p>
+</blockquote>
+<ol>
+<li class="has-line-data" data-line-start="1555" data-line-end="1556">Short GPIO26 to GND manually (or run test code)</li>
+<li class="has-line-data" data-line-start="1556" data-line-end="1557"><strong>Expected:</strong> Audible <strong>CLICK</strong> from relay</li>
+<li class="has-line-data" data-line-start="1557" data-line-end="1559">LED on relay module illuminates</li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1561" data-line-end="1562"><a id="12_Validation_Checklist_1561"></a>12. Validation Checklist</h2>
+<h3 class="code-line has-line-data" data-line-start="1563" data-line-end="1564"><a id="Hardware_1563"></a>Hardware</h3>
+<ul>
+<li class="has-line-data" data-line-start="1564" data-line-end="1565"><input type="checkbox" id="checkbox0"><label for="checkbox0">ESP32S identified in Device Manager (COM port assigned)</label></li>
+<li class="has-line-data" data-line-start="1565" data-line-end="1566"><input type="checkbox" id="checkbox1"><label for="checkbox1">5V supply measures 4.95–5.05V on multimeter</label></li>
+<li class="has-line-data" data-line-start="1566" data-line-end="1567"><input type="checkbox" id="checkbox2"><label for="checkbox2">3.3V pin measures 3.28–3.32V</label></li>
+<li class="has-line-data" data-line-start="1567" data-line-end="1569"><input type="checkbox" id="checkbox3"><label for="checkbox3">All GNDs connected together (common ground)</label></li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="1569" data-line-end="1570"><a id="Sensor_Connections_1569"></a>Sensor Connections</h3>
+<ul>
+<li class="has-line-data" data-line-start="1570" data-line-end="1571"><input type="checkbox" id="checkbox4"><label for="checkbox4">pH sensor outputs ~2.5V at pH 7 buffer</label></li>
+<li class="has-line-data" data-line-start="1571" data-line-end="1572"><input type="checkbox" id="checkbox5"><label for="checkbox5">TDS sensor voltage changes when probe in vs out of water</label></li>
+<li class="has-line-data" data-line-start="1572" data-line-end="1573"><input type="checkbox" id="checkbox6"><label for="checkbox6">Turbidity voltage is HIGH (~4V) in clear water, LOWER in murky water</label></li>
+<li class="has-line-data" data-line-start="1573" data-line-end="1574"><input type="checkbox" id="checkbox7"><label for="checkbox7">DS18B20 detected on bus (not returning -127°C)</label></li>
+<li class="has-line-data" data-line-start="1574" data-line-end="1575"><input type="checkbox" id="checkbox8"><label for="checkbox8">Pressure sensor at atmospheric reads ~0.33V (after divider)</label></li>
+<li class="has-line-data" data-line-start="1575" data-line-end="1576"><input type="checkbox" id="checkbox9"><label for="checkbox9">XKC-Y25 Feed Tank: output changes when water present</label></li>
+<li class="has-line-data" data-line-start="1576" data-line-end="1577"><input type="checkbox" id="checkbox10"><label for="checkbox10">XKC-Y25 Product Tank: output changes when water present</label></li>
+<li class="has-line-data" data-line-start="1577" data-line-end="1579"><input type="checkbox" id="checkbox11"><label for="checkbox11">YF-S201: Flow rate &gt; 0 when water flowing</label></li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="1579" data-line-end="1580"><a id="Voltage_Safety_1579"></a>Voltage Safety</h3>
+<ul>
+<li class="has-line-data" data-line-start="1580" data-line-end="1581"><input type="checkbox" id="checkbox12"><label for="checkbox12">Turbidity AOUT measured at GPIO32: &lt; 3.3V ✅</label></li>
+<li class="has-line-data" data-line-start="1581" data-line-end="1582"><input type="checkbox" id="checkbox13"><label for="checkbox13">Pressure AOUT measured at GPIO33: &lt; 3.3V ✅</label></li>
+<li class="has-line-data" data-line-start="1582" data-line-end="1583"><input type="checkbox" id="checkbox14"><label for="checkbox14">pH AOUT at GPIO34: &lt; 3.3V ✅</label></li>
+<li class="has-line-data" data-line-start="1583" data-line-end="1585"><input type="checkbox" id="checkbox15"><label for="checkbox15">TDS AOUT at GPIO35: &lt; 2.3V ✅</label></li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="1585" data-line-end="1586"><a id="Actuators_1585"></a>Actuators</h3>
+<ul>
+<li class="has-line-data" data-line-start="1586" data-line-end="1587"><input type="checkbox" id="checkbox16"><label for="checkbox16">Relay module relay clicks when GPIO26 driven LOW</label></li>
+<li class="has-line-data" data-line-start="1587" data-line-end="1588"><input type="checkbox" id="checkbox17"><label for="checkbox17">Relay module relay clicks when GPIO25 driven LOW</label></li>
+<li class="has-line-data" data-line-start="1588" data-line-end="1589"><input type="checkbox" id="checkbox18"><label for="checkbox18">Relay NC contact verified with multimeter (continuity when relay OFF)</label></li>
+<li class="has-line-data" data-line-start="1589" data-line-end="1591"><input type="checkbox" id="checkbox19"><label for="checkbox19">Relay NO contact verified (continuity when relay ON)</label></li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="1591" data-line-end="1592"><a id="Serial_Monitor_Output_1591"></a>Serial Monitor Output</h3>
+<ul>
+<li class="has-line-data" data-line-start="1592" data-line-end="1593"><input type="checkbox" id="checkbox20"><label for="checkbox20">Welcome banner prints correctly</label></li>
+<li class="has-line-data" data-line-start="1593" data-line-end="1594"><input type="checkbox" id="checkbox21"><label for="checkbox21">All sensor rows print every 5 seconds</label></li>
+<li class="has-line-data" data-line-start="1594" data-line-end="1595"><input type="checkbox" id="checkbox22"><label for="checkbox22">No crash/reset observed</label></li>
+<li class="has-line-data" data-line-start="1595" data-line-end="1597"><input type="checkbox" id="checkbox23"><label for="checkbox23">DS18B20 address printed (8 bytes, not all zeros)</label></li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1599" data-line-end="1600"><a id="13_Common_Errors_Troubleshooting_1599"></a>13. Common Errors &amp; Troubleshooting</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DS18B20 always returns -127°C</td>
+<td>Missing 4.7kΩ pull-up</td>
+<td>Add pull-up between GPIO4 and 3.3V</td>
+</tr>
+<tr>
+<td>DS18B20 shows 85°C on first read</td>
+<td>Sensor just powered on, not yet read</td>
+<td>Call <code>requestTemperatures()</code> before <code>getTempCByIndex()</code> and wait 750ms</td>
+</tr>
+<tr>
+<td>ADC reads 0 or 4095 constantly</td>
+<td>Sensor not powered or wrong pin</td>
+<td>Verify sensor VCC and GND, check correct GPIO</td>
+</tr>
+<tr>
+<td>ADC reads ~4095 even in air (pH)</td>
+<td>Input voltage exceeds 3.3V</td>
+<td>Measure actual sensor output with multimeter; add voltage divider if &gt; 3.3V</td>
+</tr>
+<tr>
+<td>Flow sensor always reads 0</td>
+<td>Missing 10kΩ pull-up</td>
+<td>Add 10kΩ between GPIO18 and 3.3V</td>
+</tr>
+<tr>
+<td>Flow sensor reads too high</td>
+<td>Wrong calibration factor</td>
+<td>YF-S201 factor is 7.5; check your specific sensor model</td>
+</tr>
+<tr>
+<td>XKC-Y25 always shows WATER</td>
+<td>Wiring issue or sensitivity too high</td>
+<td>Adjust small potentiometer on back of XKC-Y25 sensor</td>
+</tr>
+<tr>
+<td>XKC-Y25 never shows WATER</td>
+<td>Sensor on wrong side of tank wall</td>
+<td>Must be on DRY OUTSIDE surface pointing at water</td>
+</tr>
+<tr>
+<td>Relay doesn’t click</td>
+<td>Power issue or wrong logic</td>
+<td>Measure relay VCC = 5V; try <code>digitalWrite(PIN, LOW)</code> directly</td>
+</tr>
+<tr>
+<td>ESP32 resets randomly</td>
+<td>Power brownout from pump start</td>
+<td>Add 1000µF capacitor on 5V rail; use separate 12V supply for pump</td>
+</tr>
+<tr>
+<td>Garbage ADC when WiFi starts</td>
+<td>Using ADC2 pin</td>
+<td>Move sensor to GPIO32–39 (ADC1 only)</td>
+</tr>
+<tr>
+<td>Serial garbled output</td>
+<td>Wrong baud rate</td>
+<td>Set Serial Monitor to exactly 115200</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1618" data-line-end="1619"><a id="14_Best_Practices_1618"></a>14. Best Practices</h2>
+<h3 class="code-line has-line-data" data-line-start="1620" data-line-end="1621"><a id="141_Wiring_1620"></a>14.1 Wiring</h3>
+<ol>
+<li class="has-line-data" data-line-start="1621" data-line-end="1622"><strong>Use shielded cable</strong> for analog sensor signal wires longer than 20cm</li>
+<li class="has-line-data" data-line-start="1622" data-line-end="1623"><strong>Twist power and GND wires</strong> together for sensors to cancel magnetic interference</li>
+<li class="has-line-data" data-line-start="1623" data-line-end="1624"><strong>Keep analog signal wires away</strong> from the relay coil and motor wires</li>
+<li class="has-line-data" data-line-start="1624" data-line-end="1625"><strong>Add 100nF ceramic bypass caps</strong> from each ADC pin to GND as close to the ESP32 as possible</li>
+<li class="has-line-data" data-line-start="1625" data-line-end="1627"><strong>Use ferrule terminal crimps</strong> on wire ends for reliable connections on terminal blocks</li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="1627" data-line-end="1628"><a id="142_Power_1627"></a>14.2 Power</h3>
+<ol>
+<li class="has-line-data" data-line-start="1628" data-line-end="1629"><strong>Never share the 12V pump line</strong> with the ESP32 logic supply</li>
+<li class="has-line-data" data-line-start="1629" data-line-end="1630"><strong>Add a 10A fuse</strong> on the 12V line (before the relay)</li>
+<li class="has-line-data" data-line-start="1630" data-line-end="1631"><strong>Use a TVS diode</strong> across the pump terminals to clamp back-EMF spikes</li>
+<li class="has-line-data" data-line-start="1631" data-line-end="1633"><strong>Add 1000µF capacitor</strong> on the 5V rail near the ESP32 to handle current spikes</li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="1633" data-line-end="1634"><a id="143_Code_1633"></a>14.3 Code</h3>
+<ol>
+<li class="has-line-data" data-line-start="1634" data-line-end="1635"><strong>Always define <code>IRAM_ATTR</code></strong> on the flow sensor ISR function</li>
+<li class="has-line-data" data-line-start="1635" data-line-end="1636"><strong>Use <code>noInterrupts()/interrupts()</code></strong> when reading <code>flowPulseCount</code> in loop</li>
+<li class="has-line-data" data-line-start="1636" data-line-end="1637"><strong>Set <code>analogSetAttenuation(ADC_11db)</code></strong> for full 0–3.3V range (default is 0–1V)</li>
+<li class="has-line-data" data-line-start="1637" data-line-end="1639"><strong>Oversample ADC</strong> (average 10 readings) before applying any filters</li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1641" data-line-end="1642"><a id="Phase_2_Files_Created_1641"></a>📁 Phase 2 — Files Created</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>File</th>
+<th>Location</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>[config.h](file:///d:/Projects/Arduino%20Projects/Water%20Desalination/Node1_WaterQuality/config.h)</td>
+<td><code>Node1_WaterQuality/</code></td>
+<td>Master configuration, all pins &amp; constants</td>
+</tr>
+<tr>
+<td>[secrets.h](file:///d:/Projects/Arduino%20Projects/Water%20Desalination/Node1_WaterQuality/secrets.h)</td>
+<td><code>Node1_WaterQuality/</code></td>
+<td>WiFi &amp; Firebase credentials (gitignored)</td>
+</tr>
+<tr>
+<td>[Node1_WaterQuality.ino](file:///d:/Projects/Arduino%20Projects/Water%20Desalination/Node1_WaterQuality/Node1_WaterQuality.ino)</td>
+<td><code>Node1_WaterQuality/</code></td>
+<td>Main sketch</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<blockquote>
+<p class="has-line-data" data-line-start="1651" data-line-end="1653">[!IMPORTANT]<br>
+<strong>Before uploading to ESP32:</strong></p>
+<ol>
+<li class="has-line-data" data-line-start="1653" data-line-end="1654">Open <code>secrets.h</code> and fill in your real WiFi SSID, password, and Firebase URL</li>
+<li class="has-line-data" data-line-start="1654" data-line-end="1655">Install all required libraries via Arduino Library Manager</li>
+<li class="has-line-data" data-line-start="1655" data-line-end="1656">Tools → Board → ESP32 Arduino → <strong>ESP32 Dev Module</strong></li>
+<li class="has-line-data" data-line-start="1656" data-line-end="1657">Tools → Partition Scheme → <strong>Default 4MB with spiffs</strong></li>
+<li class="has-line-data" data-line-start="1657" data-line-end="1658">Tools → Upload Speed → <strong>921600</strong></li>
+<li class="has-line-data" data-line-start="1658" data-line-end="1659">Tools → CPU Frequency → <strong>240MHz (WiFi/BT)</strong></li>
+</ol>
+</blockquote>
+<hr>
+<p class="has-line-data" data-line-start="1662" data-line-end="1663"><strong>Have you completed this phase?</strong></p>
+<p class="has-line-data" data-line-start="1664" data-line-end="1665">Reply with <strong>“Phase Completed”</strong> to proceed to <strong>Phase 3: ESP32 Firmware Development</strong> <em>(full sensor reading functions, deep sleep state machine, WiFi manager, Firebase client, and structured JSON payload builder)</em>.</p>
+<h1 class="code-line has-line-data" data-line-start="1666" data-line-end="1667"><a id="Phase_3_ESP32_Firmware_Development_3Node_Architecture_1666"></a>💻 Phase 3 — ESP32 Firmware Development (3-Node Architecture)</h1>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1670" data-line-end="1671"><a id="Table_of_Contents_1670"></a>📋 Table of Contents</h2>
+<ol>
+<li class="has-line-data" data-line-start="1672" data-line-end="1673"><a href="#1-objectives">Objectives</a></li>
+<li class="has-line-data" data-line-start="1673" data-line-end="1674"><a href="#2-node-1-water-quality-firmware-design">Node 1 (Water Quality) Firmware Design</a></li>
+<li class="has-line-data" data-line-start="1674" data-line-end="1675"><a href="#3-node-2-environment-firmware-design">Node 2 (Environment) Firmware Design</a></li>
+<li class="has-line-data" data-line-start="1675" data-line-end="1676"><a href="#4-main-hub-display--comms-firmware-design">Main Hub (Display &amp; Comms) Firmware Design</a></li>
+<li class="has-line-data" data-line-start="1676" data-line-end="1677"><a href="#5-esp-now-protocol-implementation">ESP-NOW Protocol Implementation</a></li>
+<li class="has-line-data" data-line-start="1677" data-line-end="1678"><a href="#6-ble-offline-sync-implementation">BLE Offline Sync Implementation</a></li>
+<li class="has-line-data" data-line-start="1678" data-line-end="1679"><a href="#7-source-code-reference">Source Code Reference</a></li>
+<li class="has-line-data" data-line-start="1679" data-line-end="1680"><a href="#8-testing-procedures">Testing Procedures</a></li>
+<li class="has-line-data" data-line-start="1680" data-line-end="1682"><a href="#9-validation-checklist">Validation Checklist</a></li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1684" data-line-end="1685"><a id="1_Objectives_1684"></a>1. Objectives</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>#</th>
+<th>Objective</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Implement Node 1 firmware to read water quality sensors and transmit via ESP-NOW</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Implement Node 2 firmware to read environmental sensors and transmit via ESP-NOW</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Implement Main Hub firmware to receive ESP-NOW data, update the TFT display, and broadcast BLE</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Develop the BLE server to stream data to the Flet Mobile App for offline sync</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Implement robust signal filtering (Kalman, Moving Average) for noisy sensors</td>
+<td>🟠 High</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1696" data-line-end="1697"><a id="2_Node_1_Water_Quality_Firmware_Design_1696"></a>2. Node 1 (Water Quality) Firmware Design</h2>
+<p class="has-line-data" data-line-start="1698" data-line-end="1699"><strong>Role:</strong> Dedicated to core water processing.</p>
+<ul>
+<li class="has-line-data" data-line-start="1700" data-line-end="1701"><strong>Sensors:</strong> pH (feed/permeate), TDS (feed/permeate), Turbidity (feed), Temperature (feed/permeate), Pressure (feed), Level (feed/product), Flow (feed/permeate).</li>
+<li class="has-line-data" data-line-start="1701" data-line-end="1702"><strong>Actuators:</strong> RO Pump Relay, Solenoid Valve Relay.</li>
+<li class="has-line-data" data-line-start="1702" data-line-end="1710"><strong>Logic:</strong>
+<ul>
+<li class="has-line-data" data-line-start="1703" data-line-end="1704">Reads analog sensors (ADC1 only).</li>
+<li class="has-line-data" data-line-start="1704" data-line-end="1705">Applies Kalman filters to pH and TDS to smooth out pump noise.</li>
+<li class="has-line-data" data-line-start="1705" data-line-end="1706">Applies moving average filters to Flow rate readings.</li>
+<li class="has-line-data" data-line-start="1706" data-line-end="1707">Reads Pressure from G1/4 sensor via linear voltage conversion.</li>
+<li class="has-line-data" data-line-start="1707" data-line-end="1708">Controls the RO pump logic (e.g., turn on if feed tank is full and product tank is not).</li>
+<li class="has-line-data" data-line-start="1708" data-line-end="1710">Packages data into a <code>struct</code> and transmits to the Main Hub via ESP-NOW every 5 seconds.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1712" data-line-end="1713"><a id="3_Node_2_Environment_Firmware_Design_1712"></a>3. Node 2 (Environment) Firmware Design</h2>
+<p class="has-line-data" data-line-start="1714" data-line-end="1715"><strong>Role:</strong> Handles ambient environment and air quality.</p>
+<ul>
+<li class="has-line-data" data-line-start="1716" data-line-end="1717"><strong>Sensors:</strong> Ultrasonic (Tank levels), DHT22, Gas Sensors (MQ series), DS18B20 (Water temp).</li>
+<li class="has-line-data" data-line-start="1717" data-line-end="1718"><strong>Actuators:</strong> 3x Cooling Fan Relays.</li>
+<li class="has-line-data" data-line-start="1718" data-line-end="1724"><strong>Logic:</strong>
+<ul>
+<li class="has-line-data" data-line-start="1719" data-line-end="1720">Reads ultrasonic sensors to determine exact tank fill percentages.</li>
+<li class="has-line-data" data-line-start="1720" data-line-end="1721">Calculates gas ppm levels based on <code>Ro</code> baseline calibration.</li>
+<li class="has-line-data" data-line-start="1721" data-line-end="1722">Automatically triggers cooling fans if ambient/water temperature exceeds safe thresholds.</li>
+<li class="has-line-data" data-line-start="1722" data-line-end="1724">Packages data into a <code>struct</code> and transmits to the Main Hub via ESP-NOW every 5 seconds.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1726" data-line-end="1727"><a id="4_Main_Hub_Display_Comms_Firmware_Design_1726"></a>4. Main Hub (Display &amp; Comms) Firmware Design</h2>
+<p class="has-line-data" data-line-start="1728" data-line-end="1729"><strong>Role:</strong> The centralized UI and communication bridge.</p>
+<ul>
+<li class="has-line-data" data-line-start="1730" data-line-end="1731"><strong>Hardware:</strong> ESP32S + Optional 5-inch SPI TFT LCD Module.</li>
+<li class="has-line-data" data-line-start="1731" data-line-end="1739"><strong>Logic:</strong>
+<ul>
+<li class="has-line-data" data-line-start="1732" data-line-end="1733"><strong>ESP-NOW Receiver:</strong> Listens asynchronously for packets from Node 1 and Node 2.</li>
+<li class="has-line-data" data-line-start="1733" data-line-end="1734"><strong>Data Merging:</strong> Combines the C-struct data from both nodes into a single comprehensive JSON payload, injecting an NTP-synchronized timestamp.</li>
+<li class="has-line-data" data-line-start="1734" data-line-end="1735"><strong>Firebase Integration (WiFi):</strong> Connects to the local WiFi router and uses the <code>Firebase_ESP_Client</code> library to upload the merged JSON directly to the Firebase Realtime Database (<code>live_data</code> and <code>historical_logs</code>).</li>
+<li class="has-line-data" data-line-start="1735" data-line-end="1739"><strong>BLE Server:</strong> Acts as a BLE Peripheral.
+<ul>
+<li class="has-line-data" data-line-start="1736" data-line-end="1737"><strong>Notify Characteristic:</strong> Streams the merged JSON to the Mobile App every 3 seconds.</li>
+<li class="has-line-data" data-line-start="1737" data-line-end="1739"><strong>Write Characteristic:</strong> Listens for commands from the Mobile App, such as <code>{&quot;cmd&quot;: &quot;set_wifi&quot;, &quot;ssid&quot;: &quot;...&quot;, &quot;pass&quot;: &quot;...&quot;}</code>, allowing headless WiFi provisioning via NVS (Non-Volatile Storage).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1741" data-line-end="1742"><a id="5_ESPNOW_Protocol_Implementation_1741"></a>5. ESP-NOW Protocol Implementation</h2>
+<p class="has-line-data" data-line-start="1743" data-line-end="1744">ESP-NOW is a fast, connectionless protocol that bypasses the router, making it incredibly reliable for edge IoT deployments.</p>
+<ul>
+<li class="has-line-data" data-line-start="1745" data-line-end="1746"><strong>MAC Addresses:</strong> The Main Hub’s MAC address is hardcoded into the <code>config.h</code> of Node 1 and Node 2. Node 1 and 2 don’t connect to a router; they just start their WiFi radio in STA mode.</li>
+<li class="has-line-data" data-line-start="1746" data-line-end="1747"><strong>Data Structures:</strong> Data is sent as packed C-structs (<code>espnow_node1_t</code>, <code>espnow_node2_t</code>) to minimize overhead and ensure instant delivery.</li>
+<li class="has-line-data" data-line-start="1747" data-line-end="1749"><strong>Callbacks:</strong> The Hub uses <code>esp_now_register_recv_cb()</code> to process data instantly upon arrival. Nodes use <code>esp_now_register_send_cb()</code> to verify delivery success.</li>
+</ul>
+<h3 class="code-line has-line-data" data-line-start="1749" data-line-end="1750"><a id="51_Firmware_Sequence_Diagram_1749"></a>5.1 Firmware Sequence Diagram</h3>
+<pre><code class="has-line-data language-mermaid" data-line-start="1751" data-line-end="1768">sequenceDiagram
+    participant N1 as Node 1 (Water Quality)
+    participant N2 as Node 2 (Environment)
+    participant Hub as Main Hub
+    participant Firebase as Firebase RTDB
+    
+    N1-&gt;&gt;N1: Wake up, Read Sensors
+    N2-&gt;&gt;N2: Wake up, Read Sensors
+    
+    N1--&gt;&gt;Hub: ESP-NOW Broadcast (C-struct)
+    N1-&gt;&gt;N1: Deep Sleep
+    
+    N2--&gt;&gt;Hub: ESP-NOW Broadcast (C-struct)
+    
+    Hub-&gt;&gt;Hub: Merge payloads &amp; Add NTP Timestamp
+    Hub--&gt;&gt;Firebase: HTTPS POST JSON (Direct)
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1771" data-line-end="1772"><a id="6_BLE_Offline_Sync_Implementation_1771"></a>6. BLE Offline Sync Implementation</h2>
+<p class="has-line-data" data-line-start="1773" data-line-end="1774">To solve the lack of an SD Card module, the system buffers data on the user’s mobile device.</p>
+<ul>
+<li class="has-line-data" data-line-start="1775" data-line-end="1776"><strong>Service UUID:</strong> A custom UUID is defined for the Desalination System (e.g., <code>4fafc201-1fb5-459e-8fcc-c5c9c331914b</code>).</li>
+<li class="has-line-data" data-line-start="1776" data-line-end="1777"><strong>Notify Characteristic:</strong> A read/notify characteristic streams the aggregated system JSON payload to the Flet mobile app.</li>
+<li class="has-line-data" data-line-start="1777" data-line-end="1778"><strong>Write Characteristic:</strong> An RX characteristic allows the mobile app to send JSON commands back to the Hub (e.g. WiFi credentials).</li>
+<li class="has-line-data" data-line-start="1778" data-line-end="1779"><strong>Mobile App Role:</strong> The Flet app listens for notifications, and saves every payload to a local SQLite database (<code>sensor_data.sqlite</code>).</li>
+<li class="has-line-data" data-line-start="1779" data-line-end="1781"><strong>Cloud Sync:</strong> When the mobile app detects an active Internet connection, a background <code>sync.py</code> worker automatically uploads the SQLite queue to the FastAPI backend, ensuring zero data loss during power/network outages at the installation site.</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1783" data-line-end="1784"><a id="7_Source_Code_Reference_1783"></a>7. Source Code Reference</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Folder</th>
+<th>Key Files</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>firmware/Node1_WaterQuality/</code></td>
+<td><code>Node1_WaterQuality.ino</code>, <code>config.h</code></td>
+<td>Core water sensing &amp; pump control.</td>
+</tr>
+<tr>
+<td><code>firmware/Node2_Environment/</code></td>
+<td><code>Node2_Environment.ino</code>, <code>config.h</code></td>
+<td>Environment and fan control.</td>
+</tr>
+<tr>
+<td><code>firmware/Main_Hub/</code></td>
+<td><code>Main_Hub.ino</code>, <code>config.h</code></td>
+<td>Central hub, Display UI, and mobile BLE integration.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1793" data-line-end="1794"><a id="8_Testing_Procedures_1793"></a>8. Testing Procedures</h2>
+<ol>
+<li class="has-line-data" data-line-start="1795" data-line-end="1796"><strong>Upload Node Firmware:</strong> Flash Node 1 and Node 2. Monitor their serial outputs to ensure ESP-NOW packets are being sent successfully.</li>
+<li class="has-line-data" data-line-start="1796" data-line-end="1797"><strong>Verify Hub Reception:</strong> Flash the Main Hub. Ensure the serial monitor logs incoming packets from both nodes correctly.</li>
+<li class="has-line-data" data-line-start="1797" data-line-end="1798"><strong>Verify TFT Display:</strong> Check that sensor values update on the 5-inch screen within 5 seconds of a physical change.</li>
+<li class="has-line-data" data-line-start="1798" data-line-end="1800"><strong>Test BLE Connection:</strong> Use a mobile app like <em>nRF Connect</em> (or your Flet app) to bond with the Hub and subscribe to the characteristic. Ensure data flows continuously.</li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1802" data-line-end="1803"><a id="9_Validation_Checklist_1802"></a>9. Validation Checklist</h2>
+<ul>
+<li class="has-line-data" data-line-start="1804" data-line-end="1805"><input type="checkbox" id="checkbox24"><label for="checkbox24">Node 1 successfully compiles and sends data via ESP-NOW (including all 7 sensor types)</label></li>
+<li class="has-line-data" data-line-start="1805" data-line-end="1806"><input type="checkbox" id="checkbox25"><label for="checkbox25">Pressure sensor reads expected 0 bar at atmospheric pressure</label></li>
+<li class="has-line-data" data-line-start="1806" data-line-end="1807"><input type="checkbox" id="checkbox26"><label for="checkbox26">Node 2 successfully compiles and sends data via ESP-NOW</label></li>
+<li class="has-line-data" data-line-start="1807" data-line-end="1808"><input type="checkbox" id="checkbox27"><label for="checkbox27">Main Hub successfully receives data from both nodes asynchronously</label></li>
+<li class="has-line-data" data-line-start="1808" data-line-end="1809"><input type="checkbox" id="checkbox28"><label for="checkbox28">TFT Display renders UI and updates in real-time without blocking</label></li>
+<li class="has-line-data" data-line-start="1809" data-line-end="1810"><input type="checkbox" id="checkbox29"><label for="checkbox29">BLE Server starts and broadcasts correctly</label></li>
+<li class="has-line-data" data-line-start="1810" data-line-end="1812"><input type="checkbox" id="checkbox30"><label for="checkbox30">Flet Mobile App successfully pairs and receives BLE data</label></li>
+</ul>
+<hr>
+<blockquote>
+<p class="has-line-data" data-line-start="1814" data-line-end="1816">[!IMPORTANT]<br>
+Phase 3 represents the completion of the Edge Layer. The physical devices are now fully autonomous IoT nodes capable of interacting with the local display and the mobile app.</p>
+</blockquote>
+<hr>
+<p class="has-line-data" data-line-start="1819" data-line-end="1820"><strong>Have you completed this phase?</strong></p>
+<p class="has-line-data" data-line-start="1821" data-line-end="1822">Reply with <strong>“Phase Completed”</strong> to proceed to <strong>Phase 4: Backend API Development</strong> <em>(FastAPI on Vercel, Firebase Admin integration, and ML prediction endpoints).</em></p>
+<h1 class="code-line has-line-data" data-line-start="1823" data-line-end="1824"><a id="Phase_4_Backend_API_Development_FastAPI_on_Vercel_1823"></a>🚀 Phase 4 — Backend API Development (FastAPI on Vercel)</h1>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1827" data-line-end="1828"><a id="Table_of_Contents_1827"></a>📋 Table of Contents</h2>
+<ol>
+<li class="has-line-data" data-line-start="1829" data-line-end="1830"><a href="#1-objectives">Objectives</a></li>
+<li class="has-line-data" data-line-start="1830" data-line-end="1831"><a href="#2-architecture-overview">Architecture Overview</a></li>
+<li class="has-line-data" data-line-start="1831" data-line-end="1832"><a href="#3-project-structure">Project Structure</a></li>
+<li class="has-line-data" data-line-start="1832" data-line-end="1833"><a href="#4-configuration--secrets">Configuration &amp; Secrets</a></li>
+<li class="has-line-data" data-line-start="1833" data-line-end="1834"><a href="#5-firebase-integration">Firebase Integration</a></li>
+<li class="has-line-data" data-line-start="1834" data-line-end="1835"><a href="#6-ml-prediction-service">ML Prediction Service</a></li>
+<li class="has-line-data" data-line-start="1835" data-line-end="1836"><a href="#7-api-endpoints-reference">API Endpoints Reference</a></li>
+<li class="has-line-data" data-line-start="1836" data-line-end="1837"><a href="#8-vercel-deployment">Vercel Deployment</a></li>
+<li class="has-line-data" data-line-start="1837" data-line-end="1838"><a href="#9-testing-procedures">Testing Procedures</a></li>
+<li class="has-line-data" data-line-start="1838" data-line-end="1840"><a href="#10-validation-checklist">Validation Checklist</a></li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1842" data-line-end="1843"><a id="1_Objectives_1842"></a>1. Objectives</h2>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>#</th>
+<th>Objective</th>
+<th>Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Build a production-ready FastAPI backend deployable to Vercel</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Integrate both trained ML models (Water Quality + Membrane Status) as REST endpoints</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Connect to Firebase Realtime Database using the Admin SDK</td>
+<td>🔴 Critical</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Build an alert evaluation engine based on WHO water quality thresholds</td>
+<td>🟠 High</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Proxy the Gemini AI API for the in-app chatbot</td>
+<td>🟠 High</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Expose a system health endpoint for Vercel uptime monitoring</td>
+<td>🟡 Medium</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1855" data-line-end="1856"><a id="2_Architecture_Overview_1855"></a>2. Architecture Overview</h2>
+<pre><code class="has-line-data language-mermaid" data-line-start="1858" data-line-end="1867">graph TD
+    MobileApp[Flet Mobile App] -- HTTPS POST (Sync) --&gt; FastAPI
+    Dashboard[Web Dashboard] -- HTTP GET/POST --&gt; FastAPI
+    MainHub[Main Hub] -- HTTPS POST --&gt; Firebase[(Firebase RTDB)]
+
+    FastAPI -- Firebase Admin SDK --&gt; Firebase
+    FastAPI -- loads pkl --&gt; MLModels[RF Models: water_quality + membrane]
+    FastAPI -- HTTPS --&gt; Gemini[Gemini 2.5 Flash API]
+</code></pre>
+<ul>
+<li class="has-line-data" data-line-start="1868" data-line-end="1869"><strong>FastAPI</strong> is the single backend, handling ML inference, alerting, and AI chat, as well as ingesting offline-synced data from the mobile app.</li>
+<li class="has-line-data" data-line-start="1869" data-line-end="1870"><strong>Main Hub</strong> pushes live data directly to Firebase RTDB, bypassing the backend for real-time sensor updates.</li>
+<li class="has-line-data" data-line-start="1870" data-line-end="1871"><strong>Firebase RTDB</strong> is the cloud store for live data, historical logs, and alerts.</li>
+<li class="has-line-data" data-line-start="1871" data-line-end="1872"><strong>ML models</strong> are bundled inside the backend — no separate ML service needed.</li>
+<li class="has-line-data" data-line-start="1872" data-line-end="1874">Deployed on <strong>Vercel</strong> as Python Serverless Functions.</li>
+</ul>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1876" data-line-end="1877"><a id="3_Project_Structure_1876"></a>3. Project Structure</h2>
+<pre><code class="has-line-data" data-line-start="1879" data-line-end="1902">backend/
+├── main.py                          — FastAPI app + CORS + router registration
+├── requirements.txt                 — All Python dependencies
+├── api/
+│   └── index.py                     — Vercel serverless entry point
+├── ml/
+│   ├── water_quality_rf.pkl         — Trained RF classifier (Water Quality)
+│   ├── water_quality_encoder.pkl    — LabelEncoder for water quality classes
+│   ├── membrane_status_rf.pkl       — Trained RF classifier (Membrane Health)
+│   └── membrane_encoder.pkl         — LabelEncoder for membrane classes
+└── app/
+    ├── core/
+    │   ├── config.py                — Pydantic settings (reads from .env)
+    │   └── firebase.py              — Firebase Admin SDK singleton
+    ├── services/
+    │   └── ml_service.py            — Model loader + prediction function
+    └── api/v1/
+        ├── predict.py               — POST /api/v1/predict
+        ├── sensors.py               — POST /api/v1/sensors/ingest, GET /live
+        ├── alerts.py                — POST /api/v1/alerts/evaluate, GET /history
+        ├── chat.py                  — POST /api/v1/chat
+        └── status.py                — GET /api/v1/status/health
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1905" data-line-end="1906"><a id="4_Configuration_Secrets_1905"></a>4. Configuration &amp; Secrets</h2>
+<p class="has-line-data" data-line-start="1907" data-line-end="1908">All secrets are loaded from the <code>.env</code> file in the project root. <strong>Never commit this file to Git</strong> (it is already in <code>.gitignore</code>).</p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>FIREBASE_DATABASE_URL</code></td>
+<td>Firebase RTDB URL</td>
+<td><code>https://your-project-default-rtdb.europe-west1.firebasedatabase.app</code></td>
+</tr>
+<tr>
+<td><code>FIREBASE_SERVICE_ACCOUNT_PATH</code></td>
+<td>Path to Firebase JSON key</td>
+<td><code>serviceAccountKey.json</code></td>
+</tr>
+<tr>
+<td><code>GEMINI_API_KEY</code></td>
+<td>Google AI Studio API key</td>
+<td><code>AIzaSy...</code></td>
+</tr>
+<tr>
+<td><code>SECRET_KEY</code></td>
+<td>FastAPI secret (for future auth)</td>
+<td>Random 32+ char string</td>
+</tr>
+<tr>
+<td><code>DEFAULT_DEVICE_ID</code></td>
+<td>Device identifier used in Firebase paths</td>
+<td><code>device_001</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p class="has-line-data" data-line-start="1917" data-line-end="1919">[!CAUTION]<br>
+Add <code>serviceAccountKey.json</code> to <code>.gitignore</code> immediately. This file contains your private Google Cloud credentials and must <strong>never</strong> be pushed to any repository.</p>
+</blockquote>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1922" data-line-end="1923"><a id="5_Firebase_Integration_1922"></a>5. Firebase Integration</h2>
+<p class="has-line-data" data-line-start="1924" data-line-end="1925">Firebase is accessed via the <strong>Admin SDK</strong> using a Service Account key.</p>
+<p class="has-line-data" data-line-start="1926" data-line-end="1927"><strong>Singleton Pattern (<code>app/core/firebase.py</code>):</strong></p>
+<ul>
+<li class="has-line-data" data-line-start="1927" data-line-end="1928">Firebase is initialized once using <code>firebase_admin.initialize_app()</code>.</li>
+<li class="has-line-data" data-line-start="1928" data-line-end="1930">All endpoints call <code>get_db_ref(path)</code> to get a reference to any Firebase RTDB path.</li>
+</ul>
+<p class="has-line-data" data-line-start="1930" data-line-end="1931"><strong>Database Schema Used:</strong></p>
+<pre><code class="has-line-data" data-line-start="1933" data-line-end="1944">/devices/device_001/
+│   └── live_data/           ← Overwritten every 5 seconds (latest snapshot)
+│
+/historical_logs/device_001/
+│   └── &lt;push_key&gt;/          ← Appended every cycle (permanent record)
+│
+/alerts/device_001/
+│   └── &lt;push_key&gt;/          ← Written only when a threshold is breached
+│
+/system_status/device_001/   ← Last known device state
+</code></pre>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1947" data-line-end="1948"><a id="6_ML_Prediction_Service_1947"></a>6. ML Prediction Service</h2>
+<p class="has-line-data" data-line-start="1949" data-line-end="1950"><strong>File:</strong> <code>app/services/ml_service.py</code></p>
+<p class="has-line-data" data-line-start="1951" data-line-end="1952"><strong>Models Used:</strong></p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Model</th>
+<th>File</th>
+<th>Output Classes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Water Quality Classifier</td>
+<td><code>water_quality_rf.pkl</code></td>
+<td><code>Excellent</code>, <code>Acceptable</code>, <code>Poor</code></td>
+</tr>
+<tr>
+<td>Membrane Status Classifier</td>
+<td><code>membrane_status_rf.pkl</code></td>
+<td><code>Healthy</code>, <code>Needs Cleaning</code>, <code>Replace</code></td>
+</tr>
+</tbody>
+</table>
+<p class="has-line-data" data-line-start="1958" data-line-end="1959"><strong>Input Features (13 total):</strong></p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Feature</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pH_before</code></td>
+<td>Raw water pH</td>
+</tr>
+<tr>
+<td><code>TDS_before</code></td>
+<td>Raw water TDS (ppm)</td>
+</tr>
+<tr>
+<td><code>Turbidity_before</code></td>
+<td>Raw water turbidity (NTU)</td>
+</tr>
+<tr>
+<td><code>Temperature_before</code></td>
+<td>Raw water temperature (°C)</td>
+</tr>
+<tr>
+<td><code>Pressure_before</code></td>
+<td>System pressure (bar)</td>
+</tr>
+<tr>
+<td><code>pH_after</code></td>
+<td>Treated water pH</td>
+</tr>
+<tr>
+<td><code>TDS_after</code></td>
+<td>Treated water TDS (ppm)</td>
+</tr>
+<tr>
+<td><code>Turbidity_after</code></td>
+<td>Treated water turbidity (NTU)</td>
+</tr>
+<tr>
+<td><code>Temperature_after</code></td>
+<td>Treated water temperature (°C)</td>
+</tr>
+<tr>
+<td><code>Efficiency</code></td>
+<td>TDS removal efficiency (%)</td>
+</tr>
+<tr>
+<td><code>TDS_Reduction</code></td>
+<td>Absolute TDS reduction</td>
+</tr>
+<tr>
+<td><code>Turbidity_Reduction</code></td>
+<td>Absolute turbidity reduction</td>
+</tr>
+<tr>
+<td><code>pH_Change</code></td>
+<td>Change in pH after treatment</td>
+</tr>
+</tbody>
+</table>
+<p class="has-line-data" data-line-start="1976" data-line-end="1977"><strong>Performance:</strong> Models are loaded once at startup using Python’s <code>@lru_cache</code>, so all subsequent prediction requests are served purely from RAM with minimal latency.</p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="1980" data-line-end="1981"><a id="7_API_Endpoints_Reference_1980"></a>7. API Endpoints Reference</h2>
+<h3 class="code-line has-line-data" data-line-start="1982" data-line-end="1983"><a id="POST_apiv1sensorsingest_1982"></a><code>POST /api/v1/sensors/ingest</code></h3>
+<p class="has-line-data" data-line-start="1983" data-line-end="1984">Ingests a full sensor snapshot from all nodes (aggregated by the Main Hub or via mobile BLE sync).</p>
+<p class="has-line-data" data-line-start="1985" data-line-end="1986"><strong>Request Body:</strong></p>
+<pre><code class="has-line-data language-json" data-line-start="1987" data-line-end="2006"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;ph_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">7.2</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;ph_permeate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">6.9</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;tds_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">320.5</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;tds_permeate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">12.0</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;turbidity_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0.8</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;temperature_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">24.5</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;temperature_permeate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">24.2</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;pressure_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3.5</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;flow_rate_feed&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2.1</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;flow_rate_permeate&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1.5</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;water_level_feed_tank&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">100</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;water_level_product_tank&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">0</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;pump_status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;running&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;valve_status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;open&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;ambient_temp&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">28.0</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;gas_1_ppm&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">120.0</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p class="has-line-data" data-line-start="2006" data-line-end="2007"><strong>Response:</strong> <code>{ &quot;status&quot;: &quot;ok&quot;, &quot;timestamp&quot;: &quot;2026-06-27T...&quot; }</code></p>
+<hr>
+<h3 class="code-line has-line-data" data-line-start="2010" data-line-end="2011"><a id="GET_apiv1sensorslive_2010"></a><code>GET /api/v1/sensors/live</code></h3>
+<p class="has-line-data" data-line-start="2011" data-line-end="2012">Returns the latest live sensor snapshot from Firebase.</p>
+<hr>
+<h3 class="code-line has-line-data" data-line-start="2015" data-line-end="2016"><a id="POST_apiv1predict_2015"></a><code>POST /api/v1/predict</code></h3>
+<p class="has-line-data" data-line-start="2016" data-line-end="2017">Runs both ML models and returns predictions with confidence scores.</p>
+<p class="has-line-data" data-line-start="2018" data-line-end="2019"><strong>Response:</strong></p>
+<pre><code class="has-line-data language-json" data-line-start="2020" data-line-end="2036"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;ok&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;predictions&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+    <span class="hljs-attr">&quot;water_quality&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Excellent&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;confidence&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">94.5</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;probabilities&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;Acceptable&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">3.1</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;Excellent&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">94.5</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;Poor&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2.4</span> <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span><span class="hljs-punctuation">,</span>
+    <span class="hljs-attr">&quot;membrane_status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span>
+      <span class="hljs-attr">&quot;label&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Healthy&quot;</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;confidence&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">87.2</span><span class="hljs-punctuation">,</span>
+      <span class="hljs-attr">&quot;probabilities&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;Healthy&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">87.2</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;Needs Cleaning&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">11.1</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;Replace&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">1.7</span> <span class="hljs-punctuation">}</span>
+    <span class="hljs-punctuation">}</span>
+  <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<hr>
+<h3 class="code-line has-line-data" data-line-start="2039" data-line-end="2040"><a id="POST_apiv1alertsevaluate_2039"></a><code>POST /api/v1/alerts/evaluate</code></h3>
+<p class="has-line-data" data-line-start="2040" data-line-end="2041">Evaluates a sensor snapshot against WHO thresholds and writes any triggered alerts to Firebase.</p>
+<p class="has-line-data" data-line-start="2042" data-line-end="2043"><strong>Thresholds Used:</strong></p>
+<table class="table table-striped table-bordered">
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Limit</th>
+<th>Standard</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pH</td>
+<td>6.5 – 8.5</td>
+<td>WHO Drinking Water</td>
+</tr>
+<tr>
+<td>TDS</td>
+<td>&lt; 500 ppm</td>
+<td>WHO Drinking Water</td>
+</tr>
+<tr>
+<td>Turbidity</td>
+<td>&lt; 4 NTU</td>
+<td>WHO Drinking Water</td>
+</tr>
+<tr>
+<td>Pressure</td>
+<td>&lt; 5.5 bar</td>
+<td>Operational safety</td>
+</tr>
+<tr>
+<td>Gas 1 &amp; 2</td>
+<td>&lt; 1000 ppm</td>
+<td>Configurable</td>
+</tr>
+<tr>
+<td>Ambient Temp</td>
+<td>&lt; 45 °C</td>
+<td>Equipment safety</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h3 class="code-line has-line-data" data-line-start="2055" data-line-end="2056"><a id="GET_apiv1alertshistorylimit20_2055"></a><code>GET /api/v1/alerts/history?limit=20</code></h3>
+<p class="has-line-data" data-line-start="2056" data-line-end="2057">Returns the last N alerts from Firebase.</p>
+<hr>
+<h3 class="code-line has-line-data" data-line-start="2060" data-line-end="2061"><a id="POST_apiv1chat_2060"></a><code>POST /api/v1/chat</code></h3>
+<p class="has-line-data" data-line-start="2061" data-line-end="2062">Proxies a user message to Gemini 2.5 Flash with a system prompt specialized in water desalination expertise, using the implementation from <code>chatbot.py</code>.</p>
+<p class="has-line-data" data-line-start="2063" data-line-end="2064"><strong>Request:</strong></p>
+<pre><code class="has-line-data language-json" data-line-start="2065" data-line-end="2070"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;message&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Why is my TDS reading 800 ppm after treatment?&quot;</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;context&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;tds_after&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">800</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;membrane_status&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;Needs Cleaning&quot;</span> <span class="hljs-punctuation">}</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p class="has-line-data" data-line-start="2070" data-line-end="2071"><strong>Response:</strong> <code>{ &quot;status&quot;: &quot;ok&quot;, &quot;reply&quot;: &quot;A TDS of 800 ppm after RO treatment suggests...&quot; }</code></p>
+<hr>
+<h3 class="code-line has-line-data" data-line-start="2074" data-line-end="2075"><a id="GET_apiv1statushealth_2074"></a><code>GET /api/v1/status/health</code></h3>
+<p class="has-line-data" data-line-start="2075" data-line-end="2077">Simple liveness probe for Vercel and uptime monitoring services.<br>
+Returns: <code>{ &quot;status&quot;: &quot;healthy&quot;, &quot;service&quot;: &quot;water-desalination-api&quot; }</code></p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2080" data-line-end="2081"><a id="8_Vercel_Deployment_2080"></a>8. Vercel Deployment</h2>
+<p class="has-line-data" data-line-start="2082" data-line-end="2083"><strong>Configuration file:</strong> <code>vercel.json</code> (project root)</p>
+<pre><code class="has-line-data language-json" data-line-start="2085" data-line-end="2091"><span class="hljs-punctuation">{</span>
+  <span class="hljs-attr">&quot;version&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;builds&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;src&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;backend/main.py&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;use&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;@vercel/python&quot;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">]</span><span class="hljs-punctuation">,</span>
+  <span class="hljs-attr">&quot;routes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">{</span> <span class="hljs-attr">&quot;src&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;/(.*)&quot;</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;dest&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;backend/main.py&quot;</span> <span class="hljs-punctuation">}</span><span class="hljs-punctuation">]</span>
+<span class="hljs-punctuation">}</span>
+</code></pre>
+<p class="has-line-data" data-line-start="2092" data-line-end="2093"><strong>Deployment Steps:</strong></p>
+<ol>
+<li class="has-line-data" data-line-start="2094" data-line-end="2095">Install Vercel CLI: <code>npm install -g vercel</code></li>
+<li class="has-line-data" data-line-start="2095" data-line-end="2096">Run <code>vercel login</code> in your terminal.</li>
+<li class="has-line-data" data-line-start="2096" data-line-end="2097">From the project root: <code>vercel deploy</code></li>
+<li class="has-line-data" data-line-start="2097" data-line-end="2098">Set environment variables in the <strong>Vercel Dashboard → Settings → Environment Variables</strong> (same keys as <code>.env</code>).</li>
+<li class="has-line-data" data-line-start="2098" data-line-end="2100">Upload your <code>serviceAccountKey.json</code> content as a Vercel secret or use a secret manager.</li>
+</ol>
+<blockquote>
+<p class="has-line-data" data-line-start="2100" data-line-end="2102">[!WARNING]<br>
+Vercel Serverless Functions have a <strong>250MB unzipped deployment limit</strong>. The two Random Forest <code>.pkl</code> models total ~7MB together — well within this limit.</p>
+</blockquote>
+<blockquote>
+<p class="has-line-data" data-line-start="2103" data-line-end="2105">[!IMPORTANT]<br>
+<strong>Cold Start Note:</strong> The first request after a period of inactivity will have a small delay (~1–2 seconds) while the Python runtime and ML models initialize. All subsequent requests are fast.</p>
+</blockquote>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2108" data-line-end="2109"><a id="9_Testing_Procedures_2108"></a>9. Testing Procedures</h2>
+<ol>
+<li class="has-line-data" data-line-start="2110" data-line-end="2115"><strong>Run Locally:</strong><pre><code class="has-line-data language-bash" data-line-start="2112" data-line-end="2115"><span class="hljs-built_in">cd</span> backend
+uvicorn main:app --reload --port 8000
+</code></pre>
+</li>
+<li class="has-line-data" data-line-start="2115" data-line-end="2116"><strong>Open Swagger UI:</strong> Go to <code>http://localhost:8000/docs</code> to view and test all endpoints interactively.</li>
+<li class="has-line-data" data-line-start="2116" data-line-end="2119"><strong>Test Prediction Endpoint:</strong>
+<ul>
+<li class="has-line-data" data-line-start="2117" data-line-end="2118">Use the Swagger UI to POST to <code>/api/v1/predict</code> with sample feature values.</li>
+<li class="has-line-data" data-line-start="2118" data-line-end="2119">Verify it returns <code>water_quality</code> and <code>membrane_status</code> predictions.</li>
+</ul>
+</li>
+<li class="has-line-data" data-line-start="2119" data-line-end="2122"><strong>Test Firebase Ingest:</strong>
+<ul>
+<li class="has-line-data" data-line-start="2120" data-line-end="2121">POST to <code>/api/v1/sensors/ingest</code> with a sample payload.</li>
+<li class="has-line-data" data-line-start="2121" data-line-end="2122">Open Firebase Console and verify <code>live_data</code> and <code>historical_logs</code> paths are populated.</li>
+</ul>
+</li>
+<li class="has-line-data" data-line-start="2122" data-line-end="2126"><strong>Test Alert Engine:</strong>
+<ul>
+<li class="has-line-data" data-line-start="2123" data-line-end="2124">POST to <code>/api/v1/alerts/evaluate</code> with a TDS value &gt; 500.</li>
+<li class="has-line-data" data-line-start="2124" data-line-end="2126">Verify an alert appears in Firebase under <code>/alerts/device_001/</code>.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2128" data-line-end="2129"><a id="10_Validation_Checklist_2128"></a>10. Validation Checklist</h2>
+<ul>
+<li class="has-line-data" data-line-start="2130" data-line-end="2131"><input type="checkbox" id="checkbox31"><label for="checkbox31"></label><code>uvicorn main:app --reload</code> starts without import errors</li>
+<li class="has-line-data" data-line-start="2131" data-line-end="2132"><input type="checkbox" id="checkbox32"><label for="checkbox32"></label><code>/docs</code> Swagger UI loads all 5 endpoint groups</li>
+<li class="has-line-data" data-line-start="2132" data-line-end="2133"><input type="checkbox" id="checkbox33"><label for="checkbox33"></label><code>/api/v1/status/health</code> returns <code>{ &quot;status&quot;: &quot;healthy&quot; }</code></li>
+<li class="has-line-data" data-line-start="2133" data-line-end="2134"><input type="checkbox" id="checkbox34"><label for="checkbox34"></label><code>/api/v1/predict</code> returns correct labels and confidence scores</li>
+<li class="has-line-data" data-line-start="2134" data-line-end="2135"><input type="checkbox" id="checkbox35"><label for="checkbox35"></label><code>/api/v1/sensors/ingest</code> writes to Firebase <code>live_data</code> and <code>historical_logs</code></li>
+<li class="has-line-data" data-line-start="2135" data-line-end="2136"><input type="checkbox" id="checkbox36"><label for="checkbox36"></label><code>/api/v1/alerts/evaluate</code> correctly flags out-of-range readings</li>
+<li class="has-line-data" data-line-start="2136" data-line-end="2137"><input type="checkbox" id="checkbox37"><label for="checkbox37"></label><code>/api/v1/chat</code> returns Gemini response (requires valid <code>GEMINI_API_KEY</code>)</li>
+<li class="has-line-data" data-line-start="2137" data-line-end="2139"><input type="checkbox" id="checkbox38"><label for="checkbox38"></label><code>vercel deploy</code> completes without errors</li>
+</ul>
+<hr>
+<blockquote>
+<p class="has-line-data" data-line-start="2141" data-line-end="2143">[!IMPORTANT]<br>
+Phase 4 represents the complete Cloud/Backend Layer. The FastAPI service is now the brain of the system — receiving data from hardware, running ML inference, managing Firebase, and serving the dashboard and mobile app.</p>
+</blockquote>
+<hr>
+<p class="has-line-data" data-line-start="2146" data-line-end="2147"><strong>Have you completed this phase?</strong></p>
+<p class="has-line-data" data-line-start="2148" data-line-end="2149">Reply with <strong>“Phase Completed”</strong> to proceed to <strong>Phase 5: Dashboard &amp; Mobile App Development</strong> <em>(Flet Web Dashboard on Vercel + Flet Mobile App with BLE + SQLite offline sync).</em></p>
+<h1 class="code-line has-line-data" data-line-start="2150" data-line-end="2151"><a id="Phase_5_Deployment_Testing_and_Operations_2150"></a>🚢 Phase 5 — Deployment, Testing, and Operations</h1>
+<p class="has-line-data" data-line-start="2152" data-line-end="2153">This phase provides a comprehensive guide on how to deploy and test the entire Smart Water Desalination System from end-to-end, covering the Hardware, Backend, Web Dashboard, and Mobile App.</p>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2156" data-line-end="2157"><a id="Table_of_Contents_2156"></a>📋 Table of Contents</h2>
+<ol>
+<li class="has-line-data" data-line-start="2157" data-line-end="2158"><a href="#1-hardware-deployment--testing">Hardware Deployment &amp; Testing</a></li>
+<li class="has-line-data" data-line-start="2158" data-line-end="2159"><a href="#2-backend-api-deployment--testing">Backend API Deployment &amp; Testing</a></li>
+<li class="has-line-data" data-line-start="2159" data-line-end="2160"><a href="#3-web-dashboard-deployment--testing">Web Dashboard Deployment &amp; Testing</a></li>
+<li class="has-line-data" data-line-start="2160" data-line-end="2161"><a href="#4-mobile-app-testing--usage">Mobile App Testing &amp; Usage</a></li>
+<li class="has-line-data" data-line-start="2161" data-line-end="2163"><a href="#5-end-to-end-system-test-flow">End-to-End System Test Flow</a></li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2165" data-line-end="2166"><a id="1_Hardware_Deployment_Testing_2165"></a>1. Hardware Deployment &amp; Testing</h2>
+<p class="has-line-data" data-line-start="2167" data-line-end="2168">The hardware consists of 3 ESP32 nodes. You must flash them in order and verify their connections.</p>
+<h3 class="code-line has-line-data" data-line-start="2169" data-line-end="2170"><a id="11_Preparing_the_Main_Hub_2169"></a>1.1 Preparing the Main Hub</h3>
+<ol>
+<li class="has-line-data" data-line-start="2170" data-line-end="2171">Open the <code>Main_Hub</code> folder in Arduino IDE or PlatformIO.</li>
+<li class="has-line-data" data-line-start="2171" data-line-end="2172">Ensure you have installed the required libraries: <code>Firebase ESP Client</code>, <code>ArduinoJson</code>, <code>BLEDevice</code>.</li>
+<li class="has-line-data" data-line-start="2172" data-line-end="2173">Open <code>config.h</code> and verify your <code>FIREBASE_API_KEY</code> and <code>FIREBASE_DATABASE_URL</code> are correct.</li>
+<li class="has-line-data" data-line-start="2173" data-line-end="2174"><strong>Flash the Main Hub</strong> to an ESP32.</li>
+<li class="has-line-data" data-line-start="2174" data-line-end="2179"><strong>Testing</strong>:
+<ul>
+<li class="has-line-data" data-line-start="2175" data-line-end="2176">Open the Serial Monitor at <code>115200</code> baud.</li>
+<li class="has-line-data" data-line-start="2176" data-line-end="2177">You should see it attempt to connect to WiFi. If it fails, it will fall back to BLE-only mode.</li>
+<li class="has-line-data" data-line-start="2177" data-line-end="2179">You should see <code>[ESP-NOW] Ready.</code> indicating the receiver is active.</li>
+</ul>
+</li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="2179" data-line-end="2180"><a id="12_Preparing_Node_1_and_Node_2_2179"></a>1.2 Preparing Node 1 and Node 2</h3>
+<ol>
+<li class="has-line-data" data-line-start="2180" data-line-end="2181">Open <code>Node1_WaterQuality</code> and <code>Node2_Environment</code>.</li>
+<li class="has-line-data" data-line-start="2181" data-line-end="2183">In each project’s <code>config.h</code>, ensure the <code>hubAddress</code> matches the actual MAC address of your Main Hub ESP32.<br>
+<em>(You can find the Hub’s MAC address in its serial monitor during boot: <code>[WiFi] MAC: XX:XX:XX...</code>)</em></li>
+<li class="has-line-data" data-line-start="2183" data-line-end="2184"><strong>Flash Node 1 and Node 2</strong>.</li>
+<li class="has-line-data" data-line-start="2184" data-line-end="2188"><strong>Testing</strong>:
+<ul>
+<li class="has-line-data" data-line-start="2185" data-line-end="2186">Open the Serial Monitor for Node 1. You should see it reading mock/real sensors and outputting <code>[ESP-NOW] Delivery Success</code>.</li>
+<li class="has-line-data" data-line-start="2186" data-line-end="2188">Look back at the <strong>Main Hub Serial Monitor</strong>. You should see <code>[ESP-NOW] Node 1 data received</code> every 5 seconds.</li>
+</ul>
+</li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="2188" data-line-end="2189"><a id="13_Testing_Hardware_Internet_Connection_2188"></a>1.3 Testing Hardware Internet Connection</h3>
+<ol>
+<li class="has-line-data" data-line-start="2189" data-line-end="2190">With the Hub connected to your local WiFi, watch its Serial Monitor.</li>
+<li class="has-line-data" data-line-start="2190" data-line-end="2191">Every 5 seconds (when it receives data), it should print <code>[Firebase] Live data pushed OK.</code></li>
+<li class="has-line-data" data-line-start="2191" data-line-end="2193">Go to your Firebase Console online and verify the data is appearing under <code>/devices/device_001/live_data</code>.</li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2195" data-line-end="2196"><a id="2_Backend_API_Deployment_Testing_2195"></a>2. Backend API Deployment &amp; Testing</h2>
+<p class="has-line-data" data-line-start="2197" data-line-end="2198">The FastAPI backend handles ML predictions, historical alerts, and offline sync ingestion.</p>
+<h3 class="code-line has-line-data" data-line-start="2199" data-line-end="2200"><a id="21_Local_Testing_2199"></a>2.1 Local Testing</h3>
+<ol>
+<li class="has-line-data" data-line-start="2200" data-line-end="2201">Navigate to the <code>backend</code> folder in your terminal.</li>
+<li class="has-line-data" data-line-start="2201" data-line-end="2202">Ensure your <code>.env</code> file contains <code>FIREBASE_DATABASE_URL</code> and <code>FIREBASE_SERVICE_ACCOUNT_PATH</code>.</li>
+<li class="has-line-data" data-line-start="2202" data-line-end="2206">Start the server:<pre><code class="has-line-data language-bash" data-line-start="2204" data-line-end="2206">uvicorn app.main:app --reload
+</code></pre>
+</li>
+<li class="has-line-data" data-line-start="2206" data-line-end="2211"><strong>Testing</strong>:
+<ul>
+<li class="has-line-data" data-line-start="2207" data-line-end="2208">Open <code>http://127.0.0.1:8000/docs</code> in your browser.</li>
+<li class="has-line-data" data-line-start="2208" data-line-end="2209">Test the <code>GET /api/v1/sensors/live</code> endpoint. It should successfully fetch the data that the Main Hub just pushed to Firebase.</li>
+<li class="has-line-data" data-line-start="2209" data-line-end="2211">Test the <code>GET /api/v1/alerts/history</code> endpoint to see if the alert engine is evaluating the data.</li>
+</ul>
+</li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="2211" data-line-end="2212"><a id="22_Vercel_Deployment_2211"></a>2.2 Vercel Deployment</h3>
+<p class="has-line-data" data-line-start="2212" data-line-end="2213">To deploy the backend to the cloud permanently:</p>
+<ol>
+<li class="has-line-data" data-line-start="2213" data-line-end="2214">Install the Vercel CLI: <code>npm i -g vercel</code></li>
+<li class="has-line-data" data-line-start="2214" data-line-end="2215">Run <code>vercel login</code> and authenticate.</li>
+<li class="has-line-data" data-line-start="2215" data-line-end="2216">Run <code>vercel</code> in the <code>backend</code> directory.</li>
+<li class="has-line-data" data-line-start="2216" data-line-end="2217">Add your <code>.env</code> variables in the Vercel project settings dashboard.</li>
+<li class="has-line-data" data-line-start="2217" data-line-end="2219">Your API will be live at <code>https://your-project.vercel.app</code>.</li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2221" data-line-end="2222"><a id="3_Web_Dashboard_Deployment_Testing_2221"></a>3. Web Dashboard Deployment &amp; Testing</h2>
+<p class="has-line-data" data-line-start="2223" data-line-end="2224">The Web Dashboard visualizes the data sitting in Firebase via your FastAPI backend.</p>
+<h3 class="code-line has-line-data" data-line-start="2225" data-line-end="2226"><a id="31_Local_Testing_2225"></a>3.1 Local Testing</h3>
+<ol>
+<li class="has-line-data" data-line-start="2226" data-line-end="2227">Ensure your FastAPI backend is running locally at <code>http://127.0.0.1:8000</code>.</li>
+<li class="has-line-data" data-line-start="2227" data-line-end="2228">Open the <code>dashboard/web/index.html</code> file in any modern browser.</li>
+<li class="has-line-data" data-line-start="2228" data-line-end="2234"><strong>Testing</strong>:
+<ul>
+<li class="has-line-data" data-line-start="2229" data-line-end="2230">The dashboard should say “Live” (pulsing green indicator) in the bottom left.</li>
+<li class="has-line-data" data-line-start="2230" data-line-end="2231">The KPIs (pH, TDS, Turbidity) should update every 5 seconds as the Main Hub pushes new data.</li>
+<li class="has-line-data" data-line-start="2231" data-line-end="2232">Click the <strong>History</strong> tab. You should see a multi-line chart populating.</li>
+<li class="has-line-data" data-line-start="2232" data-line-end="2234">If the Hardware pushes a high TDS value (e.g., &gt; 1000), an <strong>Alert Toast</strong> should slide in from the top right.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2236" data-line-end="2237"><a id="4_Mobile_App_Testing_Usage_2236"></a>4. Mobile App Testing &amp; Usage</h2>
+<p class="has-line-data" data-line-start="2238" data-line-end="2239">The Flet mobile app provides offline viewing, BLE connection to the Hub, and WiFi provisioning.</p>
+<h3 class="code-line has-line-data" data-line-start="2240" data-line-end="2241"><a id="41_Running_the_App_on_PC_Desktop_Mode_2240"></a>4.1 Running the App on PC (Desktop Mode)</h3>
+<ol>
+<li class="has-line-data" data-line-start="2241" data-line-end="2242">Navigate to the <code>mobile/src</code> folder.</li>
+<li class="has-line-data" data-line-start="2242" data-line-end="2243">Run <code>python main.py</code>.</li>
+<li class="has-line-data" data-line-start="2243" data-line-end="2245">The app will open in a window shaped like a mobile phone.</li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="2245" data-line-end="2246"><a id="42_Testing_Virtual_BLE_No_Hardware_Needed_2245"></a>4.2 Testing Virtual BLE (No Hardware Needed)</h3>
+<ol>
+<li class="has-line-data" data-line-start="2246" data-line-end="2247">Go to the <strong>Settings</strong> tab (gear icon).</li>
+<li class="has-line-data" data-line-start="2247" data-line-end="2248">Ensure “Use Virtual BLE (Testing)” is toggled <strong>ON</strong>.</li>
+<li class="has-line-data" data-line-start="2248" data-line-end="2249">Go back to the <strong>Live</strong> tab. The app will simulate incoming BLE data, display it, and save it to the local SQLite database.</li>
+<li class="has-line-data" data-line-start="2249" data-line-end="2251">Go to the <strong>History</strong> tab to view the SQLite chart.</li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="2251" data-line-end="2252"><a id="43_Testing_Real_Hardware_BLE_2251"></a>4.3 Testing Real Hardware BLE</h3>
+<ol>
+<li class="has-line-data" data-line-start="2252" data-line-end="2253">Ensure your Main Hub ESP32 is powered on.</li>
+<li class="has-line-data" data-line-start="2253" data-line-end="2254">In the App <strong>Settings</strong> tab, toggle “Use Virtual BLE” to <strong>OFF</strong> and set the BLE Device Name to <code>AquaMonitor</code>.</li>
+<li class="has-line-data" data-line-start="2254" data-line-end="2255">Restart the app.</li>
+<li class="has-line-data" data-line-start="2255" data-line-end="2257">The app will scan for the ESP32, connect, and stream the live JSON payload.</li>
+</ol>
+<h3 class="code-line has-line-data" data-line-start="2257" data-line-end="2258"><a id="44_Provisioning_WiFi_to_the_Hardware_2257"></a>4.4 Provisioning WiFi to the Hardware</h3>
+<p class="has-line-data" data-line-start="2258" data-line-end="2259">If the Main Hub loses WiFi, you can fix it from the App:</p>
+<ol>
+<li class="has-line-data" data-line-start="2259" data-line-end="2260">Ensure the app is connected to the Hub via BLE.</li>
+<li class="has-line-data" data-line-start="2260" data-line-end="2261">Go to the <strong>WiFi</strong> tab in the app.</li>
+<li class="has-line-data" data-line-start="2261" data-line-end="2262">Enter your Home SSID and Password.</li>
+<li class="has-line-data" data-line-start="2262" data-line-end="2264">Click <strong>Send via BLE</strong>. The Hub’s Serial Monitor will show <code>[BLE CMD] Setting WiFi: SSID=...</code> and it will automatically reconnect.</li>
+</ol>
+<hr>
+<h2 class="code-line has-line-data" data-line-start="2266" data-line-end="2267"><a id="5_EndtoEnd_System_Test_Flow_2266"></a>5. End-to-End System Test Flow</h2>
+<p class="has-line-data" data-line-start="2268" data-line-end="2269">To prove the entire system works together flawlessly, run this final integration test:</p>
+<ol>
+<li class="has-line-data" data-line-start="2270" data-line-end="2271"><strong>Power up Node 1 and Node 2</strong>.</li>
+<li class="has-line-data" data-line-start="2271" data-line-end="2272"><strong>Power up the Main Hub</strong> (Ensure it is out of WiFi range or given the wrong password initially).</li>
+<li class="has-line-data" data-line-start="2272" data-line-end="2274"><strong>Open the Mobile App</strong> and connect to the Hub via BLE.
+<ul>
+<li class="has-line-data" data-line-start="2273" data-line-end="2274"><em>Result</em>: You should see live sensor data streaming to your phone, proving Node1 -&gt; ESP-NOW -&gt; Hub -&gt; BLE -&gt; Phone works.</li>
+</ul>
+</li>
+<li class="has-line-data" data-line-start="2274" data-line-end="2276"><strong>Go to the WiFi Tab</strong> in the App and send the correct WiFi credentials.
+<ul>
+<li class="has-line-data" data-line-start="2275" data-line-end="2276"><em>Result</em>: The Hub connects to WiFi.</li>
+</ul>
+</li>
+<li class="has-line-data" data-line-start="2276" data-line-end="2278"><strong>Open the Web Dashboard</strong> on your PC.
+<ul>
+<li class="has-line-data" data-line-start="2277" data-line-end="2278"><em>Result</em>: The dashboard immediately starts showing the live data, proving Hub -&gt; Firebase -&gt; Backend -&gt; Dashboard works.</li>
+</ul>
+</li>
+<li class="has-line-data" data-line-start="2278" data-line-end="2280"><strong>Disconnect the Hub from WiFi</strong> temporarily.
+<ul>
+<li class="has-line-data" data-line-start="2279" data-line-end="2280"><em>Result</em>: The mobile app continues to receive BLE data and saves it locally.</li>
+</ul>
+</li>
+<li class="has-line-data" data-line-start="2280" data-line-end="2283"><strong>Reconnect the Hub to WiFi</strong>.
+<ul>
+<li class="has-line-data" data-line-start="2281" data-line-end="2283"><em>Result</em>: The mobile app’s background worker senses the internet connection and automatically uploads the saved offline data to the FastAPI <code>/ingest</code> endpoint, updating the cloud history.</li>
+</ul>
+</li>
+</ol>
+<p class="has-line-data" data-line-start="2283" data-line-end="2284"><strong>🎉 System Validation Complete!</strong></p>
+
+</body>
+</html>

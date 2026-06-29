@@ -1,0 +1,44 @@
+{
+  "devices": {
+    "device_001": {
+      "live_data": {
+        "flow_rate_feed": 0,
+        "flow_rate_permeate": 0.4,
+        "ph_feed": 11.11406,
+        "ph_permeate": 13.36937,
+        "pressure_feed": 0,
+        "pump_status": "stopped",
+        "recovery_rate": 0,
+        "rejection_rate": -247.84653,
+        "tds_feed": 76.90052,
+        "tds_permeate": 267.49579,
+        "temperature_feed": 25.75,
+        "temperature_permeate": 25,
+        "timestamp": "1970-01-01T00:00:00Z",
+        "turbidity_feed": 1706.50525,
+        "uptime_seconds": 0,
+        "valve_status": "closed",
+        "water_level_feed_tank": 0,
+        "water_level_product_tank": 0
+      }
+    }
+  },
+  "system_status": {
+    "device_001": {
+      "cpu_temp_celsius": 45,
+      "heap_free_bytes": 203976,
+      "last_update": "1970-01-01T00:00:00Z",
+      "online": true,
+      "sensor_health": {
+        "flow": "ok",
+        "level": "ok",
+        "ph": "ok",
+        "pressure": "ok",
+        "tds": "ok",
+        "temperature": "ok",
+        "turbidity": "ok"
+      },
+      "wifi_rssi": -55
+    }
+  }
+}

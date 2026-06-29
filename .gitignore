@@ -1,0 +1,63 @@
+# ============================================================
+#  Smart Water Desalination System — .gitignore
+# ============================================================
+
+# ── Credentials & Secrets (NEVER commit these!) ──────────────
+ESP_Sensors/secrets.h
+serviceAccountKey.json
+backend/serviceAccountKey.json
+backend/.env
+**/*.env
+**/.env.local
+
+# ── SQLite local databases ────────────────────────────────────
+*.sqlite
+*.db
+
+# ── Python ───────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.venv/
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ── ML Model Files (large binaries) ──────────────────────────
+ml/models/*.pkl
+ml/models/*.joblib
+backend/app/ml/models/*.pkl
+backend/app/ml/models/*.joblib
+
+# ── Raw Data (may contain sensitive readings) ─────────────────
+ml/data/raw/
+ml/data/processed/
+
+# ── Arduino / PlatformIO ─────────────────────────────────────
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# ── IDEs ─────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# ── OS ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Node.js (if using for Vercel) ───────────────────────────
+node_modules/
+.next/
+
+# ── Logs ────────────────────────────────────────────────────
+*.log
+logs/
